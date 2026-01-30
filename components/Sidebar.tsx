@@ -240,15 +240,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       }}>
 
       {/* BRAND APEX (2026 AAA Grade) */}
-      <div className={`h-14 flex items-center border-b border-white/5 relative transition-all duration-300 ${collapsed ? 'justify-center' : 'pl-6 pr-4'}`}>
+      <div className={`h-14 flex items-center border-b border-white/5 relative transition-all duration-300 ${collapsed ? 'justify-center' : 'pl-8 pr-4'}`}>
         <div className={`flex items-center transition-all duration-300 ${collapsed ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'}`}>
-          <span className="text-lg font-bold italic tracking-tight font-display text-white select-none">
+          <span className="text-2xl font-black italic tracking-tight font-display text-white select-none">
             Morgan<span className="text-brand-500">.</span>
           </span>
         </div>
 
         {collapsed && (
-          <span className="absolute inset-0 flex items-center justify-center text-lg font-bold italic text-white font-display select-none">
+          <span className="absolute inset-0 flex items-center justify-center text-2xl font-black italic text-white font-display select-none">
             M<span className="text-brand-500">.</span>
           </span>
         )}

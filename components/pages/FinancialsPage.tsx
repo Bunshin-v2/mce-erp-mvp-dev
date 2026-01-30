@@ -154,9 +154,9 @@ export const FinancialsPage: React.FC<FinancialsPageProps> = ({
                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${item.type === 'PROJECT' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-blue-500/10 text-blue-500'}`}>
                   <FileText size={14} />
                </div>
-               <div className="flex flex-col">
-                  <span className="text-white font-bold italic text-sm">{item.identification}</span>
-                  <span className="text-xs text-zinc-500">{item.client} • {item.project_code}</span>
+               <div className="flex flex-col gap-1">
+                  <span className="text-white font-bold italic text-[12px]">{item.identification}</span>
+                  <span className="text-[10px] text-zinc-500 font-mono tracking-tight">{item.client} • {item.project_code}</span>
                </div>
             </div>
          )

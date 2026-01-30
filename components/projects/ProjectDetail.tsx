@@ -185,7 +185,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
                     {project.project_code && (
                       <div>
                         <Text variant="gov-label" color="secondary" className="block mb-0.5">Code</Text>
-                        <Text variant="mono" className="text-emerald-400 tracking-wider !text-[11px]">{project.project_code}</Text>
+                        <Text variant="mono" className="text-emerald-400 tracking-wider text-gov-label">{project.project_code}</Text>
                       </div>
                     )}
                     <div>
@@ -262,7 +262,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
                   <Text variant="gov-hero" className="text-white">%</Text>
                 </div>
               ) : (
-                <Text variant="gov-metric" className="text-white !text-3xl tracking-tighter">
+                <Text variant="gov-metric" className="text-white text-gov-hero tracking-tighter">
                   {project.completion_percent || 0}%
                 </Text>
               )}
@@ -288,7 +288,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
                   className="w-full bg-zinc-800 border border-emerald-500/50 rounded px-2 py-1 text-xl font-bold italic text-white focus:outline-none font-sans"
                 />
               ) : (
-                <Text variant="gov-metric" className="text-white !text-3xl tracking-tighter">
+                <Text variant="gov-metric" className="text-white text-gov-hero tracking-tighter">
                   {(project.contract_value_excl_vat || 0).toLocaleString(undefined, { notation: 'compact', style: 'currency', currency: 'AED' })}
                 </Text>
               )}
@@ -315,7 +315,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
                   </select>
                 </div>
               ) : (
-                <Text variant="gov-hero" className="text-white !text-xl">
+                <Text variant="gov-hero" className="text-white text-gov-title">
                   {project.project_status || 'Active'}
                 </Text>
               )}
@@ -414,11 +414,11 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
                   <textarea
                     value={editedProject?.remarks || ''}
                     onChange={(e) => setEditedProject({ ...editedProject, remarks: e.target.value })}
-                    className="w-full bg-zinc-900/50 border border-amber-500/30 rounded p-2 text-xs text-white focus:outline-none min-h-[80px] font-sans font-bold italic"
+                    className="w-full bg-zinc-900/50 border border-amber-500/30 rounded p-2 text-gov-table text-white focus:outline-none min-h-[80px] font-sans font-bold italic"
                     placeholder="Enter executive remarks..."
                   />
                 ) : (
-                  <Text variant="caption" className="text-zinc-300 !text-xs leading-relaxed">
+                  <Text variant="caption" className="text-zinc-300 text-gov-table leading-relaxed">
                     "{project.remarks || 'No critical remarks logged for this period.'}"
                   </Text>
                 )}

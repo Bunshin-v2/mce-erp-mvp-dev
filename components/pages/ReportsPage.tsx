@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Download, Search, Zap, TrendingUp, Calendar, ChevronDown, Database, Globe, Clock, BarChart3, CheckCircle2 } from 'lucide-react';
-import { safeExportToCSV } from '../../utils/exportUtils';
+import { safeExportToCSV, exportToHTML } from '../../utils/exportUtils';
 import { useReports, ReportProfile, ReportSource } from '../../hooks/useReports';
 import { PageHeader } from '../ui/PageHeader';
 import { Box, Text, Card, Button } from '../../components/primitives';
@@ -21,10 +21,16 @@ export const ReportsPage: React.FC = () => {
     { id: 'Audit', label: 'Compliance Audit', icon: Calendar, desc: 'Full audit trail and validation', color: 'from-amber-600 to-amber-500' },
   ];
 
-  const handleExport = () => {
+  const handleExport = (format: 'CSV' | 'HTML') => {
     if (!data) return;
     const exportData = Array.isArray(data) ? data : Object.values(data).flat();
-    safeExportToCSV(exportData, `MCE_${source}_${profile}_REPORT`);
+    const filename = `MCE_${source}_${profile}_REPORT`;
+
+    if (format === 'CSV') {
+      safeExportToCSV(exportData, filename);
+    } else {
+      exportToHTML(exportData, filename, { source, profile });
+    }
   };
 
   const renderTableHeaders = () => {
@@ -212,19 +218,33 @@ export const ReportsPage: React.FC = () => {
 
             <div className="h-4 w-[1px] bg-[var(--border-subtle)] mx-1" />
 
-            {/* 4. Export Button */}
-            <Button
-              as={motion.button}
-              variant="primary"
-              size="xs"
-              onClick={handleExport}
-              className="bg-gradient-to-r from-blue-600 to-blue-500 shadow-md hover:shadow-lg px-3 py-1.5 font-bold italic uppercase tracking-wider text-[10px]"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              leftIcon={<Download size={12} />}
-            >
-              Export
-            </Button>
+            {/* 4. Export Controls */}
+            <Box className="flex items-center gap-1.5 bg-white/[0.03] p-1 rounded-md border border-white/5">
+              <Button
+                as={motion.button}
+                variant="primary"
+                size="xs"
+                onClick={() => handleExport('HTML')}
+                className="bg-gradient-to-r from-blue-600 to-blue-500 shadow-md hover:shadow-lg px-3 py-1.5 font-bold italic uppercase tracking-wider text-[10px]"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                leftIcon={<TrendingUp size={12} />}
+              >
+                Intelligence Report
+              </Button>
+              <Button
+                as={motion.button}
+                variant="outline"
+                size="xs"
+                onClick={() => handleExport('CSV')}
+                className="border-white/10 hover:bg-white/5 px-3 py-1.5 font-bold italic uppercase tracking-wider text-[10px] text-zinc-400"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                leftIcon={<Download size={12} />}
+              >
+                Raw CSV
+              </Button>
+            </Box>
           </Box>
         }
       />

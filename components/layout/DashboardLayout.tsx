@@ -10,6 +10,7 @@ import { DocumentItem, KPIMetric, Project, Tender, Alert, StatusData } from '../
 import { useDashboardLogic } from '../../hooks/useDashboardLogic';
 import { useWidgetLayoutState } from '../../hooks/useWidgetLayoutState';
 import { QueueCard } from '../dashboard/QueueCard';
+import { SkeletonLoader, QueueSkeleton } from '../ui/SkeletonLoader';
 
 interface DashboardLayoutProps {
     kpis: KPIMetric[];
@@ -94,32 +95,42 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <div className="col-span-12 xl:col-span-8 space-y-10">
 
                     {/* 1. Project Portfolio Queue */}
+
+                    {/* 1. Project Portfolio Queue */}
                     <QueueCard
                         title="PROJECT PORTFOLIO"
-                        count={filteredProjects.length}
+                        count={loading ? 0 : filteredProjects.length}
                         className="transition-all"
                         mode={layout.state.project_portfolio.mode}
                         onToggle={() => layout.toggle('project_portfolio')}
                     >
-                        <ProjectList
-                            projects={filteredProjects}
-                            onSelectProject={onSelectProject}
-                            limit={layout.state.project_portfolio.mode === 'compact' ? 6 : undefined}
-                        />
+                        {loading ? (
+                            <QueueSkeleton variant="project" count={5} />
+                        ) : (
+                            <ProjectList
+                                projects={filteredProjects}
+                                onSelectProject={onSelectProject}
+                                limit={layout.state.project_portfolio.mode === 'compact' ? 6 : undefined}
+                            />
+                        )}
                     </QueueCard>
 
                     {/* 2. Tender Tracker Queue */}
                     <QueueCard
                         title="TENDER TRACKER"
-                        count={tenders?.length || 0}
+                        count={loading ? 0 : (tenders?.length || 0)}
                         className="transition-all"
                         mode={layout.state.tender_tracker.mode}
                         onToggle={() => layout.toggle('tender_tracker')}
                     >
-                        <TenderList
-                            tenders={tenders || []}
-                            limit={layout.state.tender_tracker.mode === 'compact' ? 4 : undefined}
-                        />
+                        {loading ? (
+                            <QueueSkeleton variant="tender" count={4} />
+                        ) : (
+                            <TenderList
+                                tenders={tenders || []}
+                                limit={layout.state.tender_tracker.mode === 'compact' ? 4 : undefined}
+                            />
+                        )}
                     </QueueCard>
 
                 </div>

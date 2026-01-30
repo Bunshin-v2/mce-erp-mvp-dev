@@ -72,11 +72,11 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
          {/* Adaptive Header */}
          <Box className="flex flex-col md:flex-row md:items-end justify-between gap-4 px-2">
             <Box>
-               <Text variant="h1" className="flex items-center gap-3 text-white">
+               <Text variant="gov-hero" className="flex items-center gap-3 text-white">
                   Executive Cockpit
-                  <StatusBadge status="live" label="Live System" size="sm" pulse />
+                  <StatusBadge status="live" label="LIVE SYSTEM" size="sm" pulse />
                </Text>
-               <Text variant="gov-title" color="tertiary" className="mt-1 pl-1">
+               <Text variant="gov-label" color="tertiary" className="mt-1 pl-1">
                   Strategic Command Interface // Sector 01
                </Text>
             </Box>

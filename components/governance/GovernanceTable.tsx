@@ -45,7 +45,7 @@ export function GovernanceTable<T>({
                         key={idx}
                         style={{ width: col.width || 'auto', flex: col.width ? 'none' : 1 }}
                         className={cn(
-                            "px-6 py-5",
+                            "px-6 py-3.5",
                             col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
                         )}
                     >
@@ -74,7 +74,7 @@ export function GovernanceTable<T>({
                                     key={rowIdx}
                                     onClick={() => onRowClick?.(item)}
                                     className={`
-                                        flex hover:bg-white/[0.03] transition-all duration-300 group relative min-h-[64px] border-b border-white/[0.02]
+                                        flex hover:bg-white/[0.03] transition-all duration-300 group relative min-h-[52px] border-b border-white/[0.02]
                                         ${onRowClick ? 'cursor-pointer' : ''}
                                         ${isUrgent ? 'bg-rose-500/[0.02] shadow-[inset_2px_0_0_var(--color-critical)]' : ''}
                                         ${rowIdx % 2 === 0 ? 'bg-white/[0.005]' : 'bg-transparent'}
@@ -90,7 +90,7 @@ export function GovernanceTable<T>({
                                                 key={colIdx}
                                                 style={{ width: col.width || 'auto', flex: col.width ? 'none' : 1 }}
                                                 className={`
-                                                    px-6 py-4 transition-all duration-300 flex flex-col justify-center
+                                                    px-6 py-2.5 transition-all duration-300 flex flex-col justify-center
                                                     ${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'}
                                                 `}
                                             >

@@ -8,7 +8,7 @@
     "dev:fresh": "node scripts/clean-start.cjs",
     "build": "next build",
     "start": "next start -p 3000",
-    "lint": "tsc --noEmit", 
+    "lint": "tsc --noEmit",
     "health": "npx tsx scripts/health/unified-health-check.ts",
     "health:export": "npx tsx scripts/health/unified-health-check.ts --export",
     "diagnose": "npx tsx scripts/diagnostic/run-health-probes.ts",

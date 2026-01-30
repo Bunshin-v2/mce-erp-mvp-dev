@@ -104,11 +104,51 @@ export async function proxyToAiGateway(request: Request, path: string, options: 
 
   const targetUrl = `${gatewayUrl}${path.startsWith('/') ? '' : '/'}${path}`;
 
-  const response = await fetch(targetUrl, {
-    method: request.method,
-    headers: buildHeaders(request, authHeaders),
-    body: request.method === 'GET' || request.method === 'HEAD' ? undefined : await request.text(),
-  });
+  // Create a timeout for the upstream request
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s hard timeout
+
+  let response: Response;
+  try {
+    response = await fetch(targetUrl, {
+      method: request.method,
+      headers: buildHeaders(request, authHeaders),
+      body: request.method === 'GET' || request.method === 'HEAD' ? undefined : await request.text(),
+      signal: controller.signal,
+    });
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      return NextResponse.json(
+        {
+          request_id: requestId,
+          outcome: 'failed',
+          error: {
+            code: 'AI_GATEWAY_TIMEOUT',
+            message: 'Upstream AI Service timed out (30s). The backend may be booting up or overloaded.',
+            detail: {},
+          },
+          data: null,
+        },
+        { status: 504 }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        request_id: requestId,
+        outcome: 'failed',
+        error: {
+          code: 'AI_GATEWAY_UNREACHABLE',
+          message: 'Upstream AI Service is unreachable.',
+          detail: { reason: error.message },
+        },
+        data: null,
+      },
+      { status: 503 }
+    );
+  } finally {
+    clearTimeout(timeoutId);
+  }
 
   const body = await response.text();
   const responseHeaders = new Headers();

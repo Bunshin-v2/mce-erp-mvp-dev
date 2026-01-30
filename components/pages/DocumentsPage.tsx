@@ -225,7 +225,7 @@ export const DocumentsPage: React.FC<DocumentsPageProps> = ({
 
                {/* Scrollable List */}
                <div className="flex-1 overflow-y-auto flex flex-col divide-y divide-white/[0.03]">
-                  {filteredDocs.length === 0 ? (
+                  {filteredDocs.length === 0 && (
                      <div className="p-20">
                         <EmptyState
                            icon={Database}
@@ -240,68 +240,64 @@ export const DocumentsPage: React.FC<DocumentsPageProps> = ({
                            }}
                         />
                      </div>
-                  ) : (
-                     filteredDocs.map((doc) => {
-                        const projectName = doc.project_name || 'Global Ledger';
-                        const projectCode = doc.project_code || 'MCE-UNIT';
+                  )}
+                  {filteredDocs.length > 0 && filteredDocs.map((doc) => (
+                     <div
+                        key={doc.id}
+                        onClick={() => setSelectedDocId(doc.id)}
+                        className={`grid grid-cols-12 gap-6 px-10 py-5 items-center hover:bg-glass-subtle transition-all group cursor-pointer relative border-b border-white/[0.03] last:border-0 ${selectedDocId === doc.id ? 'bg-white/[0.03]' : ''}`}
+                     >
+                        <div className="absolute left-0 inset-y-0 w-1 bg-emerald-500 opacity-0 group-hover:opacity-100 transition-all shadow-[0_0_20px_var(--color-success)]"></div>
+                        <div className="col-span-1 text-[9px] font-mono font-bold italic text-zinc-800 tracking-tighter opacity-40 pl-2">#{doc.id.slice(0, 4)}</div>
 
-                        return (
-                           <div
-                              key={doc.id}
-                              onClick={() => setSelectedDocId(doc.id)}
-                              className={`grid grid-cols-12 gap-6 px-10 py-5 items-center hover:bg-glass-subtle transition-all group cursor-pointer relative border-b border-white/[0.03] last:border-0 ${selectedDocId === doc.id ? 'bg-white/[0.03]' : ''}`}
-                           >
-                              <div className="absolute left-0 inset-y-0 w-1 bg-emerald-500 opacity-0 group-hover:opacity-100 transition-all shadow-[0_0_20px_var(--color-success)]"></div>
-                              <div className="col-span-1 text-[9px] font-mono font-bold italic text-zinc-800 tracking-tighter opacity-40 pl-2">#{doc.id.slice(0, 4)}</div>
-
-                              {/* Identity Block */}
-                              <div className="col-span-4 flex items-center space-x-8">
-                                 <div className="w-10 h-10 bg-glass border border-white/10 rounded-xl flex items-center justify-center text-zinc-600 group-hover:text-emerald-500 group-hover:border-emerald-500/20 transition-all shadow-inner shrink-0">
-                                    <FileText size={18} strokeWidth={1.5} />
-                                 </div>
-                                 <div className="min-w-0 flex flex-col gap-2">
-                                    <Text variant="h3" className="truncate tracking-tight leading-none">{doc.title}</Text>
-                                    <div className="flex items-center gap-3">
-                                       <Text variant="caption" color="secondary" className="tracking-widest capitalize">REVISION_v{doc.version || 1}</Text>
-                                       <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
-                                       <Text variant="mono" color="tertiary" className="text-[7px] bg-glass px-2 rounded-sm border border-glass">TYPE_{doc.category || 'DOC'}</Text>
-                                    </div>
-                                 </div>
-                              </div>
-
-                              {/* Project Association */}
-                              <div className="col-span-3">
-                                 <div className="flex flex-col gap-2">
-                                    <Text variant="body" color="secondary" className="truncate max-w-[220px] leading-none">{projectName}</Text>
-                                    <div className="flex items-center gap-2">
-                                       <Text variant="caption" color="tertiary" className="tracking-widest text-[9px] leading-none">{doc.client_name || 'MCE_INTERNAL'}</Text>
-                                       <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
-                                       <Text variant="mono" color="tertiary" className="text-[7px] bg-glass px-2 rounded-sm border border-glass">{projectCode}</Text>
-                                    </div>
-                                 </div>
-                              </div>
-
-                              <div className="col-span-2 text-center">
-                                 <Text variant="label" className={`px-3 py-1 rounded-sm border text-[8px] ${(doc.category || doc.type) === 'SAFETY' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
-                                    (doc.category || doc.type) === 'CONTRACT' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                                       'bg-zinc-800 text-zinc-500 border-zinc-700'
-                                    }`}>{doc.category || doc.type}</Text>
-                              </div>
-
-                              <div className="col-span-2 text-right pr-6">
-                                 <div className="inline-flex flex-col items-end">
-                                    <Text variant="label" className={`px-4 py-1.5 rounded-sm text-[9px] border transition-all ${doc.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]' :
-                                       'bg-amber-500/10 text-amber-400 border-amber-500/20 animate-pulse'
-                                       }`}>
-                                       {doc.status}
-                                    </Text>
-                                    <Text variant="caption" color="tertiary" className="text-[7px] mt-2 mb-0">Cycle Status</Text>
+                        {/* Identity Block */}
+                        <div className="col-span-4 flex items-center space-x-8">
+                           <div className="w-10 h-10 bg-glass border border-white/10 rounded-xl flex items-center justify-center text-zinc-600 group-hover:text-emerald-500 group-hover:border-emerald-500/20 transition-all shadow-inner shrink-0">
+                              <FileText size={18} strokeWidth={1.5} />
+                           </div>
+                           <div className="min-w-0 flex flex-col gap-2">
+                              <div className="min-w-0 flex flex-col gap-1">
+                                 <Text className="truncate tracking-tight leading-none text-[12px] font-bold italic text-white group-hover:text-emerald-400 transition-colors">{doc.title}</Text>
+                                 <div className="flex items-center gap-3">
+                                    <Text variant="caption" color="secondary" className="tracking-widest capitalize text-[9px]">REVISION_v{doc.version || 1}</Text>
+                                    <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
+                                    <Text variant="mono" color="tertiary" className="text-[9px] bg-glass px-2 rounded-sm border border-glass">TYPE_{doc.category || 'DOC'}</Text>
                                  </div>
                               </div>
                            </div>
-                        );
-                     })
-                  )}
+                        </div>
+
+                        {/* Project Association */}
+                        <div className="col-span-3">
+                           <div className="flex flex-col gap-2">
+                              <Text variant="body" color="secondary" className="truncate max-w-[220px] leading-none">{doc.project_name || 'Global Ledger'}</Text>
+                              <div className="flex items-center gap-2">
+                                 <Text variant="caption" color="tertiary" className="tracking-widest text-[9px] leading-none">{doc.client_name || 'MCE_INTERNAL'}</Text>
+                                 <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
+                                 <Text variant="mono" color="tertiary" className="text-[7px] bg-glass px-2 rounded-sm border border-glass">{doc.project_code || 'MCE-UNIT'}</Text>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="col-span-2 text-center">
+                           <Text variant="label" className={`px-3 py-1 rounded-sm border text-[8px] ${(doc.category || doc.type) === 'SAFETY' ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' :
+                              (doc.category || doc.type) === 'CONTRACT' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                                 'bg-zinc-800 text-zinc-500 border-zinc-700'
+                              }`}>{doc.category || doc.type}</Text>
+                        </div>
+
+                        <div className="col-span-2 text-right pr-6">
+                           <div className="inline-flex flex-col items-end">
+                              <Text variant="label" className={`px-4 py-1.5 rounded-sm text-[9px] border transition-all ${doc.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]' :
+                                 'bg-amber-500/10 text-amber-400 border-amber-500/20 animate-pulse'
+                                 }`}>
+                                 {doc.status}
+                              </Text>
+                              <Text variant="caption" color="tertiary" className="text-[7px] mt-2 mb-0">Cycle Status</Text>
+                           </div>
+                        </div>
+                     </div>
+                  ))}
                </div>
             </div>
 
@@ -339,7 +335,16 @@ export const DocumentsPage: React.FC<DocumentsPageProps> = ({
                         <button onClick={handleApprove} className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-black rounded-xl text-[11px] font-bold italic tracking-[0.2em] transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] active:scale-95">
                            Approve & Integrate
                         </button>
-                        <button className="w-full py-4 bg-white/[0.03] border border-white/[0.08] text-zinc-500 hover:text-white rounded-xl text-[11px] font-bold italic tracking-[0.2em] transition-all hover:bg-white/[0.05]">
+                        <button onClick={async () => {
+                           if (!selectedDocId) return;
+                           const { error } = await supabase.from('documents').update({ status: 'Revision', reviewed_at: new Date().toISOString() }).match({ id: selectedDocId });
+                           if (error) toast.error("Revision Request Failed");
+                           else {
+                              toast.info("Revision Requested", "Artifact flagged for review cycle.");
+                              onRefresh();
+                              setSelectedDocId(null);
+                           }
+                        }} className="w-full py-4 bg-white/[0.03] border border-white/[0.08] text-zinc-500 hover:text-white rounded-xl text-[11px] font-bold italic tracking-[0.2em] transition-all hover:bg-white/[0.05] active:scale-95">
                            Request Revision
                         </button>
                      </div>

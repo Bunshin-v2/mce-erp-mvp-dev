@@ -64,7 +64,7 @@ export const ProjectsModule: React.FC = () => {
 
               <Box className="flex justify-between items-start mb-4">
                 <Box className="space-y-1">
-                  <Text variant="gov-title" weight="bold" color="primary" className="group-hover:text-emerald-500 transition-colors">
+                  <Text variant="gov-table" weight="bold" color="primary" className="group-hover:text-emerald-500 transition-colors">
                     {project.name || project.project_name}
                   </Text>
                   <Text variant="gov-label" color="tertiary" className="uppercase">
@@ -85,7 +85,10 @@ export const ProjectsModule: React.FC = () => {
                   initial={{ width: 0 }}
                   animate={{ width: `${project.completion_percentage || project.completion || 0}%` }}
                   transition={{ duration: 1.2, ease: "circOut", delay: 0.3 }}
-                />
+                >
+                  {/* Holographic Sheen */}
+                  <div className="absolute top-0 bottom-0 right-0 w-[40px] bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 translate-x-[150%] animate-sheen-slide" />
+                </motion.div>
               </Box>
 
               <Box className="flex justify-between items-center">

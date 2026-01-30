@@ -41,8 +41,8 @@ export const DashboardFrame: React.FC<DashboardFrameProps> = ({
 
             {/* 1. Context Header */}
             <header className="flex flex-col space-y-1">
-                <h2 className="text-gov-label opacity-70">{subtitle}</h2>
-                <h1 className="text-gov-header">{title}</h1>
+                <h2 className="text-gov-label text-[11px] opacity-70 font-bold italic tracking-[0.2em] uppercase">{subtitle}</h2>
+                <h1 className="text-gov-hero font-black italic uppercase tracking-tighter text-4xl">{title}</h1>
             </header>
 
 

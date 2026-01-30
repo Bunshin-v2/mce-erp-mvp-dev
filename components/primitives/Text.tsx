@@ -62,10 +62,10 @@ export const Text = React.forwardRef<HTMLElement, TextProps>(
 
             'gov-hero': "text-gov-hero font-bold italic uppercase tracking-[-0.01em]",
             'gov-title': "text-gov-title font-bold italic uppercase tracking-[-0.01em]",
-            'gov-header': "text-[11px] font-bold italic uppercase tracking-[0.15em]",
-            'gov-label': "text-[10px] font-bold italic uppercase tracking-[0.2em] opacity-70",
+            'gov-header': "text-gov-header font-bold italic uppercase tracking-[0.15em]",
+            'gov-label': "text-gov-label font-bold italic uppercase tracking-[0.2em] opacity-70",
             'gov-body': "text-gov-body font-bold italic leading-relaxed tracking-tight",
-            'gov-metric': "text-gov-metric font-sans font-bold italic tracking-tight",
+            'gov-metric': "text-gov-metric font-mono font-bold italic tracking-tight",
             'gov-table': "text-gov-table font-bold italic tracking-tight",
         };
 

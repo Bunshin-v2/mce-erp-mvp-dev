@@ -114,7 +114,7 @@ function AppContent() {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    refetch(query);
+    refetch();
   };
 
   const renderContent = useCallback(() => {
@@ -295,7 +295,7 @@ function AppContent() {
             <DashboardLayout
               mode={dashboardMode}
               signals={signals}
-              kpis={kpis}
+              kpis={kpis || []}
               projects={projects || []}
               tenders={tenders || []}
               documents={documents || []}

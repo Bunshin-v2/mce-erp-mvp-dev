@@ -102,7 +102,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
 
                 {/* Col 0: Index */}
                 <Box className="col-span-1 flex items-center">
-                  <Text variant="gov-label" color="tertiary" className="text-[9px] opacity-30">
+                  <Text variant="gov-label" color="tertiary" className="text-gov-label opacity-30">
                     {(index + 1).toString().padStart(2, '0')}
                   </Text>
                 </Box>
@@ -113,16 +113,16 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                     <Building2 size={14} strokeWidth={1.5} />
                   </Box>
                   <Box className="min-w-0 flex flex-col gap-0.5 relative">
-                    <Text variant="h3" className="truncate text-white uppercase tracking-[0.2em] group-hover:text-white transition-colors">
+                    <Text className="truncate text-[12px] font-bold italic text-white uppercase tracking-[0.1em] group-hover:text-emerald-400 transition-colors">
                       {project.project_name}
                     </Text>
 
                     <Box className="flex items-center gap-2">
-                      <Text variant="gov-label" color="tertiary" className="truncate">
+                      <Text variant="gov-label" color="tertiary" className="truncate text-[10px]">
                         {project.client_name || 'Internal Protocol'}
                       </Text>
                       {project.project_code && (
-                        <Text variant="gov-label" color="tertiary" className="text-[8px] px-1 border border-white/5 rounded-sm bg-white/[0.02]">
+                        <Text variant="gov-label" color="tertiary" className="text-[9px] px-1 border border-white/5 rounded-sm bg-white/[0.02]">
                           {project.project_code}
                         </Text>
                       )}
@@ -135,7 +135,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                   <Box className="inline-flex flex-col items-center">
                     <Text
                       variant="gov-metric"
-                      className={`text-[15px] ${daysLeft !== null && daysLeft < 30 ? 'text-rose-600 animate-pulse' : 'text-emerald-500'}`}
+                      className={`text-[13px] font-black ${daysLeft !== null && daysLeft < 30 ? 'text-rose-600 animate-pulse' : 'text-emerald-500'}`}
                     >
                       {daysLeft !== null ? (daysLeft < 0 ? `-${Math.abs(daysLeft)}D` : `${daysLeft}D`) : '--'}
                     </Text>
@@ -147,7 +147,7 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                 <Box className="col-span-3 px-2">
                   <Box className="flex flex-col gap-1.5">
                     <Box className="flex justify-between items-end">
-                      <Text variant="gov-label">Operational Phase</Text>
+                      <Text variant="gov-label" className="text-[10px]">Operational Phase</Text>
                       <Text variant="gov-metric" className="text-[10px]">{project.completion_percent || 0}%</Text>
                     </Box>
                     <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden relative">
@@ -168,11 +168,11 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                   <Box className="flex flex-col items-end gap-1">
                     <Box className="flex items-baseline gap-1">
                       <Text variant="gov-label" color="tertiary" className="text-[9px]">AED</Text>
-                      <Text variant="gov-metric" className="text-[13px]">
+                      <Text variant="gov-metric" className="text-[12px] text-white">
                         {(project.contract_value_excl_vat || 0).toLocaleString()}
                       </Text>
                     </Box>
-                    <Text variant="gov-label" className={`px-2 py-0.5 rounded-sm ${project.project_status?.includes('Construction') ? 'bg-emerald-500/5 text-emerald-400/80' : 'bg-white/5 text-zinc-500'}`}>
+                    <Text variant="gov-label" className={`px-2 py-0.5 rounded-sm text-[9px] ${project.project_status?.includes('Construction') ? 'bg-emerald-500/5 text-emerald-400/80' : 'bg-white/5 text-zinc-500'}`}>
                       {project.project_status || 'Active'}
                     </Text>
                   </Box>

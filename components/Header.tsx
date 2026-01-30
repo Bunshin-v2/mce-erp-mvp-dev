@@ -1,5 +1,6 @@
 import React from 'react';
 import { Bell, Search, User, SlidersHorizontal, HelpCircle, Layout, Activity } from 'lucide-react';
+import { GlassButton } from '@/components/ui/GlassButton';
 
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import type { Notification } from '@/components/notifications/NotificationBell';
@@ -52,26 +53,30 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate
         {/* Global Control Group */}
         <div className="flex items-center space-x-2">
           {onToggleMode && (
-            <button
+            <GlassButton
+              variant="ghost"
+              size="icon"
               onClick={onToggleMode}
               aria-label={`Switch to ${mode === 'operational' ? 'Executive' : 'Operational'} Mode`}
-              className={`p-2 transition-all duration-300 ${mode === 'executive'
-                ? 'text-[var(--color-info)] bg-[var(--color-info)]/10 rounded shadow-[0_0_10px_rgba(51,204,204,0.3)]'
+              className={`transition-all duration-300 ${mode === 'executive'
+                ? 'text-[var(--color-info)] bg-[var(--color-info)]/10 shadow-[0_0_10px_rgba(51,204,204,0.3)]'
                 : 'text-zinc-500 hover:text-white'
                 }`}
               title="Toggle Executive Mode"
             >
               {mode === 'executive' ? <Activity size={14} /> : <Layout size={14} />}
-            </button>
+            </GlassButton>
           )}
-          <button
+          <GlassButton
+            variant="ghost"
+            size="icon"
             onClick={() => onNavigate && onNavigate('settings')}
             aria-label="System Settings"
-            className={`p-2 transition-colors ${activeView === 'settings' ? 'text-white bg-white/5 rounded' : 'text-zinc-500 hover:text-white'}`}
+            className={`transition-colors ${activeView === 'settings' ? 'text-white bg-white/5' : 'text-zinc-500 hover:text-white'}`}
             title="Settings"
           >
             <SlidersHorizontal size={14} />
-          </button>
+          </GlassButton>
 
           <NotificationBell
             notifications={sampleNotifications}

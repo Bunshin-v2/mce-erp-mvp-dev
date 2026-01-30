@@ -28,6 +28,8 @@ export interface Project {
   updated_at?: string;
   completion_percent?: number;
   compliance_status?: string;
+  project_location_city?: string;
+  doc_control_platform?: string;
 }
 
 export interface DocumentItem {

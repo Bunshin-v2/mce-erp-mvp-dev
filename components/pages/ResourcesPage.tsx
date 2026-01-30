@@ -7,6 +7,7 @@ import ResourceGrid from '../resources/ResourceGrid';
 import UtilizationChart from '../resources/UtilizationChart';
 import AllocationPanel from '../resources/AllocationPanel';
 import ManpowerImporter from '../resources/ManpowerImporter';
+import { ResourceForm } from '../forms/ResourceForm';
 import { DashboardFrame } from '../governance/DashboardFrame';
 import { MetricBlock } from '../governance/MetricBlock';
 import { GlassButton } from '../ui/GlassButton';
@@ -18,8 +19,8 @@ interface ResourcesPageProps {
   loading?: boolean;
 }
 
-export const ResourcesPage: React.FC<ResourcesPageProps> = ({ 
-  projects, 
+export const ResourcesPage: React.FC<ResourcesPageProps> = ({
+  projects,
   onRefresh,
   loading: globalLoading = false
 }) => {
@@ -41,7 +42,7 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({
   if (error) {
     return (
       <div className="p-12 text-center">
-        <EmptyState 
+        <EmptyState
           icon={Activity}
           title="Data Synchronization Fault"
           description={error}
@@ -74,11 +75,10 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 py-2 text-[10px] font-bold italic tracking-widest rounded-lg transition-all flex items-center gap-2 ${
-              activeTab === tab.id
+            className={`px-4 py-2 text-[10px] font-bold italic tracking-widest rounded-lg transition-all flex items-center gap-2 ${activeTab === tab.id
                 ? 'bg-white/10 text-white shadow-lg'
                 : 'text-zinc-600 hover:text-zinc-400'
-            }`}
+              }`}
           >
             <tab.icon size={14} />
             {tab.label}
@@ -125,6 +125,16 @@ export const ResourcesPage: React.FC<ResourcesPageProps> = ({
         )}
         {activeTab === 'import' && <ManpowerImporter />}
       </div>
+
+      {showAddTeam && (
+        <ResourceForm
+          onClose={() => setShowAddTeam(false)}
+          onSuccess={() => {
+            fetchTeamMembers();
+            setShowAddTeam(false);
+          }}
+        />
+      )}
     </DashboardFrame>
   );
 };

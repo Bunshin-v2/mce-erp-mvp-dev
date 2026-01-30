@@ -27,6 +27,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onClose, onSuccess }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setInternalError(null); // Clear previous errors
+
     try {
       const client = await getClient();
       const { error } = await client
@@ -41,11 +43,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onClose, onSuccess }) 
       onSuccess();
       onClose();
     } catch (err: any) {
-      alert(err.message);
+      setInternalError(err.message || "Failed to create project");
     } finally {
       setLoading(false);
     }
   };
+
+  const [internalError, setInternalError] = useState<string | null>(null);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in-95 duration-200">
@@ -59,6 +63,13 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onClose, onSuccess }) 
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto custom-scrollbar">
+
+          {internalError && (
+            <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-mono rounded-lg flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
+              {internalError}
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-6">
             <GlassInput

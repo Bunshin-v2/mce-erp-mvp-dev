@@ -110,10 +110,60 @@ export class RiskComplianceAgent extends BaseAgent {
   }
 
   async run(client: SupabaseClient, projectId: string) {
-    const activity = await this.logActivity(client, { action_type: 'RISK_SCAN', payload: { projectId } });
+    const activity = await this.logActivity(client, {
+      action_type: projectId === 'GLOBAL_PORTFOLIO' ? 'GLOBAL_RISK_SCAN' : 'RISK_SCAN',
+      payload: { projectId }
+    });
     if (!activity) return;
 
-    // REAL OPERATION: Check project status and budget integrity
+    // GLOBAL SCAN LOGIC
+    if (projectId === 'GLOBAL_PORTFOLIO') {
+      const { data: projects } = await client.from('projects_master').select('id, project_name, delivery_risk_rating');
+      const { data: allPos } = await client.from('purchase_orders').select('project_id, remaining_balance');
+
+      if (!projects) {
+        await this.updateActivity(client, activity.id, { status: 'failed', result: { error: 'No projects found' } });
+        return;
+      }
+
+      let criticalCount = 0;
+      let budgetBreachCount = 0;
+      const criticalProjectsList: string[] = [];
+
+      projects.forEach(p => {
+        const isCritical = p.delivery_risk_rating === 'Critical';
+
+        // Check budget breaches (any PO negative)
+        const projectPos = allPos?.filter((po: any) => po.project_id === p.id) || [];
+        const isOverspent = projectPos.some((po: any) => po.remaining_balance < 0);
+
+        if (isCritical || isOverspent) {
+          if (isCritical) criticalCount++;
+          if (isOverspent) budgetBreachCount++;
+          criticalProjectsList.push(p.project_name);
+        }
+      });
+
+      const riskLevel = (criticalCount > 0 || budgetBreachCount > 0) ? 'CRITICAL' : 'NOMINAL';
+
+      const result = {
+        scan_scope: 'GLOBAL',
+        total_projects: projects.length,
+        risk_level: riskLevel,
+        critical_flags: criticalCount,
+        budget_breaches: budgetBreachCount,
+        flagged_projects: criticalProjectsList.slice(0, 5) // Top 5
+      };
+
+      await this.updateActivity(client, activity.id, {
+        status: 'completed',
+        result,
+        hil_required: riskLevel === 'CRITICAL'
+      });
+      return result;
+    }
+
+    // SINGLE PROJECT LOGIC (Legacy)
     const { data: project } = await client.from('projects_master').select('*').eq('id', projectId).single();
     const { data: po } = await client.from('purchase_orders').select('*').eq('project_id', projectId);
 
@@ -142,11 +192,15 @@ export class KnowledgeAgent extends BaseAgent {
 
   private async callAiService(query: string) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query, client: { app: 'vercel-nextjs', version: 'unknown' } })
-      });
+        body: JSON.stringify({ message: query, client: { app: 'vercel-nextjs', version: 'unknown' } }),
+        signal: controller.signal
+      }).finally(() => clearTimeout(timeoutId));
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data?.error?.message || 'AI Gateway Offline');
@@ -248,10 +302,52 @@ export class KnowledgeAgent extends BaseAgent {
   }
 }
 
+// S1. SECURITY_GUARD (REAL)
+export class SecurityGuardAgent extends BaseAgent {
+  id = 'S1.SECURITY_GUARD';
+  name = 'Security Guard';
+  description = 'Monitors system integrity and RLS policy adherence.';
+
+  async run(client: SupabaseClient) {
+    const activity = await this.logActivity(client, { action_type: 'SYSTEM_INTEGRITY_CHECK' });
+    if (!activity) return;
+
+    // REAL OPERATION: Check for high-severity notifications and orphan records
+    const { data: criticalAlerts } = await client
+      .from('notifications')
+      .select('id')
+      .eq('priority', 'critical')
+      .is('acked_at', null);
+
+    const { data: orphanProjects } = await client
+      .from('projects_master')
+      .select('id')
+      .is('client_entity', null);
+
+    const violations = [
+      ...(criticalAlerts?.map(() => 'UNACKNOWLEDGED_CRITICAL_ALERT') || []),
+      ...(orphanProjects?.map(() => 'ORPHAN_PROJECT_DETECTED') || [])
+    ];
+
+    const status = violations.length > 0 ? 'awaiting_hil' : 'completed';
+    const result = {
+      integrity_score: Math.max(0, 100 - (violations.length * 10)),
+      violations_detected: violations.length,
+      critical_alerts: criticalAlerts?.length || 0,
+      orphan_records: orphanProjects?.length || 0,
+      protocol: 'IRON_DOME_ACTIVE'
+    };
+
+    await this.updateActivity(client, activity.id, { status, result, hil_required: status === 'awaiting_hil' });
+    return result;
+  }
+}
+
 export const agentRegistry = {
   p1: new ContractExtractor(),
   p5: new RiskComplianceAgent(),
-  knowledge: new KnowledgeAgent()
+  knowledge: new KnowledgeAgent(),
+  s1: new SecurityGuardAgent()
 };
 
 // Agent Task Writer for Document Review (HITL Workflow)

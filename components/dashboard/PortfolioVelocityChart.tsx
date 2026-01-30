@@ -59,7 +59,7 @@ export const PortfolioVelocityChart: React.FC<PortfolioVelocityChartProps> = ({ 
                                 <feComposite in="SourceGraphic" in2="glow" operator="over" />
                             </filter>
                         </defs>
-                        <CartesianGrid vertical={false} stroke="var(--border-subtle)" strokeDasharray="3 3" strokeOpacity={0.5} />
+                        {/* Grid Removed for cleaner, 'Glass' aesthetic */}
                         <Tooltip
                             contentStyle={{
                                 backgroundColor: 'var(--bg-surface)',

@@ -11,7 +11,7 @@ interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
     ({ className, variant = 'primary', size = 'md', isLoading, children, ...props }, ref) => {
 
-        const baseStyles = "inline-flex items-center justify-center rounded-lg font-bold italic transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[var(--mce-primary)]/50 border font-brand tracking-[0.15em] uppercase";
+        const baseStyles = "group inline-flex items-center justify-center rounded-lg font-bold italic transition-all duration-300 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-[var(--mce-primary)]/50 border font-brand tracking-[0.15em] uppercase";
 
         const variants = {
             primary: "bg-[var(--mce-primary)] border-[var(--mce-primary)] text-white hover:bg-[var(--mce-primary)]/90 shadow-[0_0_15px_rgba(194,23,25,0.4)] hover:shadow-[0_0_25px_rgba(194,23,25,0.6)]",
@@ -77,6 +77,9 @@ export const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>
                 {variant === 'primary' && !isLoading && (
                     <div className="absolute inset-0 rounded-lg bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 )}
+
+                {/* High-Tech Hover Sheen */}
+                <div className="absolute inset-0 -translate-x-full group-hover:animate-sheen-slide bg-gradient-to-r from-transparent via-white/20 to-transparent z-20 skew-x-[-15deg] pointer-events-none" />
             </button>
         );
     }

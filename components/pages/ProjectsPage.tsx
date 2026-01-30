@@ -91,9 +91,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       header: 'IDENTITY REGISTRY',
       width: '35%',
       accessor: (p: any) => (
-        <Box className="flex items-center gap-4">
-          <Box className="w-10 h-10 bg-white/[0.03] border border-white/5 rounded-xl flex items-center justify-center text-zinc-500 group-hover:text-emerald-500 group-hover:border-emerald-500/20 group-hover:bg-emerald-500/5 transition-all shrink-0">
-            <Building2 size={18} strokeWidth={1.5} />
+        <Box className="flex items-center gap-3">
+          <Box className="w-8 h-8 bg-white/[0.03] border border-white/5 rounded-xl flex items-center justify-center text-zinc-500 group-hover:text-emerald-500 group-hover:border-emerald-500/20 group-hover:bg-emerald-500/5 transition-all shrink-0">
+            <Building2 size={15} strokeWidth={1.5} />
           </Box>
           <Box className="min-w-0 flex flex-col gap-0.5">
             <Box className="flex items-center gap-2">
@@ -146,7 +146,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       accessor: (p: any) => {
         const progress = p.completion_percent || p.COMPLETION_PERCENT || 0;
         return (
-          <Box className="flex flex-col gap-1.5 px-4 w-full">
+          <Box className="flex flex-col gap-0.5 px-4 w-full">
             <Box className="flex justify-between items-end">
               <Text variant="gov-label" weight="bold" className="text-emerald-500">{progress}%</Text>
               <Text variant="gov-label" color="tertiary" className="uppercase opacity-40">Progress</Text>
@@ -166,7 +166,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       width: '15%',
       align: 'right' as const,
       accessor: (p: any) => (
-        <Box className="flex flex-col items-end gap-1">
+        <Box className="flex flex-col items-end gap-0.5">
           <Text variant="gov-table" weight="bold" color="primary" className="font-mono">
             AED {((p.contract_value_excl_vat || p.CONTRACT_VALUE_EXCL_VAT || 0) / 1000000).toFixed(1)}M
           </Text>

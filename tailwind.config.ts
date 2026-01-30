@@ -127,6 +127,7 @@ const config: Config = {
         'data-pulse': 'data-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'float-up': 'float-up 0.5s ease-out forwards',
         'fade-in': 'fade-in 0.3s ease-out forwards',
+        'sheen-slide': 'sheen-slide 2.5s ease-in-out infinite',
       },
       keyframes: {
         shimmer: {
@@ -144,6 +145,10 @@ const config: Config = {
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        'sheen-slide': {
+          '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
+          '100%': { transform: 'translateX(200%) skewX(-12deg)' },
         }
       }
     },

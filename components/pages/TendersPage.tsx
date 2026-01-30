@@ -72,9 +72,9 @@ export const TendersPage: React.FC<TendersPageProps> = ({
           )}>
             <Target size={14} strokeWidth={1.5} />
           </Box>
-          <Box className="flex flex-col">
-            <Text className="text-white font-bold italic truncate">{item.title}</Text>
-            <Text variant="gov-label" color="tertiary" className="truncate">{item.client || 'MCE_INTERNAL'}</Text>
+          <Box className="flex flex-col gap-1">
+            <Text className="text-white font-bold italic truncate text-[12px]">{item.title}</Text>
+            <Text variant="gov-label" color="tertiary" className="truncate text-[9px]">{item.client || 'MCE_INTERNAL'}</Text>
           </Box>
         </Box>
       )

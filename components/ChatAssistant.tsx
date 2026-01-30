@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot, Sparkles, Paperclip, Loader2, Zap } from 'lucide-react';
 import { buildAssistantContext, retrieveRelevantContext, AssistantContext } from '@/lib/ai/assistant-context';
+import { GlassButton } from '@/components/ui/GlassButton';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -73,6 +74,10 @@ export const ChatAssistant: React.FC = () => {
             const relevantContext = await retrieveRelevantContext(currentInput);
 
             // Send to AI Gateway with system context and relevant prompts
+            // Send to AI Gateway with system context and relevant prompts
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s client timeout
+
             const chatRes = await fetch('/api/ai/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -82,7 +87,8 @@ export const ChatAssistant: React.FC = () => {
                     context: relevantContext,
                     client: { app: 'vercel-nextjs', version: 'mce-assistant-v1' }
                 }),
-            });
+                signal: controller.signal
+            }).finally(() => clearTimeout(timeoutId));
             const payload = await chatRes.json();
 
             if (!chatRes.ok) {
@@ -105,9 +111,19 @@ export const ChatAssistant: React.FC = () => {
             const aiMessage: Message = { role: 'assistant', text };
             setMessages(prev => [...prev, aiMessage]);
 
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I encountered an error. Please try again." }]);
+            let errorMessage = "Sorry, I encountered an error. Please try again.";
+
+            if (err.name === 'AbortError') {
+                errorMessage = "The request timed out. The AI service might be waking up, please try again.";
+            } else if (err.message.includes('AI_GATEWAY_TIMEOUT') || err.message.includes('504')) {
+                errorMessage = "AI Service is busy. Please try again in a moment.";
+            } else if (err.message.includes('AI_GATEWAY_UNREACHABLE') || err.message.includes('503')) {
+                errorMessage = "AI Service is currently offline. Please check system status.";
+            }
+
+            setMessages(prev => [...prev, { role: 'assistant', text: errorMessage }]);
         } finally {
             setLoading(false);
         }
@@ -116,13 +132,15 @@ export const ChatAssistant: React.FC = () => {
     return (
         <div className="fixed bottom-6 right-8 z-[500] font-sans">
             {!isOpen ? (
-                <button
+                <GlassButton
                     onClick={() => setIsOpen(true)}
-                    className="w-14 h-14 bg-[var(--brand-primary)] text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all group border border-white/10 hover:bg-[var(--brand-primary-hover)]"
+                    variant="primary"
+                    size="icon"
+                    className="w-14 h-14 rounded-full shadow-lg hover:scale-110 active:scale-95 border-white/10 hover:bg-[var(--brand-primary-hover)] group"
                     title="Nexus AI Assistant"
                 >
                     <Bot size={24} strokeWidth={2} />
-                </button>
+                </GlassButton>
             ) : (
                 <div className="w-[400px] h-[600px] bg-[var(--bg-surface)] backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col border border-[var(--border-subtle)] overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
                     {/* HEADER */}
@@ -136,9 +154,14 @@ export const ChatAssistant: React.FC = () => {
                                 <p className="text-[10px] text-[var(--text-secondary)]">Powered by Nexus AI</p>
                             </div>
                         </div>
-                        <button onClick={() => setIsOpen(false)} className="hover:bg-[var(--bg-hover)] p-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+                        <GlassButton
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setIsOpen(false)}
+                            className="h-8 w-8 hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                        >
                             <X size={18} />
-                        </button>
+                        </GlassButton>
                     </div>
 
                     {/* SCOPE CHIPS */}
@@ -147,14 +170,15 @@ export const ChatAssistant: React.FC = () => {
                             {scopeKeywords.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5">
                                     {scopeKeywords.map(keyword => (
-                                        <button
+                                        <GlassButton
                                             key={keyword}
-                                            type="button"
+                                            variant="secondary"
+                                            size="sm"
                                             onClick={() => handleScopeChip(keyword)}
-                                            className="text-[10px] font-medium text-[var(--text-secondary)] px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)]/50 transition-colors"
+                                            className="h-auto py-1 px-2.5 rounded-full text-[10px] font-medium text-[var(--text-secondary)] bg-[var(--bg-surface)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)]/50"
                                         >
                                             {keyword}
-                                        </button>
+                                        </GlassButton>
                                     ))}
                                 </div>
                             )}
@@ -166,8 +190,8 @@ export const ChatAssistant: React.FC = () => {
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                        ? 'bg-[var(--brand-primary)] text-white rounded-br-sm'
-                                        : 'bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-bl-sm'
+                                    ? 'bg-[var(--brand-primary)] text-white rounded-br-sm'
+                                    : 'bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-bl-sm'
                                     }`}>
                                     {msg.text}
                                 </div>
@@ -192,13 +216,15 @@ export const ChatAssistant: React.FC = () => {
                                 placeholder="Ask about projects, tenders..."
                                 className="flex-1 bg-transparent border-none outline-none text-sm px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-tertiary)]"
                             />
-                            <button
+                            <GlassButton
                                 type="submit"
+                                variant="ghost"
+                                size="icon"
                                 disabled={!input.trim()}
-                                className="p-2 mr-1 text-[var(--brand-primary)] disabled:opacity-30 hover:bg-[var(--brand-primary)]/10 rounded-lg transition-colors"
+                                className="mr-1 text-[var(--brand-primary)] disabled:opacity-30 hover:bg-[var(--brand-primary)]/10"
                             >
                                 <Send size={18} />
-                            </button>
+                            </GlassButton>
                         </form>
                     </div>
                 </div>

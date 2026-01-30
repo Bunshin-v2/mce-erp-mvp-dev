@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Cpu, Terminal, Zap, ShieldCheck, Activity, CheckCircle2, RefreshCcw, Database, Globe, Bot } from 'lucide-react';
 import { agentRegistry } from '../../utils/agent';
 import { useSupabase } from '../../hooks/useSupabase';
@@ -16,16 +16,67 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
   const scrollRef = useRef<HTMLDivElement>(null);
   const { getClient } = useSupabase();
 
+  const getAgentMetrics = (agentId: string) => {
+    const recent = activity.filter(a => a.agent_id.includes(agentId));
+    const isProcessing = recent.some(a => a.status === 'processing');
+    const load = Math.min(recent.length * 5, 100);
+
+    return {
+      status: isProcessing ? 'Active' : (recent.length > 0 ? 'Standby' : 'Standby'),
+      load: `${load}%`
+    };
+  };
+
+  const agents = useMemo(() => [
+    { id: 'P1', name: 'Contract Extractor', model: 'Sonnet 4.5', color: 'text-emerald-500' },
+    { id: 'P5', name: 'Risk Compliance', model: 'Sonnet 4.5', color: 'text-blue-500' },
+    { id: 'P9', name: 'Knowledge Core', model: 'Gemini 1.5', color: 'text-[var(--color-info)]' },
+    { id: 'S1', name: 'Security Guard', model: 'RLS-Engine', color: 'text-rose-500' },
+  ].map(a => ({
+    ...a,
+    ...getAgentMetrics(a.id)
+  })), [activity]);
+
   const handleGlobalScan = async () => {
     setIsScanning(true);
     try {
       const client = await getClient();
-      // Execute scan for global context or all projects
-      await agentRegistry.p5.run(client, 'GLOBAL_PORTFOLIO');
-      alert('Neural Scan Complete: Portfolio integrity verified.');
+      const results = await Promise.all([
+        agentRegistry.p5.run(client, 'GLOBAL_PORTFOLIO'),
+        agentRegistry.s1.run(client)
+      ]);
+
+      const p5Result = results[0] as any;
+      const s1Result = results[1] as any;
+
+      alert(`SYSTEM WIDE SCAN COMPLETE\n\n` +
+        `RISK ENGINE (P5):\n` +
+        `- Projects: ${p5Result.total_projects}\n` +
+        `- Risk Level: ${p5Result.risk_level}\n` +
+        `- Breaches: ${p5Result.budget_breaches}\n\n` +
+        `SECURITY GUARD (S1):\n` +
+        `- Integrity Score: ${s1Result.integrity_score}%\n` +
+        `- Violations: ${s1Result.violations_detected}\n` +
+        `- Critical Alerts: ${s1Result.critical_alerts}`);
+
     } catch (error) {
       console.error('Scan failed:', error);
-      alert('Neural Scan Interrupted: Authorization verification failed.');
+      alert('Neural Scan Interrupted: System Gateway Timeout.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const handleP9Query = async () => {
+    const query = prompt("Enter Knowledge Base Query:");
+    if (!query) return;
+    setIsScanning(true);
+    try {
+      const client = await getClient();
+      const result = await agentRegistry.knowledge.query(client, query);
+      alert(`INTELLIGENCE CORE RESPONSE:\n\n${result.answer}\n\nCitations: ${result.citations.join(', ')}`);
+    } catch (error) {
+      alert("Intelligence Core Timeout.");
     } finally {
       setIsScanning(false);
     }
@@ -38,47 +89,49 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
     }
   }, [activity]);
 
-  const agents = [
-    { id: 'P1', name: 'Contract Extractor', model: 'Sonnet 4.5', status: 'Active', load: '12%', color: 'text-emerald-500' },
-    { id: 'P5', name: 'Risk Compliance', model: 'Sonnet 4.5', status: 'Monitoring', load: '4%', color: 'text-blue-500' },
-    { id: 'P9', name: 'Knowledge Core', model: 'Gemini 1.5', status: 'Active', load: '28%', color: 'text-[var(--color-info)]' },
-    { id: 'S1', name: 'Security Guard', model: 'RLS-Engine', status: 'Standby', load: '0%', color: 'text-rose-500' },
-  ];
-
-    return (
-        <div className="page-container space-y-8 animate-in fade-in duration-700 pb-32">
-            <PageHeader 
-                title="Agent Command"
-                subtitle="Mission Control // Sector 01"
-                actions={
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={handleGlobalScan}
-                            disabled={isScanning}
-                            aria-label={isScanning ? "Neural Scan in progress" : "Execute Global Compliance Neural Scan"}
-                            className={`bg-emerald-500 text-black px-6 py-2 rounded-xl text-[10px] font-bold italic tracking-widest flex items-center gap-2 transition-all ${isScanning ? 'animate-pulse opacity-50' : 'hover:bg-emerald-400'}`}
-                        >
-                            <ShieldCheck size={14} strokeWidth={3} />
-                            {isScanning ? 'Scanning Cluster...' : 'Execute Compliance Scan'}
-                        </button>
-                        <div className="px-4 py-2 bg-black/40 border border-glass rounded-xl flex items-center gap-3">
-                            <div className="flex space-x-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse [animation-delay:0.2s]"></div>
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse [animation-delay:0.4s]"></div>
-                            </div>
-                            <span className="text-[10px] font-mono font-bold italic text-zinc-500 tracking-widest">Neural Link: SECURE</span>
-                        </div>
-                        <button
-                            onClick={() => window.location.reload()}
-                            aria-label="Refresh Agent Console Data"
-                            className="p-3 bg-glass border border-white/10 rounded-xl hover:bg-white/10 transition-all text-zinc-400 shadow-lg"
-                        >
-                            <RefreshCcw size={16} />
-                        </button>
-                    </div>
-                }
-            />
+  return (
+    <div className="page-container space-y-8 animate-in fade-in duration-700 pb-32">
+      <PageHeader
+        title="Agent Command"
+        subtitle="Mission Control // Sector 01"
+        actions={
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleGlobalScan}
+              disabled={isScanning}
+              aria-label={isScanning ? "Neural Scan in progress" : "Execute Global Compliance Neural Scan"}
+              className={`bg-emerald-500 text-black px-6 py-2 rounded-xl text-[10px] font-bold italic tracking-widest flex items-center gap-2 transition-all ${isScanning ? 'animate-pulse opacity-50' : 'hover:bg-emerald-400'}`}
+            >
+              <ShieldCheck size={14} strokeWidth={3} />
+              {isScanning ? 'Scanning Cluster...' : 'Execute Compliance Scan'}
+            </button>
+            <button
+              onClick={handleP9Query}
+              disabled={isScanning}
+              aria-label="Ask Knowledge Core"
+              className={`bg-[#0ea5e9] text-black px-4 py-2 rounded-xl text-[10px] font-bold italic tracking-widest flex items-center gap-2 transition-all ${isScanning ? 'opacity-50' : 'hover:bg-[#38bdf8]'}`}
+            >
+              <Zap size={14} strokeWidth={3} />
+              Intel Query
+            </button>
+            <div className="px-4 py-2 bg-black/40 border border-glass rounded-xl flex items-center gap-3">
+              <div className="flex space-x-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse [animation-delay:0.2s]"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse [animation-delay:0.4s]"></div>
+              </div>
+              <span className="text-[10px] font-mono font-bold italic text-zinc-500 tracking-widest">Neural Link: SECURE</span>
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              aria-label="Refresh Agent Console Data"
+              className="p-3 bg-glass border border-white/10 rounded-xl hover:bg-white/10 transition-all text-zinc-400 shadow-lg"
+            >
+              <RefreshCcw size={16} />
+            </button>
+          </div>
+        }
+      />
 
 
       {/* COMMAND NAVIGATION */}
@@ -128,7 +181,7 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
                 <div className="space-y-3 relative z-10">
                   <div className="flex items-end justify-between">
                     <span className="text-[9px] text-zinc-500 font-bold italic tracking-widest">Cognitive Load</span>
-                    <span className="text-[11px] font-mono font-bold italic text-emerald-500">{agent.load}</span>
+                    <span className="text-[12px] font-mono font-bold italic text-emerald-500">{agent.load}</span>
                   </div>
                   <div className="w-full bg-glass rounded-full h-1 overflow-hidden shadow-inner">
                     <div className="bg-emerald-500 h-full transition-all duration-[2000ms] shadow-[0_0_15px_var(--color-success)]" style={{ width: agent.load }}></div>
@@ -146,7 +199,7 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
                 <h3 className="text-[10px] font-bold italic text-zinc-400 tracking-[0.3em] font-mono">live_stream.sh</h3>
               </div>
             </div>
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 font-mono text-[11px] leading-relaxed custom-scrollbar">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 font-mono text-[10px] leading-relaxed custom-scrollbar">
               {activity.length === 0 ? (
                 <div className="h-full flex items-center justify-center opacity-20 flex-col gap-4">
                   <Activity size={40} className="animate-pulse" />

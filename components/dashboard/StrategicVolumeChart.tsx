@@ -31,9 +31,10 @@ export const StrategicVolumeChart: React.FC<StrategicVolumeChartProps> = ({ data
                     <BarChart data={data} barGap={2}>
                         <defs>
                             <linearGradient id="prismBar" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="var(--brand-accent)" stopOpacity={0.9} />
+                                <stop offset="0%" stopColor="var(--brand-accent)" stopOpacity={1} />
+                                <stop offset="20%" stopColor="#ffffff" stopOpacity={0.4} /> {/* Specular Highlight */}
                                 <stop offset="50%" stopColor="var(--brand-accent)" stopOpacity={0.4} />
-                                <stop offset="100%" stopColor="var(--brand-accent)" stopOpacity={0.1} />
+                                <stop offset="100%" stopColor="var(--brand-accent)" stopOpacity={0.05} />
                             </linearGradient>
                             <filter id="barGlow">
                                 <feGaussianBlur stdDeviation="2" result="glow" />

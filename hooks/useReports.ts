@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useDashboardData } from './useDashboardData';
+import { useProjects } from './domain/useProjects';
+import { useTenders } from './domain/useTenders';
+import { useProcurement } from './domain/useProcurement';
 
 export type ReportSource = 'PROJECTS' | 'TENDERS' | 'FINANCIALS';
 export type ReportProfile = 'Executive' | 'Standard' | 'Depth' | 'Audit';
@@ -11,15 +13,27 @@ interface UseReportsProps {
 }
 
 export const useReports = ({ source, profile, groupBy }: UseReportsProps) => {
-    const { projects, tenders, auditLogs, purchaseOrders, loading } = useDashboardData();
+    // Direct Domain Hooks - Decoupled from monolithic useDashboardData
+    const { projects, loading: projectsLoading } = useProjects();
+    const { tenders, loading: tendersLoading } = useTenders();
+    const { purchaseOrders, loading: poLoading } = useProcurement();
+
     const [data, setData] = useState<any>([]);
 
+    // Calculate loading state based on the requested source
+    const loading = useMemo(() => {
+        if (source === 'PROJECTS') return projectsLoading;
+        if (source === 'TENDERS') return tendersLoading;
+        if (source === 'FINANCIALS') return poLoading;
+        return false;
+    }, [source, projectsLoading, tendersLoading, poLoading]);
+
     const rawData = useMemo(() => {
-        if (source === 'PROJECTS') return projects.map(p => ({ 
+        if (source === 'PROJECTS') return projects.map(p => ({
             ...p,
             id: p.id,
-            identifier: p.project_name, 
-            status: p.project_status, 
+            identifier: p.project_name,
+            status: p.project_status,
             value: Number(p.contract_value_excl_vat || 0),
             completion: p.completion_percent,
             risk: p.delivery_risk_rating,
@@ -27,11 +41,11 @@ export const useReports = ({ source, profile, groupBy }: UseReportsProps) => {
             platform: p.doc_control_platform || 'Internal',
             updated_at: p.updated_at || new Date().toISOString()
         }));
-        if (source === 'TENDERS') return tenders.map(t => ({ 
+        if (source === 'TENDERS') return tenders.map(t => ({
             ...t,
             id: t.id,
-            identifier: t.title, 
-            status: t.status, 
+            identifier: t.title,
+            status: t.status,
             value: Number(t.value || 0),
             location: t.client || 'Corporate',
             platform: 'MCE_Portal',
@@ -72,40 +86,40 @@ export const useReports = ({ source, profile, groupBy }: UseReportsProps) => {
             case 'Depth':
                 return items; // Full raw data
             default: // Standard
-                return items.map(d => ({ 
-                    NAME: d.identifier, 
+                return items.map(d => ({
+                    NAME: d.identifier,
                     CODE: d.project_code || d.id.substring(0, 4),
                     CLIENT: d.client_name || d.client || d.vendor_name || 'N/A',
-                    STATUS: d.status, 
-                    LOCATION: d.location 
+                    STATUS: d.status,
+                    LOCATION: d.location
                 }));
         }
     };
 
     useEffect(() => {
         if (loading) return;
-        
+
         let processedData: any[] = transformByProfile(rawData);
-        
+
         // 1. Dynamic Grouping (Pivot)
         if (groupBy) {
             const grouped = processedData.reduce((acc: any, item: any) => {
-                 let key = 'Other';
-                 if (groupBy === 'Platform') key = item.PLATFORM || item.platform || 'Internal';
-                 if (groupBy === 'Location') key = item.LOCATION || item.location || 'HQ';
-                 if (groupBy === 'Day') key = new Date(item.updated_at || new Date()).toLocaleDateString('en-US', { weekday: 'long' });
-                 
-                 acc[key] = acc[key] || [];
-                 acc[key].push(item);
-                 return acc;
-             }, {});
-             setData(grouped);
-             return;
+                let key = 'Other';
+                if (groupBy === 'Platform') key = item.PLATFORM || item.platform || 'Internal';
+                if (groupBy === 'Location') key = item.LOCATION || item.location || 'HQ';
+                if (groupBy === 'Day') key = new Date(item.updated_at || new Date()).toLocaleDateString('en-US', { weekday: 'long' });
+
+                acc[key] = acc[key] || [];
+                acc[key].push(item);
+                return acc;
+            }, {});
+            setData(grouped);
+            return;
         }
 
         // 2. Default Audit Hierarchy (Platform -> Location -> Day)
         if (profile === 'Audit') {
-             const hierarchy = processedData.reduce((acc: any, item: any) => {
+            const hierarchy = processedData.reduce((acc: any, item: any) => {
                 const platform = item.PLATFORM || 'MCE_Internal';
                 const location = item.LOCATION || 'Corporate_HQ';
                 const day = new Date(item.updated_at).toISOString().split('T')[0];
