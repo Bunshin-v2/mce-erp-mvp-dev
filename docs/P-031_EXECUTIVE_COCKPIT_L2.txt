@@ -1,0 +1,31 @@
+# PROMPT P-031 — Executive Cockpit (L2-only) + Daily Briefing Panel
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement /executive-cockpit per wireframe (premium view). L2-only route guard.
+
+FEATURES
+- Daily Briefing panel (AI-generated summary placeholder allowed)
+- Financial health charts (placeholder if finance tables incomplete)
+- Risk heatmap (projects colored by risk)
+- “Ask about my portfolio” entry that navigates to /chat with portfolio filter
+
+DO
+1) Add route with server RBAC guard (L2+).
+2) Build UI components:
+   - FlashReportHeader
+   - FinancialHealthWidget (charts)
+   - RiskHeatmap (click opens project modal)
+3) Data:
+   - risk score: if no model yet, use rules-based placeholder (e.g., overdue milestones + tender deadlines) stored in a computed view.
+4) Ensure no internal evaluation gates shown in UI.
+
+VALIDATION
+- Non-L2 users blocked.
+- Widgets render with RLS-safe data.
+
+ROLLBACK
+- Revert commit.
+

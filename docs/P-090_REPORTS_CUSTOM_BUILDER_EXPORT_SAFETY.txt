@@ -1,0 +1,42 @@
+# PROMPT P-090 — Reports: Custom Report Builder + Criteria + Preview + CSV Export Safety
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Add /reports page to generate custom reports with criteria dropdowns and exports.
+
+MVP REPORT TYPES (enabled)
+- Projects Summary
+- Tenders Pipeline
+- Milestones Due/Progress
+
+PHASE-2 (disabled placeholders)
+- Financials
+- Liabilities/Obligations
+
+DO
+1) Tables:
+   - report_definitions (report_key, schema json, allowed_tiers)
+   - report_runs (user_id, report_key, params_json, row_count, created_at)
+2) RPC/views:
+   - report_projects_summary(params)
+   - report_tenders_pipeline(params)
+   - report_milestones_due(params)
+   All SECURITY INVOKER so RLS applies.
+3) UI Builder:
+   - criteria panel: scope, date range (required), status filters, department/owner filters, selectable columns
+   - preview table
+4) Export:
+   - server route re-checks RBAC + run ownership
+   - CSV injection prevention (=,+,-,@ prefix)
+5) Performance controls:
+   - LIMIT default + pagination support
+
+VALIDATION
+- L4 cannot run org-wide; scope is clamped.
+- Export matches preview and remains RLS-safe.
+
+ROLLBACK
+- Revert commit; snapshot before migrations.
+

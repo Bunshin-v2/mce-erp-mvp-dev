@@ -1,0 +1,40 @@
+# PROMPT P-010 — RBAC (L1–L4) + Dept Scoping + Supabase RLS (Fail-closed)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement table-driven permission tiers and enforce access with server RBAC + Supabase RLS.
+
+HARD RULES
+- L2 (chairman, vice_chairman): org read-all
+- L3 (dept_head): dept scope (configurable later)
+- L4 (pm/engineer/finance/viewer): entity membership scope
+- Document sensitivity: public/internal/restricted/confidential
+- Additive migrations only. If tables already exist, extend without breaking.
+
+DO
+1) Create/extend tables (use existing naming conventions where found):
+   - roles, permission_tiers (L1..L4), departments
+   - profiles: role_id, tier_id, dept_id
+   - entity_memberships (entity_type, entity_id, user_id, role_on_entity)
+   - document_sensitivity_levels + documents.sensitivity_level
+2) Enable RLS on: projects, tenders, documents, tasks, notifications, checklists, reports, rag tables.
+3) Add RLS policies:
+   - L2 access to all rows
+   - L3 access limited to dept scope
+   - L4 access only through entity_memberships
+   - sensitivity gates on documents
+4) Add server guard utility: requireRoleOrTier() and requireTierAtLeast()
+5) Seed roles for chairman and vice_chairman.
+
+VALIDATION
+- Prove L4 cannot query org-wide projects/tenders.
+- Prove L2 can query org-wide.
+- Prove confidential docs blocked for non-allowed tiers.
+- Add a minimal RLS test script (can be run locally) using real session tokens if supported.
+
+ROLLBACK
+- DB snapshot before migration.
+- Revert commit to roll back code.
+

@@ -1,0 +1,27 @@
+# PROMPT P-085 — Import Pipeline: Projects + Manpower (Staging→Validate→Upsert + Pseudo Registry)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Ensure real datasets import safely and power dashboards without hidden placeholder drift.
+
+DO
+1) Staging tables:
+   - stage_projects, stage_manpower
+   - import_runs, import_errors
+   - pseudo_data_registry (field, reason, source_row_id)
+2) Import scripts:
+   - parse CSV/XLSX, validate, dedupe, upsert clients/projects/resources
+3) Admin UI (L1/L2 only):
+   - import screen showing errors + promote button
+4) Ensure imported rows preserve source row references for traceability.
+
+VALIDATION
+- Bad rows do not break import; errors listed.
+- Pseudo registry entries surfaced.
+- Dashboards show imported data.
+
+ROLLBACK
+- Revert commit; clear staging tables; snapshot before promoting.
+

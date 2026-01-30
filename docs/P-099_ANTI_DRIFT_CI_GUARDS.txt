@@ -1,0 +1,24 @@
+# PROMPT P-099 — Anti-Drift: CI Guards for Schema Drift + RLS Coverage + Export Safety
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Prevent recurrence of known faults: missing tables/columns, missing RLS, export leakage.
+
+DO
+1) Add scripts:
+   - check_schema_drift: grep for table/column names in code and verify against information_schema after migrations
+   - check_rls_coverage: ensure RLS enabled + policies exist for all tables touched by app
+   - check_export_safety: static check for CSV sanitization in export route
+2) Add CI pipeline step:
+   - spin up ephemeral DB, run migrations, run scripts, run minimal smoke tests.
+3) Output failures must clearly identify missing tables/columns/policies.
+
+VALIDATION
+- CI fails on intentional drift example (add a reference to nonexistent column).
+- CI passes on clean build.
+
+ROLLBACK
+- Revert commit.
+

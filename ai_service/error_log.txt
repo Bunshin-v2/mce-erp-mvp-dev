@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\t1glish\Downloads\nexus-construct-erp (2)\ai_service\main.py", line 27, in <module>
+    from nexus_rag import get_rag_agent
+  File "C:\Users\t1glish\Downloads\nexus-construct-erp (2)\ai_service\nexus_rag.py", line 2, in <module>
+    from langchain.agents import initialize_agent, AgentType
+ImportError: cannot import name 'initialize_agent' from 'langchain.agents' (C:\Users\t1glish\Downloads\nexus-construct-erp (2)\ai_service\venv\Lib\site-packages\langchain\agents\__init__.py)

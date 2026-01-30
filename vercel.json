@@ -1,0 +1,4 @@
+{
+  "buildCommand": "npm run build",
+  "name": "mce-command-center"
+}

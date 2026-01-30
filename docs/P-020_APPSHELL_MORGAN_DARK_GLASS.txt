@@ -1,0 +1,30 @@
+# PROMPT P-020 — AppShell Layout + Landing (Wireframe v2.0 Morgan Dark Glass)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Match Wireframe v2.0: signed-out landing; signed-in persistent Shell Layout.
+
+DO
+1) Landing (/):
+   - Minimal hero + sign-in CTA
+   - Do not require auth
+2) AppShell:
+   - Sidebar (64 collapsed / 240 expanded) + role-gated links:
+     Dashboard, Projects, Tenders, Financials (Phase-2 disabled), Documents, Resources,
+     Executive Cockpit (L2+), AI Agent Console (L2+), Settings
+   - Header: GlobalSearch (projects+tenders), QuickActions (+New Project/+New Tender),
+     NotificationsBell, Breadcrumbs
+3) Styling:
+   - Use tokens matching wireframe (charcoal glass panels + Morgan red accents)
+   - Keep minimalistic, production-grade
+
+VALIDATION
+- SignedOut sees landing.
+- SignedIn sees shell across routes.
+- Links hidden by RBAC (not merely disabled).
+
+ROLLBACK
+- Revert commit.
+

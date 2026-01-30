@@ -1,0 +1,867 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e7] [cursor=pointer]:
+    - img [ref=e8]
+  - alert [ref=e11]
+  - generic [ref=e12]:
+    - generic:
+      - generic: MORGAN
+    - complementary [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e16]: Morgan.
+        - button "Collapse Sidebar" [ref=e17]:
+          - img [ref=e18]
+      - navigation [ref=e20]:
+        - generic [ref=e21]:
+          - button "Collapse PORTFOLIO section" [ref=e22] [cursor=pointer]:
+            - heading "PORTFOLIO" [level=4] [ref=e23]
+            - img [ref=e24]
+          - generic [ref=e26]:
+            - button "Dashboard" [ref=e27]:
+              - img [ref=e29]
+              - generic [ref=e34]: Dashboard
+            - button "Projects" [active] [ref=e35]:
+              - img [ref=e38]
+              - generic [ref=e42]: Projects
+            - button "Tenders" [ref=e43]:
+              - img [ref=e45]
+              - generic [ref=e48]: Tenders
+            - button "Documents" [ref=e49]:
+              - img [ref=e51]
+              - generic [ref=e54]: Documents
+            - button "Tasks" [ref=e55]:
+              - img [ref=e57]
+              - generic [ref=e60]: Tasks
+            - button "Calendar" [ref=e61]:
+              - img [ref=e63]
+              - generic [ref=e65]: Calendar
+            - button "Executive Cockpit" [ref=e66]:
+              - img [ref=e68]
+              - generic [ref=e70]: Executive Cockpit
+        - generic [ref=e71]:
+          - button "Collapse FINANCIAL section" [ref=e72] [cursor=pointer]:
+            - heading "FINANCIAL" [level=4] [ref=e73]
+            - img [ref=e74]
+          - generic [ref=e76]:
+            - button "Financials" [ref=e77]:
+              - img [ref=e79]
+              - generic [ref=e82]: Financials
+            - button "Reports" [ref=e83]:
+              - img [ref=e85]
+              - generic [ref=e88]: Reports
+        - generic [ref=e89]:
+          - button "Collapse TEAM & MESH section" [ref=e90] [cursor=pointer]:
+            - heading "TEAM & MESH" [level=4] [ref=e91]
+            - img [ref=e92]
+          - generic [ref=e94]:
+            - button "Intelligence Mesh" [ref=e95]:
+              - img [ref=e97]
+              - generic [ref=e100]: Intelligence Mesh
+              - img [ref=e101]
+            - generic [ref=e103]:
+              - button "Mesh Sync" [ref=e104]:
+                - img [ref=e106]
+                - generic [ref=e108]: Mesh Sync
+              - button "Team" [ref=e109]:
+                - img [ref=e111]
+                - generic [ref=e116]: Team
+              - button "Agents" [ref=e117]:
+                - img [ref=e119]
+                - generic [ref=e122]: Agents
+      - generic [ref=e123]:
+        - button "User Profile" [ref=e124]:
+          - img [ref=e125]
+          - generic [ref=e130]: Profile
+        - button "System Settings" [ref=e131]:
+          - img [ref=e132]
+          - generic [ref=e135]: Settings
+        - button "Terminal Logout" [ref=e137]:
+          - img [ref=e138]
+          - generic [ref=e141]: Terminal
+    - generic [ref=e142]:
+      - banner [ref=e143]:
+        - generic [ref=e146]: Operational Workspace
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - img [ref=e149]
+            - textbox "Query Cluster Signals..." [ref=e152]
+            - generic [ref=e153]: /
+          - generic [ref=e154]:
+            - button "Switch to Executive Mode" [ref=e155]:
+              - img [ref=e156]
+            - button "System Settings" [ref=e158]:
+              - img [ref=e159]
+            - button "View 0 Notifications" [ref=e161]:
+              - img [ref=e162]
+            - button "User Profile" [ref=e165]:
+              - generic [ref=e166]: MC
+              - generic [ref=e167]: Morgan Corp
+      - main [ref=e168]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - generic [ref=e174] [cursor=pointer]: COMMAND_CENTER
+                - generic [ref=e175]: /
+                - generic [ref=e176]: PROJECT_PORTFOLIO
+              - heading "Global Projects Ledger" [level=1] [ref=e177]
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - button [ref=e180]:
+                  - img [ref=e181]
+                - button [ref=e182]:
+                  - img [ref=e183]
+              - button "EXPORT_LEDGER" [ref=e185]:
+                - img [ref=e186]
+                - text: EXPORT_LEDGER
+              - button "INITIALIZE_NODE" [ref=e189]:
+                - img [ref=e190]
+                - text: INITIALIZE_NODE
+          - generic [ref=e191]:
+            - button "ALL" [ref=e192]
+            - button "ONGOING" [ref=e193]
+            - button "COMPLETED" [ref=e194]
+            - button "UPCOMING" [ref=e195]
+          - generic [ref=e196]:
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - img [ref=e199]
+                - paragraph [ref=e201]: 38 RECORDS_SYNCHRONIZED
+              - button "ADVANCED_QUERY" [ref=e202]:
+                - img [ref=e203]
+                - text: ADVANCED_QUERY
+            - generic [ref=e205]:
+              - generic [ref=e206]: Identity_Registry
+              - generic [ref=e207]: Temporal_Lock
+              - generic [ref=e208]: Saturation_Status
+              - generic [ref=e209]: Aggregate_Value
+            - generic [ref=e210]:
+              - generic [ref=e211] [cursor=pointer]:
+                - generic [ref=e213]:
+                  - img [ref=e215]
+                  - generic [ref=e219]:
+                    - heading "SSMC Staff Parking Phase I" [level=4] [ref=e220]
+                    - generic [ref=e221]:
+                      - generic [ref=e222]: SSMC/RAFED
+                      - generic [ref=e224]: CODE_N/A
+                - generic [ref=e226]:
+                  - generic [ref=e227]: "-514D"
+                  - paragraph [ref=e228]: Remaining
+                - generic [ref=e230]:
+                  - generic [ref=e231]: Progress
+                  - generic [ref=e232]: 0%
+                - generic [ref=e234]:
+                  - generic [ref=e235]:
+                    - generic [ref=e236]: AED
+                    - generic [ref=e237]: 4.0M
+                  - text: Completed
+              - generic [ref=e238] [cursor=pointer]:
+                - generic [ref=e240]:
+                  - img [ref=e242]
+                  - generic [ref=e246]:
+                    - heading "Al Ghurair Rehabilitation Center" [level=4] [ref=e247]
+                    - generic [ref=e248]:
+                      - generic [ref=e249]: Al Ghurair Centre
+                      - generic [ref=e251]: CODE_N/A
+                - generic [ref=e253]:
+                  - generic [ref=e254]: "-392D"
+                  - paragraph [ref=e255]: Remaining
+                - generic [ref=e257]:
+                  - generic [ref=e258]: Progress
+                  - generic [ref=e259]: 0%
+                - generic [ref=e261]:
+                  - generic [ref=e262]:
+                    - generic [ref=e263]: AED
+                    - generic [ref=e264]: 1.8M
+                  - text: Completed
+              - generic [ref=e265] [cursor=pointer]:
+                - generic [ref=e267]:
+                  - img [ref=e269]
+                  - generic [ref=e273]:
+                    - heading "SSMC Staff Parking Phase II" [level=4] [ref=e274]
+                    - generic [ref=e275]:
+                      - generic [ref=e276]: SSMC/RAFED
+                      - generic [ref=e278]: CODE_N/A
+                - generic [ref=e280]:
+                  - generic [ref=e281]: "-333D"
+                  - paragraph [ref=e282]: Remaining
+                - generic [ref=e284]:
+                  - generic [ref=e285]: Progress
+                  - generic [ref=e286]: 0%
+                - generic [ref=e288]:
+                  - generic [ref=e289]:
+                    - generic [ref=e290]: AED
+                    - generic [ref=e291]: 7.9M
+                  - text: DLP Period
+              - generic [ref=e292] [cursor=pointer]:
+                - generic [ref=e294]:
+                  - img [ref=e296]
+                  - generic [ref=e300]:
+                    - heading "STMC Multi-Storey Parking" [level=4] [ref=e301]
+                    - generic [ref=e302]:
+                      - generic [ref=e303]: RAFED
+                      - generic [ref=e305]: CODE_2024.004.HLT-002
+                - generic [ref=e307]:
+                  - generic [ref=e308]: "-301D"
+                  - paragraph [ref=e309]: Remaining
+                - generic [ref=e311]:
+                  - generic [ref=e312]: Progress
+                  - generic [ref=e313]: 0%
+                - generic [ref=e315]:
+                  - generic [ref=e316]:
+                    - generic [ref=e317]: AED
+                    - generic [ref=e318]: 1.0M
+                  - text: Schematic Stage (Design)
+              - generic [ref=e319] [cursor=pointer]:
+                - generic [ref=e321]:
+                  - img [ref=e323]
+                  - generic [ref=e327]:
+                    - heading "New Corniche Hospital - Biomed Tender Package - V04" [level=4] [ref=e328]
+                    - generic [ref=e329]:
+                      - generic [ref=e330]: RAFED
+                      - generic [ref=e332]: CODE_N/A
+                - generic [ref=e334]:
+                  - generic [ref=e335]: "-27D"
+                  - paragraph [ref=e336]: Remaining
+                - generic [ref=e338]:
+                  - generic [ref=e339]: Progress
+                  - generic [ref=e340]: 0%
+                - generic [ref=e342]:
+                  - generic [ref=e343]:
+                    - generic [ref=e344]: AED
+                    - generic [ref=e345]: 0.3M
+                  - text: Client Review
+              - generic [ref=e346] [cursor=pointer]:
+                - generic [ref=e348]:
+                  - img [ref=e350]
+                  - generic [ref=e354]:
+                    - heading "New Corniche Hospital - Royal Suites - V01" [level=4] [ref=e355]
+                    - generic [ref=e356]:
+                      - generic [ref=e357]: RAFED
+                      - generic [ref=e359]: CODE_N/A
+                - generic [ref=e361]:
+                  - generic [ref=e362]: "-26D"
+                  - paragraph [ref=e363]: Remaining
+                - generic [ref=e365]:
+                  - generic [ref=e366]: Progress
+                  - generic [ref=e367]: 0%
+                - generic [ref=e369]:
+                  - generic [ref=e370]:
+                    - generic [ref=e371]: AED
+                    - generic [ref=e372]: 1.6M
+                  - text: Tender Documents
+              - generic [ref=e373] [cursor=pointer]:
+                - generic [ref=e375]:
+                  - img [ref=e377]
+                  - generic [ref=e381]:
+                    - heading "New Corniche Hospital - Royal Suites - V02" [level=4] [ref=e382]
+                    - generic [ref=e383]:
+                      - generic [ref=e384]: RAFED
+                      - generic [ref=e386]: CODE_N/A
+                - generic [ref=e388]:
+                  - generic [ref=e389]: "-26D"
+                  - paragraph [ref=e390]: Remaining
+                - generic [ref=e392]:
+                  - generic [ref=e393]: Progress
+                  - generic [ref=e394]: 0%
+                - generic [ref=e396]:
+                  - generic [ref=e397]:
+                    - generic [ref=e398]: AED
+                    - generic [ref=e399]: 1.2M
+                  - text: Tender Documents
+              - generic [ref=e400] [cursor=pointer]:
+                - generic [ref=e402]:
+                  - img [ref=e404]
+                  - generic [ref=e408]:
+                    - heading "New Corniche Hospital - SKMC Retail / Mosque - V03" [level=4] [ref=e409]
+                    - generic [ref=e410]:
+                      - generic [ref=e411]: RAFED
+                      - generic [ref=e413]: CODE_N/A
+                - generic [ref=e415]:
+                  - generic [ref=e416]: "-26D"
+                  - paragraph [ref=e417]: Remaining
+                - generic [ref=e419]:
+                  - generic [ref=e420]: Progress
+                  - generic [ref=e421]: 0%
+                - generic [ref=e423]:
+                  - generic [ref=e424]:
+                    - generic [ref=e425]: AED
+                    - generic [ref=e426]: 0.1M
+                  - text: Awaiting Building Permit
+              - generic [ref=e427] [cursor=pointer]:
+                - generic [ref=e429]:
+                  - img [ref=e431]
+                  - generic [ref=e435]:
+                    - heading "Majalis Phase 3 (No 5) Supervision" [level=4] [ref=e436]
+                    - generic [ref=e437]:
+                      - generic [ref=e438]: Presidential Court
+                      - generic [ref=e440]: CODE_N/A
+                - generic [ref=e442]:
+                  - generic [ref=e443]: 33D
+                  - paragraph [ref=e444]: Remaining
+                - generic [ref=e446]:
+                  - generic [ref=e447]: Progress
+                  - generic [ref=e448]: 0%
+                - generic [ref=e450]:
+                  - generic [ref=e451]:
+                    - generic [ref=e452]: AED
+                    - generic [ref=e453]: 3.5M
+                  - text: Construction Ongoing
+              - generic [ref=e454] [cursor=pointer]:
+                - generic [ref=e456]:
+                  - img [ref=e458]
+                  - generic [ref=e462]:
+                    - heading "Majlis (2) Al Dhafra" [level=4] [ref=e463]
+                    - generic [ref=e464]:
+                      - generic [ref=e465]: Presidential Court
+                      - generic [ref=e467]: CODE_N/A
+                - generic [ref=e469]:
+                  - generic [ref=e470]: 64D
+                  - paragraph [ref=e471]: Remaining
+                - generic [ref=e473]:
+                  - generic [ref=e474]: Progress
+                  - generic [ref=e475]: 0%
+                - generic [ref=e477]:
+                  - generic [ref=e478]:
+                    - generic [ref=e479]: AED
+                    - generic [ref=e480]: 1.7M
+                  - text: Construction Ongoing
+              - generic [ref=e481] [cursor=pointer]:
+                - generic [ref=e483]:
+                  - img [ref=e485]
+                  - generic [ref=e489]:
+                    - heading "Al Kheiran Villa" [level=4] [ref=e490]
+                    - generic [ref=e491]:
+                      - generic [ref=e492]: Presidential Court
+                      - generic [ref=e494]: CODE_N/A
+                - generic [ref=e496]:
+                  - generic [ref=e497]: 64D
+                  - paragraph [ref=e498]: Remaining
+                - generic [ref=e500]:
+                  - generic [ref=e501]: Progress
+                  - generic [ref=e502]: 0%
+                - generic [ref=e504]:
+                  - generic [ref=e505]:
+                    - generic [ref=e506]: AED
+                    - generic [ref=e507]: 3.3M
+                  - text: Ongoing
+              - generic [ref=e508] [cursor=pointer]:
+                - generic [ref=e510]:
+                  - img [ref=e512]
+                  - generic [ref=e516]:
+                    - heading "Arab Monetary Fund Fitout & Façade" [level=4] [ref=e517]
+                    - generic [ref=e518]:
+                      - generic [ref=e519]: Arab Monetary Fund
+                      - generic [ref=e521]: CODE_N/A
+                - generic [ref=e523]:
+                  - generic [ref=e524]: 94D
+                  - paragraph [ref=e525]: Remaining
+                - generic [ref=e527]:
+                  - generic [ref=e528]: Progress
+                  - generic [ref=e529]: 0%
+                - generic [ref=e531]:
+                  - generic [ref=e532]:
+                    - generic [ref=e533]: AED
+                    - generic [ref=e534]: 2.4M
+                  - text: Construction Ongoing
+              - generic [ref=e535] [cursor=pointer]:
+                - generic [ref=e537]:
+                  - img [ref=e539]
+                  - generic [ref=e543]:
+                    - heading "AD Police Saadiyat D3" [level=4] [ref=e544]
+                    - generic [ref=e545]:
+                      - generic [ref=e546]: AD POLICE
+                      - generic [ref=e548]: CODE_N/A
+                - generic [ref=e550]:
+                  - generic [ref=e551]: 217D
+                  - paragraph [ref=e552]: Remaining
+                - generic [ref=e554]:
+                  - generic [ref=e555]: Progress
+                  - generic [ref=e556]: 0%
+                - generic [ref=e558]:
+                  - generic [ref=e559]:
+                    - generic [ref=e560]: AED
+                    - generic [ref=e561]: 1.2M
+                  - text: Construction Ongoing
+              - generic [ref=e562] [cursor=pointer]:
+                - generic [ref=e564]:
+                  - img [ref=e566]
+                  - generic [ref=e570]:
+                    - heading "Civil Defence Al Shawamekh - C" [level=4] [ref=e571]
+                    - generic [ref=e572]:
+                      - generic [ref=e573]: AD POLICE
+                      - generic [ref=e575]: CODE_N/A
+                - generic [ref=e577]:
+                  - generic [ref=e578]: 217D
+                  - paragraph [ref=e579]: Remaining
+                - generic [ref=e581]:
+                  - generic [ref=e582]: Progress
+                  - generic [ref=e583]: 0%
+                - generic [ref=e585]:
+                  - generic [ref=e586]:
+                    - generic [ref=e587]: AED
+                    - generic [ref=e588]: 1.9M
+                  - text: Tender Stage
+              - generic [ref=e589] [cursor=pointer]:
+                - generic [ref=e591]:
+                  - img [ref=e593]
+                  - generic [ref=e597]:
+                    - heading "AD Police Beda Mutawah" [level=4] [ref=e598]
+                    - generic [ref=e599]:
+                      - generic [ref=e600]: AD POLICE
+                      - generic [ref=e602]: CODE_N/A
+                - generic [ref=e604]:
+                  - generic [ref=e605]: 247D
+                  - paragraph [ref=e606]: Remaining
+                - generic [ref=e608]:
+                  - generic [ref=e609]: Progress
+                  - generic [ref=e610]: 0%
+                - generic [ref=e612]:
+                  - generic [ref=e613]:
+                    - generic [ref=e614]: AED
+                    - generic [ref=e615]: 1.5M
+                  - text: Tender Stage
+              - generic [ref=e616] [cursor=pointer]:
+                - generic [ref=e618]:
+                  - img [ref=e620]
+                  - generic [ref=e624]:
+                    - heading "Abu Dhabi Stem Cell Research Lab & Hospital" [level=4] [ref=e625]
+                    - generic [ref=e626]:
+                      - generic [ref=e627]: Abu Dhabi Stem Cell Center
+                      - generic [ref=e629]: CODE_MED-2026-X1
+                - generic [ref=e631]:
+                  - generic [ref=e632]: 302D
+                  - paragraph [ref=e633]: Remaining
+                - generic [ref=e635]:
+                  - generic [ref=e636]: Progress
+                  - generic [ref=e637]: 42.5%
+                - generic [ref=e640]:
+                  - generic [ref=e641]:
+                    - generic [ref=e642]: AED
+                    - generic [ref=e643]: 36.2M
+                  - text: Construction
+              - generic [ref=e644] [cursor=pointer]:
+                - generic [ref=e646]:
+                  - img [ref=e648]
+                  - generic [ref=e652]:
+                    - heading "AD Police Training Hangar - Tarif" [level=4] [ref=e653]
+                    - generic [ref=e654]:
+                      - generic [ref=e655]: AD POLICE
+                      - generic [ref=e657]: CODE_N/A
+                - generic [ref=e659]:
+                  - generic [ref=e660]: 338D
+                  - paragraph [ref=e661]: Remaining
+                - generic [ref=e663]:
+                  - generic [ref=e664]: Progress
+                  - generic [ref=e665]: 0%
+                - generic [ref=e667]:
+                  - generic [ref=e668]:
+                    - generic [ref=e669]: AED
+                    - generic [ref=e670]: 1.2M
+                  - text: Construction Ongoing
+              - generic [ref=e671] [cursor=pointer]:
+                - generic [ref=e673]:
+                  - img [ref=e675]
+                  - generic [ref=e679]:
+                    - heading "AD Police Saadiyat D2" [level=4] [ref=e680]
+                    - generic [ref=e681]:
+                      - generic [ref=e682]: AD POLICE
+                      - generic [ref=e684]: CODE_N/A
+                - generic [ref=e686]:
+                  - generic [ref=e687]: 339D
+                  - paragraph [ref=e688]: Remaining
+                - generic [ref=e690]:
+                  - generic [ref=e691]: Progress
+                  - generic [ref=e692]: 0%
+                - generic [ref=e694]:
+                  - generic [ref=e695]:
+                    - generic [ref=e696]: AED
+                    - generic [ref=e697]: 1.2M
+                  - text: Tender Stage
+              - generic [ref=e698] [cursor=pointer]:
+                - generic [ref=e700]:
+                  - img [ref=e702]
+                  - generic [ref=e706]:
+                    - heading "AD Police, Emergency, and Civil Defence - Rahayel" [level=4] [ref=e707]
+                    - generic [ref=e708]:
+                      - generic [ref=e709]: AD POLICE
+                      - generic [ref=e711]: CODE_N/A
+                - generic [ref=e713]:
+                  - generic [ref=e714]: 339D
+                  - paragraph [ref=e715]: Remaining
+                - generic [ref=e717]:
+                  - generic [ref=e718]: Progress
+                  - generic [ref=e719]: 0%
+                - generic [ref=e721]:
+                  - generic [ref=e722]:
+                    - generic [ref=e723]: AED
+                    - generic [ref=e724]: 1.0M
+                  - text: Tender Stage
+              - generic [ref=e725] [cursor=pointer]:
+                - generic [ref=e727]:
+                  - img [ref=e729]
+                  - generic [ref=e733]:
+                    - heading "Long Term Care Center" [level=4] [ref=e734]
+                    - generic [ref=e735]:
+                      - generic [ref=e736]: Al Jalila Foundation
+                      - generic [ref=e738]: CODE_N/A
+                - generic [ref=e740]:
+                  - generic [ref=e741]: 582D
+                  - paragraph [ref=e742]: Remaining
+                - generic [ref=e744]:
+                  - generic [ref=e745]: Progress
+                  - generic [ref=e746]: 0%
+                - generic [ref=e748]:
+                  - generic [ref=e749]:
+                    - generic [ref=e750]: AED
+                    - generic [ref=e751]: 8.0M
+                  - text: Concept Stage (Design)
+              - generic [ref=e752] [cursor=pointer]:
+                - generic [ref=e754]:
+                  - img [ref=e756]
+                  - generic [ref=e760]:
+                    - heading "Abu Dhabi Plant Tissue Culture Lab" [level=4] [ref=e761]
+                    - generic [ref=e762]:
+                      - generic [ref=e763]: Presidential Court
+                      - generic [ref=e765]: CODE_N/A
+                - generic [ref=e767]:
+                  - generic [ref=e768]: 642D
+                  - paragraph [ref=e769]: Remaining
+                - generic [ref=e771]:
+                  - generic [ref=e772]: Progress
+                  - generic [ref=e773]: 0%
+                - generic [ref=e775]:
+                  - generic [ref=e776]:
+                    - generic [ref=e777]: AED
+                    - generic [ref=e778]: 4.8M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e779] [cursor=pointer]:
+                - generic [ref=e781]:
+                  - img [ref=e783]
+                  - generic [ref=e787]:
+                    - heading "The Farm house" [level=4] [ref=e788]
+                    - generic [ref=e789]:
+                      - generic [ref=e790]: ZAAD DEVELOPMENT LLC
+                      - generic [ref=e792]: CODE_N/A
+                - generic [ref=e794]:
+                  - generic [ref=e795]: 734D
+                  - paragraph [ref=e796]: Remaining
+                - generic [ref=e798]:
+                  - generic [ref=e799]: Progress
+                  - generic [ref=e800]: 0%
+                - generic [ref=e802]:
+                  - generic [ref=e803]:
+                    - generic [ref=e804]: AED
+                    - generic [ref=e805]: 5.0M
+                  - text: Pre-Award
+              - generic [ref=e806] [cursor=pointer]:
+                - generic [ref=e808]:
+                  - img [ref=e810]
+                  - generic [ref=e814]:
+                    - heading "Perla Towers 1" [level=4] [ref=e815]
+                    - generic [ref=e816]:
+                      - generic [ref=e817]: Emaar Properties
+                      - generic [ref=e819]: CODE_TWR-DXB-09
+                - generic [ref=e821]:
+                  - generic [ref=e822]: 759D
+                  - paragraph [ref=e823]: Remaining
+                - generic [ref=e825]:
+                  - generic [ref=e826]: Progress
+                  - generic [ref=e827]: 0%
+                - generic [ref=e829]:
+                  - generic [ref=e830]:
+                    - generic [ref=e831]: AED
+                    - generic [ref=e832]: 125.0M
+                  - text: Tender
+              - generic [ref=e833] [cursor=pointer]:
+                - generic [ref=e835]:
+                  - img [ref=e837]
+                  - generic [ref=e841]:
+                    - heading "Agricultural Genome Bank Design" [level=4] [ref=e842]
+                    - generic [ref=e843]:
+                      - generic [ref=e844]: Abu Dhabi Agriculture & Food Safety Authority (ADAFSA)
+                      - generic [ref=e846]: CODE_N/A
+                - generic [ref=e848]:
+                  - generic [ref=e849]: 824D
+                  - paragraph [ref=e850]: Remaining
+                - generic [ref=e852]:
+                  - generic [ref=e853]: Progress
+                  - generic [ref=e854]: 0%
+                - generic [ref=e856]:
+                  - generic [ref=e857]:
+                    - generic [ref=e858]: AED
+                    - generic [ref=e859]: 13.1M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e860] [cursor=pointer]:
+                - generic [ref=e862]:
+                  - img [ref=e864]
+                  - generic [ref=e868]:
+                    - heading "New Corniche Hospital" [level=4] [ref=e869]
+                    - generic [ref=e870]:
+                      - generic [ref=e871]: RAFED
+                      - generic [ref=e873]: CODE_2023.010.HLT.012
+                - generic [ref=e875]:
+                  - generic [ref=e876]: 1069D
+                  - paragraph [ref=e877]: Remaining
+                - generic [ref=e879]:
+                  - generic [ref=e880]: Progress
+                  - generic [ref=e881]: 0%
+                - generic [ref=e883]:
+                  - generic [ref=e884]:
+                    - generic [ref=e885]: AED
+                    - generic [ref=e886]: 57.0M
+                  - text: Construction
+              - generic [ref=e887] [cursor=pointer]:
+                - generic [ref=e889]:
+                  - img [ref=e891]
+                  - generic [ref=e895]:
+                    - heading "New Hospital at Delma Island - Abu Dhabi" [level=4] [ref=e896]
+                    - generic [ref=e897]:
+                      - generic [ref=e898]: RAFED
+                      - generic [ref=e900]: CODE_N/A
+                - generic [ref=e902]:
+                  - generic [ref=e903]: 1524D
+                  - paragraph [ref=e904]: Remaining
+                - generic [ref=e906]:
+                  - generic [ref=e907]: Progress
+                  - generic [ref=e908]: 0%
+                - generic [ref=e910]:
+                  - generic [ref=e911]:
+                    - generic [ref=e912]: AED
+                    - generic [ref=e913]: 11.9M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e914] [cursor=pointer]:
+                - generic [ref=e916]:
+                  - img [ref=e918]
+                  - generic [ref=e922]:
+                    - heading "Tawazun Industrial Park" [level=4] [ref=e923]
+                    - generic [ref=e924]:
+                      - generic [ref=e925]: Tawazun
+                      - generic [ref=e927]: CODE_N/A
+                - generic [ref=e929]:
+                  - generic [ref=e930]: "--"
+                  - paragraph [ref=e931]: Remaining
+                - generic [ref=e933]:
+                  - generic [ref=e934]: Progress
+                  - generic [ref=e935]: 0%
+                - generic [ref=e937]:
+                  - generic [ref=e938]:
+                    - generic [ref=e939]: AED
+                    - generic [ref=e940]: 13.6M
+                  - text: Upcoming
+              - generic [ref=e941] [cursor=pointer]:
+                - generic [ref=e943]:
+                  - img [ref=e945]
+                  - generic [ref=e949]:
+                    - heading "Facelift Enhancement Projects at SKMC and Tawam Hospital" [level=4] [ref=e950]
+                    - generic [ref=e951]:
+                      - generic [ref=e952]: RAFED
+                      - generic [ref=e954]: CODE_N/A
+                - generic [ref=e956]:
+                  - generic [ref=e957]: "--"
+                  - paragraph [ref=e958]: Remaining
+                - generic [ref=e960]:
+                  - generic [ref=e961]: Progress
+                  - generic [ref=e962]: 0%
+                - generic [ref=e964]:
+                  - generic [ref=e965]:
+                    - generic [ref=e966]: AED
+                    - generic [ref=e967]: 23.4M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e968] [cursor=pointer]:
+                - generic [ref=e970]:
+                  - img [ref=e972]
+                  - generic [ref=e976]:
+                    - heading "The Beach House" [level=4] [ref=e977]
+                    - generic [ref=e978]:
+                      - generic [ref=e979]: ZAAD DEVELOPMENT LLC
+                      - generic [ref=e981]: CODE_N/A
+                - generic [ref=e983]:
+                  - generic [ref=e984]: "--"
+                  - paragraph [ref=e985]: Remaining
+                - generic [ref=e987]:
+                  - generic [ref=e988]: Progress
+                  - generic [ref=e989]: 0%
+                - generic [ref=e991]:
+                  - generic [ref=e992]:
+                    - generic [ref=e993]: AED
+                    - generic [ref=e994]: 5.5M
+                  - text: Tender Stage
+              - generic [ref=e995] [cursor=pointer]:
+                - generic [ref=e997]:
+                  - img [ref=e999]
+                  - generic [ref=e1003]:
+                    - heading "Lusaili & Lahbab" [level=4] [ref=e1004]
+                    - generic [ref=e1005]:
+                      - generic [ref=e1006]: Dubai Health
+                      - generic [ref=e1008]: CODE_N/A
+                - generic [ref=e1010]:
+                  - generic [ref=e1011]: "--"
+                  - paragraph [ref=e1012]: Remaining
+                - generic [ref=e1014]:
+                  - generic [ref=e1015]: Progress
+                  - generic [ref=e1016]: 0%
+                - generic [ref=e1018]:
+                  - generic [ref=e1019]:
+                    - generic [ref=e1020]: AED
+                    - generic [ref=e1021]: 8.0M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1022] [cursor=pointer]:
+                - generic [ref=e1024]:
+                  - img [ref=e1026]
+                  - generic [ref=e1030]:
+                    - heading "Converting group of villas into a specialized hospital" [level=4] [ref=e1031]
+                    - generic [ref=e1032]:
+                      - generic [ref=e1033]: AI Hospital - Private
+                      - generic [ref=e1035]: CODE_N/A
+                - generic [ref=e1037]:
+                  - generic [ref=e1038]: "--"
+                  - paragraph [ref=e1039]: Remaining
+                - generic [ref=e1041]:
+                  - generic [ref=e1042]: Progress
+                  - generic [ref=e1043]: 0%
+                - generic [ref=e1045]:
+                  - generic [ref=e1046]:
+                    - generic [ref=e1047]: AED
+                    - generic [ref=e1048]: 0.5M
+                  - text: Tender Stage
+              - generic [ref=e1049] [cursor=pointer]:
+                - generic [ref=e1051]:
+                  - img [ref=e1053]
+                  - generic [ref=e1057]:
+                    - heading "80-Bed General Hospital" [level=4] [ref=e1058]
+                    - generic [ref=e1059]:
+                      - generic [ref=e1060]: Al Ghurair
+                      - generic [ref=e1062]: CODE_N/A
+                - generic [ref=e1064]:
+                  - generic [ref=e1065]: "--"
+                  - paragraph [ref=e1066]: Remaining
+                - generic [ref=e1068]:
+                  - generic [ref=e1069]: Progress
+                  - generic [ref=e1070]: 0%
+                - generic [ref=e1072]:
+                  - generic [ref=e1073]:
+                    - generic [ref=e1074]: AED
+                    - generic [ref=e1075]: 4.3M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1076] [cursor=pointer]:
+                - generic [ref=e1078]:
+                  - img [ref=e1080]
+                  - generic [ref=e1084]:
+                    - heading "Al Gurm Island Villa" [level=4] [ref=e1085]
+                    - generic [ref=e1086]:
+                      - generic [ref=e1087]: ZAAD DEVELOPMENT LLC
+                      - generic [ref=e1089]: CODE_N/A
+                - generic [ref=e1091]:
+                  - generic [ref=e1092]: "--"
+                  - paragraph [ref=e1093]: Remaining
+                - generic [ref=e1095]:
+                  - generic [ref=e1096]: Progress
+                  - generic [ref=e1097]: 0%
+                - generic [ref=e1099]:
+                  - generic [ref=e1100]:
+                    - generic [ref=e1101]: AED
+                    - generic [ref=e1102]: 6.5M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1103] [cursor=pointer]:
+                - generic [ref=e1105]:
+                  - img [ref=e1107]
+                  - generic [ref=e1111]:
+                    - heading "SSMC - Strategic Internal Expansion" [level=4] [ref=e1112]
+                    - generic [ref=e1113]:
+                      - generic [ref=e1114]: RAFED
+                      - generic [ref=e1116]: CODE_N/A
+                - generic [ref=e1118]:
+                  - generic [ref=e1119]: "--"
+                  - paragraph [ref=e1120]: Remaining
+                - generic [ref=e1122]:
+                  - generic [ref=e1123]: Progress
+                  - generic [ref=e1124]: 0%
+                - generic [ref=e1126]:
+                  - generic [ref=e1127]:
+                    - generic [ref=e1128]: AED
+                    - generic [ref=e1129]: 15.2M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1130] [cursor=pointer]:
+                - generic [ref=e1132]:
+                  - img [ref=e1134]
+                  - generic [ref=e1138]:
+                    - 'heading "Majlis Al Amal Ground Floor, Building No: 12, DHCC, Dubai, UAE" [level=4] [ref=e1139]'
+                    - generic [ref=e1140]:
+                      - generic [ref=e1141]: Al Jalila Foundation
+                      - generic [ref=e1143]: CODE_N/A
+                - generic [ref=e1145]:
+                  - generic [ref=e1146]: "--"
+                  - paragraph [ref=e1147]: Remaining
+                - generic [ref=e1149]:
+                  - generic [ref=e1150]: Progress
+                  - generic [ref=e1151]: 0%
+                - generic [ref=e1153]:
+                  - generic [ref=e1154]:
+                    - generic [ref=e1155]: AED
+                    - generic [ref=e1156]: 1.0M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1157] [cursor=pointer]:
+                - generic [ref=e1159]:
+                  - img [ref=e1161]
+                  - generic [ref=e1165]:
+                    - heading "Development of Up to Five (5) Clinics" [level=4] [ref=e1166]
+                    - generic [ref=e1167]:
+                      - generic [ref=e1168]: Al Ghurair
+                      - generic [ref=e1170]: CODE_N/A
+                - generic [ref=e1172]:
+                  - generic [ref=e1173]: "--"
+                  - paragraph [ref=e1174]: Remaining
+                - generic [ref=e1176]:
+                  - generic [ref=e1177]: Progress
+                  - generic [ref=e1178]: 0%
+                - generic [ref=e1180]:
+                  - generic [ref=e1181]:
+                    - generic [ref=e1182]: AED
+                    - generic [ref=e1183]: 21.4M
+                  - text: Pre-Award / Tender Stage
+              - generic [ref=e1184] [cursor=pointer]:
+                - generic [ref=e1186]:
+                  - img [ref=e1188]
+                  - generic [ref=e1192]:
+                    - heading "Central Honeybee Pest and Disease Laboratory" [level=4] [ref=e1193]
+                    - generic [ref=e1194]:
+                      - generic [ref=e1195]: Abu Dhabi Agriculture & Food Safety Authority (ADAFSA)
+                      - generic [ref=e1197]: CODE_N/A
+                - generic [ref=e1199]:
+                  - generic [ref=e1200]: "--"
+                  - paragraph [ref=e1201]: Remaining
+                - generic [ref=e1203]:
+                  - generic [ref=e1204]: Progress
+                  - generic [ref=e1205]: 0%
+                - generic [ref=e1207]:
+                  - generic [ref=e1208]:
+                    - generic [ref=e1209]: AED
+                    - generic [ref=e1210]: 5.5M
+                  - text: Tender Stage
+              - generic [ref=e1211] [cursor=pointer]:
+                - generic [ref=e1213]:
+                  - img [ref=e1215]
+                  - generic [ref=e1219]:
+                    - heading "Specialized Rehab Hospital Extension" [level=4] [ref=e1220]
+                    - generic [ref=e1221]:
+                      - generic [ref=e1222]: IMKAN Properties
+                      - generic [ref=e1224]: CODE_N/A
+                - generic [ref=e1226]:
+                  - generic [ref=e1227]: "--"
+                  - paragraph [ref=e1228]: Remaining
+                - generic [ref=e1230]:
+                  - generic [ref=e1231]: Progress
+                  - generic [ref=e1232]: 0%
+                - generic [ref=e1234]:
+                  - generic [ref=e1235]:
+                    - generic [ref=e1236]: AED
+                    - generic [ref=e1237]: 3.6M
+                  - text: Tender Stage
+  - button "Nexus AI Assistant" [ref=e1239]:
+    - img [ref=e1240]
+  - generic:
+    - generic: MORGAN
+```

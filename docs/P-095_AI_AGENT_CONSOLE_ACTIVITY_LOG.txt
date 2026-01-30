@@ -1,0 +1,26 @@
+# PROMPT P-095 — AI Agent Console + agents_activity Log (Wireframe)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement AI Agent Console UI and backend activity logging without granting autonomous destructive actions.
+
+DO
+1) Table:
+   - agents_activity (agent_id, name, status, last_run_at, payload, created_by)
+2) UI:
+   - /ai-agent-console (L2+)
+   - Chat interface (“Chat with Nexus”) → routes to /chat with agent context tag
+   - Agent Status Grid for Foreman/Estimator/Controller showing state and last actions
+3) Guardrails:
+   - Agents are assist-first (read/report) in MVP; no write actions unless explicitly enabled.
+   - Do not show internal evaluation gates in user UI.
+
+VALIDATION
+- Non-L2 blocked.
+- Activity rows append and render.
+
+ROLLBACK
+- Revert commit.
+

@@ -1,0 +1,29 @@
+# PROMPT P-070 — Documents (DMS): File Explorer + Upload + Version History + Sensitivity
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement wireframe Documents module with Supabase Storage, private buckets, and version history.
+
+DO
+1) Storage:
+   - private bucket
+   - server issues signed upload/download URLs
+2) Tables:
+   - documents (entity refs, filename, mime, sensitivity_level, created_by)
+   - document_versions (doc_id, version_no, storage_path, checksum, created_at)
+3) UI:
+   - folder tree (Root > Projects > [Project] > Phase)
+   - grid/list with icons
+   - drag-drop upload
+   - version history list (v1.0, v1.1)
+4) Enforce sensitivity via RLS + signed URLs only.
+
+VALIDATION
+- Lower tiers blocked from confidential docs.
+- Version upload increments correctly; previous versions accessible to allowed users.
+
+ROLLBACK
+- Revert commit; snapshot before migrations.
+

@@ -1,0 +1,34 @@
+# PROMPT P-050 — Tasks Suite (To-Do Tracker): List + Kanban + Calendar + Tags (MVP)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement MVP tasks suite referenced in wireframe dashboard tasks panel and To-Do tracker doc.
+
+MVP SURFACES
+- /tasks: list with filters (status, due window, entity)
+- /tasks/kanban
+- /tasks/calendar (basic month/week)
+- quick add in dashboard
+
+DO
+1) Ensure schema supports:
+   - tasks (title, status, due_at, assignee_id, entity_type/entity_id, tags)
+   - task_events audit trail
+   - task_tags join (optional)
+2) UI components:
+   - TasksTable
+   - KanbanBoard
+   - CalendarView
+   - TaskQuickAdd
+3) Notification linkage:
+   - tasks.due_at feeds sweep (Module P-060)
+
+VALIDATION
+- L4 sees only tasks assigned or entity-scoped by membership.
+- Create/edit works; status transitions reflect in dashboard.
+
+ROLLBACK
+- Revert commit; DB snapshot for new tables.
+

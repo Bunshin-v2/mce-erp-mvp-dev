@@ -1,0 +1,515 @@
+/**
+ * MCE COMMAND CENTER 2026 - DESIGN TOKENS
+ *
+ * This file is the single source of truth for all design decisions.
+ * NO HARDCODED VALUES. All styling must reference these tokens.
+ *
+ * Changes to this file require design system review.
+ */
+
+:root {
+   /* =========================================================================
+     SEMANTIC COLORS - What colors mean in this system
+     ========================================================================= */
+
+   /* Status Colors - Reserved Meaning */
+   --color-critical: #be185d;
+   /* Critical/Error (deep rose) */
+   --color-warning: #b45309;
+   /* Warning (deep amber) */
+   --color-success: #059669;
+   /* Healthy/Success (emerald) */
+   --color-info: #2563eb;
+   /* Info/In-Progress (blue) */
+   --color-neutral: #71717a;
+   /* Secondary/Disabled (zinc) */
+
+   /* =========================================================================
+     BACKGROUND COLORS - Surface hierarchy
+     ========================================================================= */
+
+   /* Background System */
+   --bg-base: #050505;
+   /* Primary background - Neutral Charcoal */
+   --bg-surface: #0a0a0a;
+   /* Elevated surfaces */
+   --bg-layer: #0e0e0e;
+   /* Secondary surfaces */
+   --bg-hover: #121212;
+   /* Hover state */
+   --bg-active: #18181b;
+   /* Active/Selected state */
+   --bg-input: #080808;
+   /* Input fields */
+
+   /* Aliases for compatibility */
+   --surface-base: var(--bg-base);
+   --surface-surface: var(--bg-surface);
+   --surface-layer: var(--bg-layer);
+   --surface-border: rgba(255, 255, 255, 0.05);
+   --surface-border-strong: rgba(255, 255, 255, 0.1);
+
+   /* Overlay Opacity Variants */
+   --overlay-1: rgba(255, 255, 255, 0.01);
+   /* Barely visible */
+   --overlay-2: rgba(255, 255, 255, 0.02);
+   /* Very subtle */
+   --overlay-5: rgba(255, 255, 255, 0.05);
+   /* Subtle background */
+   --overlay-10: rgba(255, 255, 255, 0.10);
+   /* Hover state */
+
+   /* =========================================================================
+     TEXT COLORS - Typographic hierarchy
+     ========================================================================= */
+
+   --text-primary: #f5f5f7;
+   /* Main body text, headings */
+   --text-secondary: #a1a1aa;
+   /* Labels, captions, secondary info */
+   --text-tertiary: #71717a;
+   /* Very muted, disabled, timestamps */
+   --text-disabled: #52525b;
+   /* Disabled state */
+   --text-link: #2563eb;
+   /* Links (use color-info) */
+
+   /* =========================================================================
+     TYPOGRAPHY - Font families and scales
+     ========================================================================= */
+
+   --font-sans: var(--font-oswald), system-ui, sans-serif;
+   --font-mono: var(--font-mono), 'Courier New', monospace;
+
+   /* App Font Roles */
+   --font-decorative: 'Oswald', var(--font-sans);
+   --font-ui: var(--font-decorative);
+   --font-heading: var(--font-decorative);
+
+
+   /* Font Sizes - Predefined Scale Only */
+   --font-size-xs: 11px;
+   /* Captions, auxiliary text */
+   --font-size-sm: 12px;
+   /* Labels, small UI */
+   --font-size-base: 13px;
+   /* Body text, data rows */
+   --font-size-md: 14px;
+   /* Subheadings, secondary headings */
+   --font-size-lg: 16px;
+   /* Section headings */
+   --font-size-xl: 18px;
+   /* Major section headings */
+   --font-size-2xl: 20px;
+   /* Page section titles */
+   --font-size-3xl: 28px;
+   /* Page titles */
+   --font-size-4xl: 32px;
+   /* Hero titles (rare) */
+
+   /* Font Weights - Black Italic System (MCE Cockpit DNA) */
+   --font-weight-normal: 700;
+   /* Body text — black by default */
+   --font-weight-medium: 700;
+   /* Labels — black by default */
+   --font-weight-semibold: 700;
+   /* Subheadings — black */
+   --font-weight-bold: 700;
+   /* Headings, titles — black */
+
+   /* Font Style - Italic everywhere */
+   --font-style-default: italic;
+
+   /* Line Heights */
+   --line-height-tight: 1.2;
+   /* Headings */
+   --line-height-normal: 1.4;
+   /* Body text */
+   --line-height-relaxed: 1.6;
+   /* Long-form text */
+
+   /* Letter Spacing */
+   --letter-spacing-tight: -0.01em;
+   /* Headings (tighter) */
+   --letter-spacing-normal: 0em;
+   /* Body text */
+   --letter-spacing-wide: 0.02em;
+   /* Labels (more space) */
+
+   /* =========================================================================
+     SPACING SCALE - 4px base unit (fundamental to all layout)
+     ========================================================================= */
+
+   --space-0-5: 2px;
+   /* Micro spacing (rarely used) */
+   --space-1: 4px;
+   /* Tight spacing */
+   --space-2: 8px;
+   /* Comfortable spacing */
+   --space-3: 12px;
+   /* Generous spacing */
+   --space-4: 16px;
+   /* Standard spacing (most common) */
+   --space-5: 20px;
+   /* Major spacing */
+   --space-6: 24px;
+   /* Section spacing (row height in tables) */
+   --space-8: 32px;
+   /* Container padding, large sections */
+   --space-10: 40px;
+   /* Extreme spacing (use sparingly) */
+
+   /* Specific Spacing Rules */
+   --spacing-table-row: var(--space-6);
+   /* 24px vertical padding */
+   --spacing-section: var(--space-6);
+   /* 24px margin between sections */
+   --spacing-container: var(--space-8);
+   /* 32px container padding */
+   --spacing-sidebar: var(--space-4);
+   /* 16px sidebar padding */
+
+   /* Legacy "Gov" Aliases for backward compatibility during transition */
+   --gov-s0-5: var(--space-0-5);
+   --gov-s1: var(--space-1);
+   --gov-s2: var(--space-2);
+   --gov-s3: var(--space-3);
+   --gov-s4: var(--space-4);
+   --gov-s5: var(--space-5);
+   --gov-s6: var(--space-6);
+   --gov-s8: var(--space-8);
+   --gov-radius: var(--radius-lg);
+
+   /* Status Tokens */
+   --status-nominal: var(--color-success);
+   --status-warning: var(--color-warning);
+   --status-critical: var(--color-critical);
+   --status-info: var(--color-info);
+   --status-inactive: var(--color-neutral);
+
+   /* =========================================================================
+     BORDER & CORNER RADIUS
+     ========================================================================= */
+
+   /* Border Styles - Consistent borders */
+   --border-subtle: 1px solid #333;
+   /* Subtle divider, table borders */
+   --border-strong: 1px solid #52525b;
+   /* Input fields, active states */
+
+   /* Border Radius - Only 3 sizes */
+   --radius-sm: 6px;
+   /* Input fields, small buttons */
+   --radius-md: 8px;
+   /* Buttons, small components */
+   --radius-lg: 12px;
+   /* Cards, panels, large components */
+
+   /* =========================================================================
+     TRANSITIONS & ANIMATION TIMING
+     ========================================================================= */
+
+   /* Standard Durations - Only 4 options allowed */
+   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+   /* Hover, focus */
+   --transition-standard: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+   /* State change */
+   --transition-moderate: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+   /* Visibility */
+   --transition-smooth: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+   /* Panels, nav */
+
+   /* Easing Functions */
+   --ease-out-cubic: cubic-bezier(0.33, 1, 0.68, 1);
+   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+   --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+
+   /* =========================================================================
+     SHADOWS - Elevation system
+     ========================================================================= */
+
+   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+   --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.15);
+   --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+
+   /* =========================================================================
+     Z-INDEX LAYERING - Strict hierarchy
+     ========================================================================= */
+
+   --z-hide: -1;
+   /* Below everything */
+   --z-base: 0;
+   /* Default layer */
+   --z-dropdown: 100;
+   /* Dropdowns, select menus */
+   --z-sticky: 200;
+   /* Sticky headers, sidebars */
+   --z-modal: 300;
+   /* Modal overlays */
+   --z-toast: 400;
+   /* Toast notifications (highest) */
+
+   /* =========================================================================
+     COMPONENT SPACING - Predefined for common patterns
+     ========================================================================= */
+
+   /* Header/Title Spacing */
+   --spacing-title-padding: var(--space-8);
+   /* 32px padding */
+   --spacing-title-margin-bottom: var(--space-6);
+   /* 24px spacing below */
+
+   /* Card Spacing */
+   --spacing-card-padding: var(--space-6);
+   /* 24px padding */
+   --spacing-card-gap: var(--space-4);
+   /* 16px gap inside */
+
+   /* Table Spacing */
+   --spacing-table-header-padding: var(--space-4) var(--space-6);
+   --spacing-table-cell-padding: var(--space-4) var(--space-6);
+
+   /* List/Stack Spacing */
+   --spacing-list-gap: var(--space-4);
+   /* 16px between items */
+   --spacing-list-compact-gap: var(--space-2);
+   /* 8px for dense layouts */
+
+   /* Grid Spacing */
+   --spacing-grid-gap: var(--space-6);
+   /* 24px gaps (normal) */
+   --spacing-grid-dense-gap: var(--space-4);
+   /* 16px gaps (dense) */
+
+   /* =========================================================================
+     SPECIFIC COMPONENT SIZING
+     ========================================================================= */
+
+   /* Sidebar */
+   --sidebar-width: 156px;
+   /* Optimized width */
+   --sidebar-width-collapsed: 64px;
+   /* Icon-only width */
+   --sidebar-transition: var(--transition-smooth);
+
+   /* Input Fields */
+   --input-height: 40px;
+   --input-height-sm: 36px;
+   --input-height-lg: 44px;
+
+   /* Button Sizes */
+   --button-height-sm: 32px;
+   --button-height-md: 40px;
+   --button-height-lg: 44px;
+   --button-padding-x: var(--space-4);
+
+   /* =========================================================================
+     DATA TABLE SIZING
+     ========================================================================= */
+
+   --table-row-height: 56px;
+   /* 24px padding top/bottom */
+   --table-header-height: 40px;
+   --table-cell-padding-x: var(--space-6);
+   /* 24px horizontal */
+   --table-cell-padding-y: var(--space-4);
+   /* 16px vertical */
+
+   /* =========================================================================
+     BREAKPOINTS - Responsive design (mobile-first)
+     ========================================================================= */
+
+   --breakpoint-sm: 640px;
+   --breakpoint-md: 768px;
+   --breakpoint-lg: 1024px;
+   --breakpoint-xl: 1280px;
+   --breakpoint-2xl: 1536px;
+
+   /* -------------------------------------------------------------------------
+      DYNAMIC BRAND TOKENS (Added for Modern ERP Components)
+      ------------------------------------------------------------------------- */
+   --brand-accent: var(--color-info);
+   /* MCE Blue #2563eb */
+   --brand-accent-2: #8b5cf6;
+   /* Violet Pulse */
+   --bg-glass-accent: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+/**
+ * UTILITY CLASSES - Built from tokens
+ * These classes should be used consistently across all components
+ */
+
+/* Typography Utilities */
+.text-title-sm {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-lg);
+   font-weight: 700;
+   font-style: italic;
+   letter-spacing: var(--letter-spacing-tight);
+   line-height: var(--line-height-tight);
+   color: var(--text-primary);
+}
+
+.text-title-md {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-xl);
+   font-weight: 700;
+   font-style: italic;
+   letter-spacing: var(--letter-spacing-tight);
+   line-height: var(--line-height-tight);
+   color: var(--text-primary);
+}
+
+.text-title-lg {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-3xl);
+   font-weight: 700;
+   font-style: italic;
+   letter-spacing: var(--letter-spacing-tight);
+   line-height: var(--line-height-tight);
+   color: var(--text-primary);
+}
+
+.text-body {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-base);
+   font-weight: 700;
+   font-style: italic;
+   line-height: var(--line-height-normal);
+   color: var(--text-primary);
+}
+
+.text-label {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-sm);
+   font-weight: 700;
+   font-style: italic;
+   letter-spacing: var(--letter-spacing-wide);
+   color: var(--text-secondary);
+   text-transform: uppercase;
+}
+
+.text-caption {
+   font-family: var(--font-sans);
+   font-size: var(--font-size-xs);
+   font-weight: 700;
+   font-style: italic;
+   color: var(--text-tertiary);
+}
+
+.text-mono {
+   font-family: var(--font-mono);
+   font-size: var(--font-size-base);
+   font-weight: 700;
+   font-style: italic;
+   letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Color Utilities */
+.text-critical {
+   color: var(--color-critical);
+}
+
+.text-warning {
+   color: var(--color-warning);
+}
+
+.text-success {
+   color: var(--color-success);
+}
+
+.text-info {
+   color: var(--color-info);
+}
+
+.bg-critical {
+   background-color: var(--color-critical);
+}
+
+.bg-warning {
+   background-color: var(--color-warning);
+}
+
+.bg-success {
+   background-color: var(--color-success);
+}
+
+.bg-info {
+   background-color: var(--color-info);
+}
+
+/* Border Utilities */
+.border-subtle {
+   border: var(--border-subtle);
+}
+
+.border-b-subtle {
+   border-bottom: var(--border-subtle);
+}
+
+.border-strong {
+   border: var(--border-strong);
+}
+
+/* Spacing Utilities */
+.p-container {
+   padding: var(--spacing-container);
+}
+
+.p-card {
+   padding: var(--spacing-card-padding);
+}
+
+.gap-list {
+   gap: var(--spacing-list-gap);
+}
+
+.gap-grid {
+   gap: var(--spacing-grid-gap);
+}
+
+/* Transition Utilities */
+.transition-fast {
+   transition: all var(--transition-fast);
+}
+
+.transition-standard {
+   transition: all var(--transition-standard);
+}
+
+.transition-moderate {
+   transition: all var(--transition-moderate);
+}
+
+.transition-smooth {
+   transition: all var(--transition-smooth);
+}
+
+/* Shadow Utilities */
+.shadow-elevation {
+   box-shadow: var(--shadow-lg);
+}
+
+.shadow-elevated {
+   box-shadow: var(--shadow-xl);
+}
+
+/* Z-Index Utilities */
+.z-dropdown {
+   z-index: var(--z-dropdown);
+}
+
+.z-sticky {
+   z-index: var(--z-sticky);
+}
+
+.z-modal {
+   z-index: var(--z-modal);
+}
+
+.z-toast {
+   z-index: var(--z-toast);
+}

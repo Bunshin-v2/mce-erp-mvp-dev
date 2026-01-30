@@ -1,0 +1,29 @@
+# PROMPT P-030 — Dashboards by Role (Widgets + Real Data Wiring)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement /dashboard widgets per tier using real datasets via RLS-safe queries.
+
+MVP WIDGETS (from wireframe)
+- KPI cards (Total Revenue, Active Projects, Pending Bids, Risk Level)
+- Project Portfolio list w/ progress bar + AED value + status pill
+- Tasks & Alerts panel (counts + quick add + recent)
+
+DO
+1) Create widget architecture:
+   - widgets/ directory with typed props
+   - Dashboard composition chooses widgets by tier
+2) Data:
+   - Use Supabase queries under user session
+   - Where finance data is missing, show placeholders with explicit “Phase 2” labels (no fake totals unless from real table)
+3) AED formatting utility.
+
+VALIDATION
+- L4 sees only their scoped projects/tasks.
+- Page loads fast (LIMIT/pagination).
+
+ROLLBACK
+- Revert commit.
+

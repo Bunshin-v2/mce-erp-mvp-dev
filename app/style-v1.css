@@ -1,0 +1,9 @@
+@import "tailwindcss";
+@import "../styles/tokens-2026.css";
+
+@layer base {
+  body {
+    background-color: #050505 !important;
+    color: #f5f5f7 !important;
+  }
+}

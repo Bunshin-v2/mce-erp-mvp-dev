@@ -1,0 +1,30 @@
+# PROMPT P-060 — Notification Engine: Rules + Sweep + Dedupe + Inbox + Ack
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement follow-up/alarm/countdown engine with deduped notifications.
+
+DO
+1) Tables:
+   - notification_rules (type, thresholds, enabled)
+   - notifications (recipient_id, entity refs, type, payload, dedupe_key, acked_at)
+   - notification_runs (heartbeat metrics)
+2) Sweep function:
+   - computes due windows for tenders/tasks/milestones/followups
+   - upserts notifications with ON CONFLICT DO NOTHING using dedupe_key
+3) UI:
+   - NotificationsBell badge in header
+   - /notifications inbox with filters and ack
+4) Email channel:
+   - keep hooks/stubs; do not break if email not configured yet
+
+VALIDATION
+- Sweep idempotent.
+- Ack stops escalation for same dedupe group.
+- Badge count equals unread.
+
+ROLLBACK
+- Disable schedule; revert commit; snapshot before migration.
+

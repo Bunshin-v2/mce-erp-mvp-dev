@@ -1,0 +1,36 @@
+# PROMPT P-040 — Tenders Kanban/List + Win Probability + Detail Fields
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement Tenders module per wireframe: Kanban columns + win probability score.
+
+REQUIREMENTS
+- Kanban columns: Opportunity, Estimating, Submitted, Negotiation, Awarded, Lost
+- Tender detail includes: deadline countdown, bond value calculator, competitor analysis fields
+- Win Probability Score (AI-calculated) can be rules-based MVP (documented), stored in tender.win_probability.
+
+DO
+1) Ensure schema supports:
+   - tender.status enum/set matching columns
+   - deadline_at timestamptz
+   - win_probability numeric
+   - bond_value numeric
+   - competitor_notes text/json
+2) UI:
+   - /tenders list with toggle Kanban/List
+   - DnD updates status with optimistic UI
+3) Add rules-based win_probability MVP:
+   - signals: completeness %, days to deadline, client type, team capacity
+   - compute on tender update or via RPC
+
+VALIDATION
+- Status transitions persist.
+- Deadline countdown shows correct UAE time.
+- Win probability updates deterministically.
+
+ROLLBACK
+- DB snapshot before enum changes.
+- Revert commit.
+

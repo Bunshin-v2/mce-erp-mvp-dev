@@ -1,0 +1,27 @@
+# PROMPT P-000 — Conductor Preflight + Repo Inventory (Non-breaking)
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+OBJECTIVE
+- Produce a repo inventory report that will be used to execute the remaining prompts safely.
+
+INSTRUCTIONS
+1) Detect stack: Next.js App Router? Tailwind/shadcn? Clerk/Auth.js? Supabase client usage.
+2) Identify canonical tables & naming: projects_master vs projects, tenders, documents, invoices, agents_activity, tasks.
+3) Find current routing: where AppShell/layout is defined; which pages exist.
+4) Find migrations folder: list migrations in order; report missing/duplicated tables vs UI.
+5) Output an "Inventory Summary" including:
+   - key file paths for: layout, sidebar, auth guard, supabase client, data access layer
+   - schema files/migrations and active tables
+   - any naming mismatches (deadline vs deadline_at, etc.)
+   - recommended mapping plan (views/adapters vs renames)
+
+BMAD LOOP
+- Draft: produce inventory.
+- Critic: flag high-risk drift areas.
+- Patch: propose safe plan for next prompt execution.
+
+DELIVERABLE
+- Print inventory summary + list of safe patch actions. Do NOT modify code in this prompt.
+

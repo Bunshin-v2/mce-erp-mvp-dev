@@ -1,0 +1,29 @@
+# PROMPT P-080 — RAG Hybrid Retrieval (FTS/BM25-like + Vector) + Cite-or-Refuse Chat UI
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Implement RAG system with hybrid retrieval and citation-first responses, respecting RLS.
+
+DO
+1) Tables:
+   - extraction_jobs, document_chunks, chunk_embeddings (pgvector), rag_queries (optional)
+2) Pipeline:
+   - upload doc → extraction job → chunks → embeddings
+   - retrieval: filters → FTS rank + vector rank → fusion
+3) Chat UI (/chat):
+   - shows cited answers with chunk references
+   - refusal when evidence insufficient or access blocked
+4) Hard rule:
+   - No internal evaluation gates shown to end-users (only citations/refusals)
+5) Add an internal admin script to run a golden-set eval (results stored for AI report prompt P-090).
+
+VALIDATION
+- Retrieval runs under user session so RLS applies.
+- Answers include citations or refusal.
+- Conflicting evidence is surfaced, not hidden.
+
+ROLLBACK
+- Revert commit; snapshot before enabling pgvector.
+

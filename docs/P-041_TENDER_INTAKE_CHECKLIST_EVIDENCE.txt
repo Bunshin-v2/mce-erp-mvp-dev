@@ -1,0 +1,38 @@
+# PROMPT P-041 — Tender Intake Wizard: Template→TOC Checklist→Tasks/Followups→Evidence→Coverage→Submit Gate
+Date: 2026-01-26
+Mode: Conductor + BMAD (Draft→Critic→Patch→Validate)
+Change policy: additive, non-breaking, minimal diff. No evaluation gates in end-user UI.
+
+GOAL
+Add tender intake workflow (beyond wireframe) to standardize RFQ analysis + requirements enforcement.
+
+DO (additive)
+1) Tables (create if missing):
+   - tender_checklist_templates (versioned)
+   - tender_checklist_template_nodes (tree)
+   - tender_checklists (per tender)
+   - tender_checklist_items (generated; stable ids)
+   - tender_evidence_links (item↔document)
+   - tender_generation_runs (idempotency + audit)
+2) Intake Wizard UI:
+   - select template + included sections
+   - generate checklist
+   - bulk assign owner + due_at to items
+   - auto-create tasks + followups with dedupe keys
+   - evidence linker (attach docs)
+   - coverage bar (% + missing evidence list)
+3) Idempotency:
+   - regenerate must NOT duplicate items/tasks
+   - preserve evidence links by template_node_id mapping or stable item keys
+4) Submit gating:
+   - cannot mark tender “Submitted” unless checklist exists + coverage threshold OR override recorded (who/why)
+
+VALIDATION
+- Re-run generate produces identical item counts, no duplicates.
+- Coverage updates when evidence linked/unlinked.
+- RLS: only members can access tender checklist.
+
+ROLLBACK
+- DB snapshot before migrations.
+- Revert commit.
+
