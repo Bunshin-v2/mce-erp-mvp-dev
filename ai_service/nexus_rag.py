@@ -73,6 +73,8 @@ class SimpleRAGAgent:
         except Exception as e:
             error_msg = str(e)
             print(f"RAG Search Error: {error_msg}")
+            if "PERMISSION_DENIED" in error_msg or "leaked" in error_msg.lower():
+                return "ERROR_API_KEY_LEAKED"
             if "policy" in error_msg or "permission denied" in error_msg:
                 return "Error: Database access denied. Please check SUPABASE_SERVICE_KEY in ai_service/.env (Must be Service Role Key, not Anon Key)."
             return ""
@@ -81,14 +83,18 @@ class SimpleRAGAgent:
         """
         Mimics the LangChain agent.invoke interface
         """
-        # 1. Retrieve Context
-        context = self.search_documents(query)
+        try:
+            # 1. Retrieve Context
+            context = self.search_documents(query)
 
-        # 2. Augment Prompt with Master Template
-        if not context:
-            context = "No specific context found in the internal knowledge base."
+            if context == "ERROR_API_KEY_LEAKED":
+                return {"output": "CRITICAL: Your GEMINI_API_KEY has been reported as leaked and revoked by Google. Please generate a NEW key at https://aistudio.google.com/app/apikey and update your .env files."}
 
-        master_prompt = f"""You are the Nexus RAG Agent, an AI assistant that answers questions strictly based on retrieved context from the Nexus ERP knowledge base.
+            # 2. Augment Prompt with Master Template
+            if not context:
+                context = "No specific context found in the internal knowledge base."
+
+            master_prompt = f"""You are the Nexus RAG Agent, an AI assistant that answers questions strictly based on retrieved context from the Nexus ERP knowledge base.
 
 Your job:
 - Understand the user’s question.
@@ -116,10 +122,15 @@ User Question:
 
 Final Answer:"""
 
-        # 3. Generate Answer
-        response_msg = self.llm.invoke(master_prompt)
+            # 3. Generate Answer
+            response_msg = self.llm.invoke(master_prompt)
 
-        return {"output": response_msg.content}
+            return {"output": response_msg.content}
+        except Exception as e:
+            error_msg = str(e)
+            if "PERMISSION_DENIED" in error_msg or "leaked" in error_msg.lower():
+                return {"output": "CRITICAL: Your GEMINI_API_KEY has been reported as leaked and revoked by Google. Please generate a NEW key at https://aistudio.google.com/app/apikey and update your .env files."}
+            return {"output": f"RAG Error: {error_msg}"}
 
 
 # ------------------------------------------------------------------------------
