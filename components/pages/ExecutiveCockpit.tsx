@@ -14,6 +14,8 @@ import { useExecutiveData } from '@/hooks/useExecutiveData';
 import type { Tender } from '@/types';
 import type { Notification } from '../notifications/NotificationBell';
 import { Activity, AlertTriangle, Briefcase, DollarSign } from 'lucide-react';
+import { DashboardFrame } from '../governance/DashboardFrame';
+import { MetricBlock } from '../governance/MetricBlock';
 
 interface CockpitProps {
    projects?: any[];
@@ -68,19 +70,36 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
    })) || [];
 
    return (
-      <Box className="space-y-6 pb-20">
-         {/* Adaptive Header */}
-         <Box className="flex flex-col md:flex-row md:items-end justify-between gap-4 px-2">
-            <Box>
-               <Text variant="gov-hero" className="flex items-center gap-3 text-white">
-                  Executive Cockpit
-                  <StatusBadge status="live" label="LIVE SYSTEM" size="sm" pulse />
-               </Text>
-               <Text variant="gov-label" color="tertiary" className="mt-1 pl-1">
-                  Strategic Command Interface // Sector 01
-               </Text>
-            </Box>
-
+      <DashboardFrame
+         title="Executive Cockpit"
+         subtitle="Strategic Command Interface // Sector 01"
+         metrics={
+            <>
+               <MetricBlock
+                  label="Active Units"
+                  value={stats.active}
+                  trend={{ value: 4, type: 'up' }}
+               />
+               <MetricBlock
+                  label="Contract Value"
+                  value={stats.value}
+                  isCurrency
+                  trend={{ value: 12.5, type: 'up' }}
+               />
+               <MetricBlock
+                  label="Active Tenders"
+                  value={stats.bids}
+                  trend={{ value: 2, type: 'down' }}
+               />
+               <MetricBlock
+                  label="Risk Signals"
+                  value={stats.critical}
+                  trend={stats.critical > 0 ? { value: stats.critical, type: 'up' } : undefined}
+                  status={stats.critical > 0 ? 'critical' : 'nominal'}
+               />
+            </>
+         }
+         tabs={
             <Box className="bg-zinc-950/40 p-1 rounded-xl border border-white/5 backdrop-blur-md flex gap-1">
                {tabs.map(tab => (
                   <button
@@ -102,67 +121,8 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
                   </button>
                ))}
             </Box>
-         </Box>
-
-         {/* 2026 Metric Grid */}
-         <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <GlassCard className="flex items-center justify-between group" variant="hover">
-               <MetricDisplay
-                  label="Active Units"
-                  value={<AnimatedCounter value={stats.active} />}
-                  trend={{ value: 4, direction: 'up', isGood: true }}
-                  size="lg"
-               />
-               <Box className="h-10 w-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Activity className="text-emerald-500" size={20} />
-               </Box>
-            </GlassCard>
-
-            <GlassCard className="flex items-center justify-between group" variant="hover">
-               <MetricDisplay
-                  label="Contract Value"
-                  value={
-                     <div className="flex items-baseline">
-                        <Text as="span" className="text-[13px] mr-1 font-bold italic text-[var(--text-secondary)] opacity-50 uppercase tracking-widest">AED</Text>
-                        <Text variant="gov-hero" as="span"><AnimatedCounter value={stats.value / 1000000} format="decimal" decimals={1} /></Text>
-                        <Text as="span" className="text-[13px] ml-1 font-bold italic text-[var(--text-secondary)] opacity-50 uppercase tracking-widest">M</Text>
-                     </div>
-                  }
-                  trend={{ value: 12.5, direction: 'up', isGood: true }}
-                  size="lg"
-               />
-               <Box className="h-10 w-10 rounded-2xl bg-brand-500/10 border border-brand-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <DollarSign className="text-brand-500" size={20} />
-               </Box>
-            </GlassCard>
-
-            <GlassCard className="flex items-center justify-between group" variant="hover">
-               <MetricDisplay
-                  label="Active Tenders"
-                  value={<AnimatedCounter value={stats.bids} />}
-                  trend={{ value: 2, direction: 'down', isGood: false }}
-                  size="lg"
-               />
-               <Box className="h-10 w-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Briefcase className="text-amber-500" size={20} />
-               </Box>
-            </GlassCard>
-
-            <GlassCard className="flex items-center justify-between group" variant={stats.critical > 0 ? "neon" : "hover"}>
-               <MetricDisplay
-                  label="Risk Signals"
-                  value={<AnimatedCounter value={stats.critical} />}
-                  trend={stats.critical > 0 ? { value: stats.critical, direction: 'up', isGood: false } : { value: 0, direction: 'neutral' }}
-                  size="lg"
-                  valueClassName={stats.critical > 0 ? "text-rose-500 drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]" : ""}
-               />
-               <Box className={`h-10 w-10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${stats.critical > 0 ? 'bg-rose-500 text-white animate-pulse' : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'}`}>
-                  <AlertTriangle size={20} />
-               </Box>
-            </GlassCard>
-         </Box>
-
-         {/* Main Viewport */}
+         }
+      >
          <AnimatePresence mode="wait">
             {activeTab === 'OVERVIEW' && (
                <motion.div
@@ -177,7 +137,7 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
                      <div className="lg:col-span-8">
                         <GlassCard className="h-full min-h-[400px]">
                            <Box className="mb-6 flex items-center justify-between">
-                              <Text variant="h4" className="text-white uppercase tracking-widest text-[var(--font-size-sm)] font-bold italic">Portfolio Velocity</Text>
+                              <Text variant="gov-header">Portfolio Velocity</Text>
                               <StatusBadge status="active" size="sm" />
                            </Box>
                            <PortfolioVelocityChart data={portfolioData} totalValue={stats.value} />
@@ -186,7 +146,7 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
                      <div className="lg:col-span-4">
                         <GlassCard className="h-full min-h-[400px]">
                            <Box className="mb-6 flex items-center justify-between">
-                              <Text variant="h4" className="text-white uppercase tracking-widest text-[var(--font-size-sm)] font-bold italic">Pipeline Volume</Text>
+                              <Text variant="gov-header">Pipeline Volume</Text>
                               <StatusBadge status="projected" label="Forecast" size="sm" dot={false} className="bg-brand-500/10 text-brand-400" />
                            </Box>
                            <StrategicVolumeChart
@@ -200,7 +160,7 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
 
                   <GlassCard>
                      <Box className="mb-6 flex items-center justify-between">
-                        <Text variant="h4" className="text-white uppercase tracking-widest text-[var(--font-size-sm)] font-bold italic">Operational Ledger</Text>
+                        <Text variant="gov-header">Operational Ledger</Text>
                      </Box>
                      <OperationalLedger projects={projects} onSelectProject={onSelectProject} />
                   </GlassCard>
@@ -226,12 +186,11 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
                   initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  className="h-[calc(100vh-320px)] min-h-[650px]"
                >
                   <RiskHeatmapV2 projects={projects} alerts={alerts} />
                </motion.div>
             )}
          </AnimatePresence>
-      </Box>
+      </DashboardFrame>
    );
 };

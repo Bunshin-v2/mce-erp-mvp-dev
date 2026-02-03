@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+@import './styles/design-tokens.css';
 
 @tailwind base;
 @tailwind components;
@@ -30,11 +31,11 @@
     }
 
     * {
-        @apply border-zinc-800;
+        @apply border-border-base;
     }
 
     body {
-        @apply bg-[#050505] text-[#f5f5f7] antialiased selection:bg-blue-500/30;
+        @apply bg-bg-base text-text-primary antialiased selection:bg-blue-500/30;
         font-feature-settings: "ss01", "ss02", "cv01", "cv02";
     }
 
@@ -51,7 +52,8 @@
 
 @layer utilities {
     .bg-glass {
-        @apply bg-white/[0.03] backdrop-blur-md border border-white/[0.05];
+        @apply backdrop-blur-md border border-white/[0.05];
+        background-color: var(--bg-surface);
     }
 
     .text-shadow-glow {

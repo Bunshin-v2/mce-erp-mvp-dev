@@ -8,7 +8,7 @@ export const StyleTuner: React.FC = () => {
 
    const Section = ({ label, children }: { label: string, children: React.ReactNode }) => (
       <div className="space-y-3">
-         <h4 className="text-[9px] font-bold italic text-zinc-500 tracking-[0.2em] flex items-center">
+         <h4 className="text-[9px] font-bold text-zinc-500 tracking-[0.2em] flex items-center">
             <ChevronRight size={10} className="mr-1 text-[var(--color-critical)]" />
             {label}
          </h4>
@@ -21,7 +21,7 @@ export const StyleTuner: React.FC = () => {
    const ToggleBtn = ({ active, onClick, label, icon: Icon }: any) => (
       <button
          onClick={onClick}
-         className={`p-3 rounded border text-[10px] font-bold italic tracking-widest text-left flex items-center space-x-3 transition-all ${active
+         className={`p-3 rounded border text-[10px] font-bold tracking-widest text-left flex items-center space-x-3 transition-all ${active
             ? 'bg-[var(--surface-apex)] border-[var(--surface-border)] text-black shadow-sm'
             : 'bg-[var(--surface-layer)] border-[var(--surface-border)] text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
             }`}
@@ -47,10 +47,10 @@ export const StyleTuner: React.FC = () => {
             <div className="absolute bottom-16 right-0 bg-[var(--surface-base)] border border-[var(--surface-border)] p-6 rounded-lg shadow-2xl w-80 animate-in slide-in-from-bottom-4 duration-300 backdrop-blur-xl">
                <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
                   <div>
-                     <h3 className="text-[10px] font-bold italic text-white flex items-center tracking-[0.3em] font-brand">
+                     <h3 className="text-[10px] font-bold text-white flex items-center tracking-[0.3em] font-brand">
                         Interface Command
                      </h3>
-                     <p className="text-[9px] text-zinc-600 font-bold italic tracking-wider mt-1 font-mono">v2.4.0 • Authorized</p>
+                     <p className="text-[9px] text-zinc-600 font-bold tracking-wider mt-1 font-mono">v2.4.0 • Authorized</p>
                   </div>
                   <button onClick={resetToBaseline} className="text-[9px] text-zinc-500 hover:text-[var(--color-critical)] underline decoration-dotted transition-colors font-mono">
                      RESET

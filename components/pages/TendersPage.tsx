@@ -56,7 +56,7 @@ export const TendersPage: React.FC<TendersPageProps> = ({
     {
       header: 'REF_ID',
       accessor: (item: any) => (
-        <Text variant="gov-label" color="tertiary" className="opacity-40">
+        <Text variant="gov-label" color="tertiary">
           #{item.id.slice(0, 4)}
         </Text>
       ),
@@ -67,13 +67,13 @@ export const TendersPage: React.FC<TendersPageProps> = ({
       accessor: (item: any) => (
         <Box className="flex items-center gap-4">
           <Box className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center border transition-all shrink-0",
-            item.probability === 'High' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500' : 'bg-amber-500/5 border-amber-500/20 text-amber-500'
+            "w-8 h-8 flex items-center justify-center transition-all shrink-0",
+            item.probability === 'High' ? 'text-emerald-500' : 'text-amber-500'
           )}>
             <Target size={14} strokeWidth={1.5} />
           </Box>
           <Box className="flex flex-col gap-1">
-            <Text className="text-white font-bold italic truncate text-[12px]">{item.title}</Text>
+            <Text className="text-white font-bold truncate text-[12px]">{item.title}</Text>
             <Text variant="gov-label" color="tertiary" className="truncate text-[9px]">{item.client || 'MCE_INTERNAL'}</Text>
           </Box>
         </Box>
@@ -83,7 +83,7 @@ export const TendersPage: React.FC<TendersPageProps> = ({
       header: 'EXECUTION_STATUS',
       accessor: (item: any) => (
         <Box className="flex justify-center">
-          <Badge variant={item.status === 'Active' ? 'success' : 'outline'} className="text-[9px] px-3 py-1 font-bold italic tracking-widest italic">
+          <Badge variant={item.status === 'Active' ? 'success' : 'outline'} className="text-[9px] px-3 py-1 font-bold tracking-widest">
             {item.status}
           </Badge>
         </Box>

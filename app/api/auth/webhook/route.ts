@@ -2,25 +2,15 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
-import { createClient } from '@supabase/supabase-js'; // Import the standard client
+import { getSupabaseAdmin } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
-// Special Supabase client with service role key for admin-level access
-const createAdminClient = () => {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!url || !serviceKey) {
-        console.error('CRITICAL: Supabase URL or Service Role Key is missing. Webhook cannot connect.');
-        // Return a mock client that always fails to prevent crash
-        return { from: () => ({ insert: () => ({ error: { message: 'DB_UNCONFIGURED' } }), update: () => ({ error: { message: 'DB_UNCONFIGURED' } }), delete: () => ({ error: { message: 'DB_UNCONFIGURED' } }) }) } as any;
-    }
-
-    // This client uses the service role key, bypassing RLS.
-    return createClient(url, serviceKey);
-}
-
 export async function POST(req: Request) {
+  const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    console.error('CRITICAL: Supabase Admin initialization failed for webhook');
+    return new Response('Internal Server Error', { status: 500 });
+  }
 
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
@@ -58,46 +48,45 @@ export async function POST(req: Request) {
 
   const { id } = evt.data;
   const eventType = evt.type;
-  
-  const supabase = createAdminClient();
+
 
   if (eventType === 'user.created') {
     const { email_addresses, first_name, last_name } = evt.data;
-    const { error } = await supabase.from('user_profiles').insert({
-        id: id,
-        email: email_addresses[0].email_address,
-        full_name: `${first_name || ''} ${last_name || ''}`.trim(),
-        role: 'viewer' // Default role
+    const { error } = await (supabase.from('user_profiles') as any).insert({
+      id: id,
+      email: email_addresses[0].email_address,
+      full_name: `${first_name || ''} ${last_name || ''}`.trim(),
+      role: 'viewer' // Default role
     });
 
     if (error) {
-        console.error('Supabase error on user.created:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Supabase error on user.created:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
 
   if (eventType === 'user.updated') {
     const { email_addresses, first_name, last_name } = evt.data;
-    const { error } = await supabase.from('user_profiles')
-        .update({
-            email: email_addresses[0].email_address,
-            full_name: `${first_name || ''} ${last_name || ''}`.trim(),
-        })
-        .eq('id', id);
+    const { error } = await (supabase.from('user_profiles') as any)
+      .update({
+        email: email_addresses[0].email_address,
+        full_name: `${first_name || ''} ${last_name || ''}`.trim(),
+      })
+      .eq('id', id);
 
-     if (error) {
-        console.error('Supabase error on user.updated:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error('Supabase error on user.updated:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
-   if (eventType === 'user.deleted') {
-    const { error } = await supabase.from('user_profiles')
-        .delete()
-        .eq('id', id);
+  if (eventType === 'user.deleted') {
+    const { error } = await (supabase.from('user_profiles') as any)
+      .delete()
+      .eq('id', id);
 
-     if (error) {
-        console.error('Supabase error on user.deleted:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error('Supabase error on user.deleted:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
   }
 

@@ -63,8 +63,8 @@ export const AppShell: React.FC<AppShellProps> = ({
                     unreadCount={unreadCount}
                 />
 
-                {/* Content Surface */}
-                <main className={`flex-1 overflow-y-auto custom-scrollbar relative z-10 ${config.density === 'executive' ? 'px-4 py-2' : 'p-6'}`}>
+                {/* Content Surface - PADDING STRIPPED FOR CANONICAL CONTROL */}
+                <main className="flex-1 overflow-y-auto custom-scrollbar relative z-10 p-0">
                     <div className="min-h-full animate-fade-in">
                         {children}
                     </div>

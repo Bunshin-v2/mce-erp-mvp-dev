@@ -36,21 +36,21 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
 
   return (
     <Box className="w-full flex flex-col motion-entry">
-      <Box className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-zinc-800/50">
+      <Box className="grid grid-cols-12 gap-4 px-6 py-4 morgan-ledger-header border-b border-white/10">
         <Box className="col-span-1">
-          <Text variant="gov-header" color="tertiary">#</Text>
+          <Text className="text-[10px] uppercase font-oswald font-black italic tracking-widest text-white">ID</Text>
         </Box>
-        <Box className="col-span-4">
-          <Text variant="gov-header" color="tertiary">Artifact Focus</Text>
+        <Box className="col-span-4" >
+          <Text className="text-[10px] uppercase font-oswald font-black italic tracking-widest text-white">Artifact Focus</Text>
         </Box>
-        <Box className="col-span-2 text-center">
-          <Text variant="gov-header" color="tertiary">Timeline</Text>
+        <Box className="col-span-2 text-center" >
+          <Text className="text-[10px] uppercase font-oswald font-black italic tracking-widest text-white">Timeline</Text>
         </Box>
-        <Box className="col-span-3">
-          <Text variant="gov-header" color="tertiary">Status</Text>
+        <Box className="col-span-3" >
+          <Text className="text-[10px] uppercase font-oswald font-black italic tracking-widest text-white">Status</Text>
         </Box>
-        <Box className="col-span-2 text-right">
-          <Text variant="gov-header" color="tertiary">Value</Text>
+        <Box className="col-span-2 text-right" >
+          <Text className="text-[10px] uppercase font-oswald font-black italic tracking-widest text-white">Value</Text>
         </Box>
       </Box>
 
@@ -96,33 +96,33 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                 onClick={() => onSelectProject(project.id)}
                 variant="hover"
                 padding="none"
-                className="group grid grid-cols-12 gap-4 px-6 py-6 bg-transparent border-b border-zinc-800/50 rounded-none hover:bg-white/[0.01] items-center relative"
+                className="group grid grid-cols-12 gap-4 px-6 py-5 bg-white/[0.02] border-b border-border-subtle rounded-none hover:bg-[var(--bg-active)] items-center relative transition-all"
               >
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--morgan-teal)] opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
                 {/* Col 0: Index */}
                 <Box className="col-span-1 flex items-center">
-                  <Text variant="gov-label" color="tertiary" className="text-gov-label opacity-30">
+                  <Text className="text-[10px] font-mono font-bold text-[var(--text-tertiary)] opacity-60">
                     {(index + 1).toString().padStart(2, '0')}
                   </Text>
                 </Box>
 
                 {/* Col 1: Identification */}
                 <Box className="col-span-4 flex items-center space-x-4 relative">
-                  <Box className="w-9 h-9 bg-zinc-950/20 border border-white/5 rounded flex items-center justify-center text-zinc-600 group-hover:text-emerald-500 transition-all">
+                  <Box className="w-9 h-9 bg-bg-surface border border-border-subtle rounded flex items-center justify-center text-text-secondary group-hover:text-emerald-500 transition-all">
                     <Building2 size={14} strokeWidth={1.5} />
                   </Box>
                   <Box className="min-w-0 flex flex-col gap-0.5 relative">
-                    <Text className="truncate text-[12px] font-bold italic text-white uppercase tracking-[0.1em] group-hover:text-emerald-400 transition-colors">
+                    <Text className="truncate text-[12px] font-oswald font-bold italic text-[var(--text-primary)] uppercase tracking-[0.12em] group-hover:text-[var(--morgan-teal)] transition-colors">
                       {project.project_name}
                     </Text>
 
                     <Box className="flex items-center gap-2">
-                      <Text variant="gov-label" color="tertiary" className="truncate text-[10px]">
+                      <Text variant="gov-label" color="tertiary" className="truncate text-[10px] text-text-secondary">
                         {project.client_name || 'Internal Protocol'}
                       </Text>
                       {project.project_code && (
-                        <Text variant="gov-label" color="tertiary" className="text-[9px] px-1 border border-white/5 rounded-sm bg-white/[0.02]">
+                        <Text variant="gov-label" color="tertiary" className="text-[9px] px-1 border border-border-subtle rounded-sm bg-bg-base text-text-tertiary">
                           {project.project_code}
                         </Text>
                       )}
@@ -167,12 +167,12 @@ export const ProjectList: React.FC<ProjectListProps> = ({ projects, onSelectProj
                 <Box className="col-span-2 text-right">
                   <Box className="flex flex-col items-end gap-1">
                     <Box className="flex items-baseline gap-1">
-                      <Text variant="gov-label" color="tertiary" className="text-[9px]">AED</Text>
-                      <Text variant="gov-metric" className="text-[12px] text-white">
+                      <Text className="text-[9px] font-bold italic text-[var(--text-tertiary)] opacity-60">AED</Text>
+                      <Text className="text-[12px] font-oswald font-bold italic text-[var(--morgan-teal)]">
                         {(project.contract_value_excl_vat || 0).toLocaleString()}
                       </Text>
                     </Box>
-                    <Text variant="gov-label" className={`px-2 py-0.5 rounded-sm text-[9px] ${project.project_status?.includes('Construction') ? 'bg-emerald-500/5 text-emerald-400/80' : 'bg-white/5 text-zinc-500'}`}>
+                    <Text className={`px-2 py-0.5 rounded-sm text-[9px] font-bold font-oswald italic tracking-widest ${project.project_status?.includes('Construction') ? 'bg-[var(--color-success)]/10 text-[var(--color-success)]' : 'bg-[var(--bg-base)] text-[var(--text-tertiary)]'}`}>
                       {project.project_status || 'Active'}
                     </Text>
                   </Box>

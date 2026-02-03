@@ -14,6 +14,7 @@ interface TabNavProps {
     activeTab: string;
     onChange: (id: string) => void;
     variant?: 'category' | 'time';
+    className?: string;
 }
 
 /**
@@ -24,10 +25,11 @@ export const TabNav: React.FC<TabNavProps> = ({
     tabs,
     activeTab,
     onChange,
-    variant = 'category'
+    variant = 'category',
+    className
 }) => {
     return (
-        <Box className="flex items-center space-x-6 overflow-x-auto no-scrollbar">
+        <Box className={cn("flex items-center space-x-6 overflow-x-auto no-scrollbar", className)}>
             {tabs.map((tab) => {
                 const isActive = activeTab === tab.id;
                 return (
@@ -36,13 +38,12 @@ export const TabNav: React.FC<TabNavProps> = ({
                         onClick={() => onChange(tab.id)}
                         className={cn(
                             "relative h-14 flex items-center space-x-2 px-1 transition-all duration-300 group selection:bg-emerald-500/30",
-                            isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                            isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
                         )}
                     >
                         <Text
-                            variant="gov-header"
                             className={cn(
-                                "whitespace-nowrap transition-transform duration-300",
+                                "text-[13px] font-medium whitespace-nowrap transition-transform duration-300",
                                 isActive ? "scale-105 italic" : "group-hover:translate-x-0.5"
                             )}
                         >

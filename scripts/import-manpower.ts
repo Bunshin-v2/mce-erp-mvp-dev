@@ -2,15 +2,14 @@
 // Usage: npx ts-node scripts/import-manpower.ts <path-to-csv>
 
 import * as fs from 'fs';
-import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
+import { getSupabaseAdmin } from '../lib/supabase';
 
-dotenv.config({ path: '.env.local' });
+const supabase = getSupabaseAdmin();
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // In prod, use SERVICE_ROLE_KEY
-);
+if (!supabase) {
+  console.error('Failed to initialize admin client');
+  process.exit(1);
+}
 
 interface ManpowerRow {
   Project: string;
@@ -41,9 +40,9 @@ async function importManpower(filePath: string) {
     console.log(`Processing: ${role} for ${project}...`);
 
     // 1. Upsert Position
-    const { data: posData, error: posError } = await supabase
+    const { data: posData, error: posError } = await (supabase as any)
       .from('manpower_positions')
-      .upsert({ title: role, discipline: discipline || 'General' }, { onConflict: 'title' })
+      .upsert({ title: role, discipline: discipline || 'General' } as any, { onConflict: 'title' })
       .select()
       .single();
 
@@ -53,7 +52,7 @@ async function importManpower(filePath: string) {
     }
 
     // 2. Find Project ID (Mock lookup based on name match)
-    const { data: projData } = await supabase
+    const { data: projData } = await (supabase as any)
       .from('projects_master')
       .select('id')
       .ilike('PROJECT_NAME', `%${project}%`)
@@ -65,16 +64,16 @@ async function importManpower(filePath: string) {
     }
 
     // 3. Insert Requirement
-    const { error: reqError } = await supabase
+    const { error: reqError } = await (supabase as any)
       .from('manpower_requirements')
       .insert({
-        project_id: projData.id,
-        position_id: posData.id,
+        project_id: (projData as any).id,
+        position_id: (posData as any).id,
         start_date: start,
         end_date: end,
         quantity: parseInt(qty) || 1,
         status: 'open'
-      });
+      } as any);
 
     if (reqError) console.error(`Failed to insert requirement: ${reqError.message}`);
   }

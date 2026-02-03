@@ -67,6 +67,8 @@ export interface KPIMetric {
   description: string;
   icon?: any;
   color?: string;
+  isCurrency?: boolean;
+  status?: string;
   safety?: {
     value: number;
     label: string;

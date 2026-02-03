@@ -63,7 +63,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
     return (
         <Box as="span" className={cn(
-            "inline-flex items-center rounded-sm border font-bold italic uppercase tracking-widest backdrop-blur-md select-none",
+            "inline-flex items-center rounded-sm border font-medium uppercase tracking-wide backdrop-blur-md select-none",
             styles[variant],
             sizes[size],
             className
@@ -75,7 +75,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
                     (pulse || variant === 'critical') && "animate-pulse"
                 )} />
             )}
-            <Text variant="gov-label" className="text-[inherit] font-bold italic">
+            <Text variant="gov-label" className="text-[inherit] font-medium">
                 {label || status}
             </Text>
         </Box>

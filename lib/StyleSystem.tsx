@@ -8,11 +8,14 @@ export type PanelHierarchy = 'balanced' | 'focused';
 export type SidebarWeight = 'light' | 'normal' | 'bold';
 export type SidebarSize = 'compact' | 'normal' | 'large';
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 interface StyleConfig {
     density: DensityMode;
     surface: SurfaceReliability;
     signal: SignalIntensity;
     hierarchy: PanelHierarchy;
+    theme: ThemeMode; // Added theme mode
 
     // Granular Controls
     sidebarOptimized: boolean; // True = Collapsed/Icon-focus, False = Full
@@ -20,6 +23,13 @@ interface StyleConfig {
     sidebarSize: SidebarSize; // Font size for sidebar labels
     kpiEmphasis: 'value' | 'label'; // Value = Numeric dominant, Label = Context dominant
     verticalRhythm: 'tight' | 'relaxed';
+
+    // Light Mode Fine-Tuning Tokens
+    kpiBgLight: string;
+    kpiBorderLight: string;
+    kpiShadowLight: string;
+    kpiLabelColorLight: string;
+    kpiValueColorLight: string;
 }
 
 const defaultStyle: StyleConfig = {
@@ -27,11 +37,19 @@ const defaultStyle: StyleConfig = {
     surface: 'bordered',
     signal: 'standard',
     hierarchy: 'balanced',
+    theme: 'system', // Default to system theme
     sidebarOptimized: false,
     sidebarWeight: 'normal', // More readable default
     sidebarSize: 'normal', // Slightly larger by default
     kpiEmphasis: 'label', // User requested "Label-First"
     verticalRhythm: 'relaxed',
+
+    // Light Mode Defaults (Morgan Manifesto Synthesis)
+    kpiBgLight: '#51A2A8', // Morgan Teal (Nominal Surface)
+    kpiBorderLight: 'rgba(255, 255, 255, 0.1)',
+    kpiShadowLight: '0 8px 30px -10px rgba(44, 62, 80, 0.12), 0 0 1px rgba(44, 62, 80, 0.1)',
+    kpiLabelColorLight: 'rgba(255, 255, 255, 0.9)',
+    kpiValueColorLight: '#ffffff', // High Contrast White
 };
 
 interface StyleContextType {
@@ -47,7 +65,17 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         // Load from storage if available (only in browser)
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('mce-style-config');
-            return saved ? JSON.parse(saved) : defaultStyle;
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    // Merge with defaultStyle to ensure new properties like 'theme' are present
+                    return { ...defaultStyle, ...parsed };
+                } catch (e) {
+                    console.error("Failed to parse mce-style-config from localStorage", e);
+                    return defaultStyle;
+                }
+            }
+            return defaultStyle;
         }
         return defaultStyle;
     });
@@ -58,6 +86,59 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             localStorage.setItem('mce-style-config', JSON.stringify(config));
         }
     }, [config]);
+
+    const updateConfig = (updates: Partial<StyleConfig>) => {
+        setConfig(prev => {
+            const newConfig = { ...prev, ...updates };
+            // If theme is updated, apply it immediately to data-theme
+            if (updates.theme && typeof window !== 'undefined') {
+                applyTheme(newConfig.theme);
+            }
+            return newConfig;
+        });
+    };
+
+
+
+
+
+
+
+    // Helper function to apply theme to document.documentElement
+    const applyTheme = (themeMode: ThemeMode) => {
+        if (typeof window === 'undefined') return;
+        const root = document.documentElement;
+        if (themeMode === 'system') {
+            root.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+            root.dataset.theme = themeMode;
+        }
+    };
+
+    // Effect for theme application and system theme listener
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        applyTheme(config.theme);
+
+        let mediaQuery: MediaQueryList | undefined;
+        const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+            if (config.theme === 'system') {
+                document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
+            }
+        };
+
+        if (config.theme === 'system') {
+            mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', handleSystemThemeChange);
+        }
+
+        return () => {
+            if (mediaQuery) {
+                mediaQuery.removeEventListener('change', handleSystemThemeChange);
+            }
+        };
+    }, [config.theme]);
 
     // Apply CSS Variables based on config
     useEffect(() => {
@@ -108,11 +189,17 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             root.style.setProperty('--sidebar-header-size', '0.75rem'); // 12px - header
         }
 
+        // 6. Light Mode KPI Overrides (Active Injection)
+        if (root.dataset.theme === 'light') {
+            root.style.setProperty('--kpi-bg', config.kpiBgLight);
+            root.style.setProperty('--kpi-border', config.kpiBorderLight);
+            root.style.setProperty('--kpi-shadow', config.kpiShadowLight);
+            root.style.setProperty('--kpi-label-color', config.kpiLabelColorLight);
+            root.style.setProperty('--kpi-value-color', config.kpiValueColorLight);
+        }
     }, [config]);
 
-    const updateConfig = (updates: Partial<StyleConfig>) => {
-        setConfig(prev => ({ ...prev, ...updates }));
-    };
+
 
     const resetToBaseline = () => {
         setConfig(defaultStyle);

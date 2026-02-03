@@ -72,10 +72,10 @@ export const SignalMatrix: React.FC<SignalMatrixProps> = ({ query, results, onCl
                                             className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-[var(--color-info)]/30 transition-all group"
                                         >
                                             <div className="flex justify-between items-start mb-2">
-                                                <span className="text-xs font-bold italic text-slate-500 font-mono tracking-tighter">{p.project_code}</span>
+                                                <span className="text-[13px] font-normal text-[var(--color-text-secondary)] font-mono tracking-tighter">{p.project_code}</span>
                                                 <ArrowRight size={14} className="text-slate-700 group-hover:text-[var(--color-info)] -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
                                             </div>
-                                            <p className="text-sm font-bold italic text-white group-hover:text-[var(--color-info)] transition-colors">{p.project_name}</p>
+                                            <p className="text-[15px] font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-info)] transition-colors">{p.project_name}</p>
                                         </button>
                                     ))}
                                 </div>
@@ -94,10 +94,10 @@ export const SignalMatrix: React.FC<SignalMatrixProps> = ({ query, results, onCl
                                             className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-amber-500/30 transition-all group"
                                         >
                                             <div className="flex justify-between items-start mb-2">
-                                                <span className="text-xs font-bold italic text-slate-500 font-mono tracking-tighter">{t.client}</span>
+                                                <span className="text-[13px] font-normal text-[var(--color-text-secondary)] font-mono tracking-tighter">{t.client}</span>
                                                 <ArrowRight size={14} className="text-slate-700 group-hover:text-amber-500 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
                                             </div>
-                                            <p className="text-sm font-bold italic text-white group-hover:text-amber-400 transition-colors">{t.title}</p>
+                                            <p className="text-[15px] font-medium text-[var(--color-text-primary)] group-hover:text-amber-400 transition-colors">{t.title}</p>
                                         </button>
                                     ))}
                                 </div>

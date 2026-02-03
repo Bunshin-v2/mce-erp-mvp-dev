@@ -67,15 +67,14 @@ export const TenderKanban: React.FC<TenderKanbanProps> = ({ tenders, onSelectTen
                                     maxRotation={3}
                                     scale={1.02}
                                 >
-                                    <GlassPanel
-                                        variant="base"
-                                        className="p-4 cursor-pointer hover:border-[var(--mce-primary)]/50 transition-all h-full"
+                                    <div
+                                        className="h-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-lg px-4 py-3 cursor-pointer hover:border-[var(--text-tertiary)] transition-all"
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <Badge status={tender.status}>{tender.status}</Badge>
                                             <div className="relative">
                                                 <button
-                                                    className={`text-zinc-600 hover:text-white transition-colors p-1 rounded-md ${activeOverlay === tender.id ? 'bg-white/10 text-white' : ''}`}
+                                                    className={`text-zinc-600 hover:text-[var(--text-primary)] transition-colors p-1 rounded-md ${activeOverlay === tender.id ? 'bg-black/5 text-black' : ''}`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setActiveOverlay(activeOverlay === tender.id ? null : tender.id);
@@ -86,14 +85,14 @@ export const TenderKanban: React.FC<TenderKanbanProps> = ({ tenders, onSelectTen
 
                                                 {/* Status Transition Overlay */}
                                                 {activeOverlay === tender.id && (
-                                                    <div className="absolute right-0 top-full mt-2 w-48 bg-[#0a0a0b] border border-white/10 rounded-lg shadow-2xl z-[100] p-1 backdrop-blur-xl animate-in fade-in zoom-in duration-200">
-                                                        <div className="px-2 py-1.5 text-[10px] font-bold italic tracking-widest text-zinc-500 border-b border-white/5 mb-1">
+                                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-lg shadow-xl z-[100] p-1 animate-in fade-in zoom-in duration-200">
+                                                        <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-500 border-b border-zinc-100 mb-1">
                                                             Change Status
                                                         </div>
                                                         {COLUMNS.filter(c => c.id !== tender.status).map(col => (
                                                             <button
                                                                 key={col.id}
-                                                                className="w-full text-left px-2 py-2 text-[11px] font-bold italic text-zinc-400 hover:text-white hover:bg-white/5 rounded-md transition-all flex items-center justify-between group/item"
+                                                                className="w-full text-left px-2 py-2 text-[11px] font-bold text-zinc-600 hover:text-black hover:bg-zinc-100 rounded-md transition-all flex items-center justify-between group/item"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     onUpdateStatus?.(tender.id, col.id);
@@ -109,31 +108,31 @@ export const TenderKanban: React.FC<TenderKanbanProps> = ({ tenders, onSelectTen
                                             </div>
                                         </div>
 
-                                        <h4 className="text-sm font-bold italic text-zinc-200 mb-1 line-clamp-2 leading-tight group-hover:text-white transition-colors">
+                                        <h4 className="text-sm font-bold text-[var(--text-primary)] mb-1 line-clamp-2 leading-tight">
                                             {tender.title}
                                         </h4>
-                                        <p className="text-[10px] text-zinc-500 font-bold italic tracking-wider mb-3">
+                                        <p className="text-caption text-tertiary uppercase tracking-wide mb-3">
                                             {tender.client}
                                         </p>
 
-                                        <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                                            <div className="flex items-center gap-1.5 text-emerald-400">
-                                                <DollarSign size={12} />
-                                                <span className="text-xs font-mono font-bold italic">
+                                        <div className="flex items-center justify-between pt-3 border-t border-[var(--border-subtle)]">
+                                            <div className="flex items-center gap-1.5 text-[var(--text-primary)]">
+                                                <DollarSign size={14} strokeWidth={2.5} />
+                                                <span className="text-lg font-bold text-[var(--text-primary)]">
                                                     {(Number(tender.value) || 0).toLocaleString(undefined, { notation: 'compact' })}
                                                 </span>
                                             </div>
 
                                             {tender.probability && (
-                                                <div className={`text-[9px] font-bold italic tracking-tight px-1.5 py-0.5 rounded ${tender.probability === 'High' ? 'bg-emerald-500/10 text-emerald-500' :
-                                                    tender.probability === 'Medium' ? 'bg-amber-500/10 text-amber-500' :
-                                                        'bg-rose-500/10 text-rose-500'
+                                                <div className={`text-xs font-medium px-2 py-1 rounded-sm text-white ${tender.probability === 'High' ? 'bg-[var(--color-success)]' :
+                                                        tender.probability === 'Medium' ? 'bg-[var(--color-warning)]' :
+                                                            'bg-[var(--color-critical)]'
                                                     }`}>
                                                     {tender.probability}
                                                 </div>
                                             )}
                                         </div>
-                                    </GlassPanel>
+                                    </div>
                                 </TiltCard>
                             ))}
                         </div>

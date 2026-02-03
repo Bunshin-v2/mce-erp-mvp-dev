@@ -17,7 +17,7 @@ export const TenderList: React.FC<TenderListProps> = ({ tenders, limit }) => {
     }
 
     return (
-        <div className="divide-y divide-white/[0.05] flex-col h-full">
+        <div className="divide-y divide-[var(--surface-border)] flex-col h-full">
             {(limit ? tenders.slice(0, limit) : tenders).map((tender) => (
                 <TiltCard
                     key={tender.id}
@@ -27,25 +27,25 @@ export const TenderList: React.FC<TenderListProps> = ({ tenders, limit }) => {
                 >
                     <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-zinc-900/50 rounded-lg border border-glass group-hover:border-white/[0.1] transition-colors">
-                                <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                            <div className="p-2 bg-bg-surface rounded-lg border border-border-subtle group-hover:border-border-strong transition-colors">
+                                <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
                             </div>
                             <div>
-                                <h4 className="text-[13px] font-bold italic text-zinc-200 group-hover:text-white transition-colors">{tender.title}</h4>
-                                <div className="flex items-center gap-2 text-xs text-zinc-500 mt-0.5">
+                                <h4 className="text-[13px] font-oswald font-bold italic text-[var(--text-primary)] group-hover:text-[var(--morgan-teal)] transition-colors uppercase tracking-wider">{tender.title}</h4>
+                                <div className="flex items-center gap-2 text-xs text-text-secondary mt-0.5">
                                     <span className="tracking-wider font-bold italic">{tender.client}</span>
-                                    <span className="text-zinc-700">•</span>
+                                    <span className="text-zinc-400 opacity-50">•</span>
                                     <span className="flex items-center gap-1.5">
-                                        <div className={`w-1 h-1 rounded-full ${tender.status === 'Pre-Award' ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]' :
-                                            tender.status === 'Tender Stage' ? 'bg-amber-500' : 'bg-rose-500'
+                                        <div className={`w-1 h-1 rounded-full ${tender.status === 'Pre-Award' ? 'bg-[var(--morgan-teal)] shadow-[0_0_8px_var(--morgan-teal)]' :
+                                            tender.status === 'Tender Stage' ? 'bg-[var(--morgan-teal-light)]' : 'bg-[var(--morgan-red-dark)] shadow-[0_0_8px_var(--morgan-red-glow)]'
                                             }`} />
-                                        <span className="font-mono text-zinc-400">{tender.status ? tender.status.toUpperCase() : 'UNKNOWN'}</span>
+                                        <span className="font-oswald font-black italic text-[10px] text-text-tertiary">{tender.status ? tender.status.toUpperCase() : 'UNKNOWN'}</span>
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div className="text-right">
-                            <div className="text-sm font-mono font-bold italic text-zinc-100 group-hover:text-emerald-400 transition-colors">
+                            <div className="text-sm font-oswald font-bold italic text-[var(--kpi-value-color)] group-hover:scale-105 transition-transform">
                                 AED {(tender.value / 1000000).toFixed(1)}M
                             </div>
                         </div>
@@ -53,17 +53,17 @@ export const TenderList: React.FC<TenderListProps> = ({ tenders, limit }) => {
                     <div className="flex items-center justify-between mt-3 pl-[3.25rem]">
                         <div className="flex items-center gap-2">
                             <div className="flex -space-x-2">
-                                <div className="w-5 h-5 rounded-full bg-zinc-800 border border-zinc-900 flex items-center justify-center text-xs text-zinc-500">AB</div>
-                                <div className="w-5 h-5 rounded-full bg-zinc-800 border border-zinc-900 flex items-center justify-center text-xs text-zinc-500">MC</div>
+                                <div className="w-5 h-5 rounded-full bg-bg-surface border border-bg-base flex items-center justify-center text-xs text-text-tertiary shadow-sm">AB</div>
+                                <div className="w-5 h-5 rounded-full bg-bg-surface border border-bg-base flex items-center justify-center text-xs text-text-tertiary shadow-sm">MC</div>
                             </div>
-                            <span className="text-xs text-zinc-600 font-bold italic">+3 Team</span>
+                            <span className="text-xs text-text-secondary font-bold italic">+3 Team</span>
                         </div>
                         <span
-                            className={`text-xs tracking-wider font-mono px-2 py-1 rounded ${(tender.winProbability || tender.probability) === 'High'
-                                ? 'bg-emerald-500/10 text-emerald-500'
-                                : (tender.winProbability || tender.probability) === 'Medium'
-                                    ? 'bg-amber-500/10 text-amber-500'
-                                    : 'bg-rose-500/10 text-rose-500'
+                            className={`text-[10px] tracking-widest font-oswald font-black italic px-2 py-0.5 rounded border uppercase transition-colors ${(tender.winProbability || tender.probability) === 'High'
+                                    ? 'bg-[var(--morgan-teal)]/10 text-[var(--morgan-teal)] border-[var(--morgan-teal)]/20'
+                                    : (tender.winProbability || tender.probability) === 'Medium'
+                                        ? 'bg-[var(--morgan-teal-light)]/10 text-[var(--morgan-teal)] border-[var(--morgan-teal)]/10'
+                                        : 'bg-[var(--morgan-red-dark)]/10 text-[var(--morgan-red-dark)] border-[var(--morgan-red-dark)]/20'
                                 }`}
                         >
                             {(tender.winProbability || tender.probability || 'Medium')} Prob

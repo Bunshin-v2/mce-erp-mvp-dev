@@ -1,22 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
-import path from 'path';
-
-// Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+import { getSupabaseAdmin } from '../lib/supabase';
 
 async function testBotFunctionality() {
   console.log('\x1b[36m%s\x1b[0m', '🔍 Starting Bot Functionality Dial-In Verification...\n');
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('\x1b[31m%s\x1b[0m', '❌ Missing Supabase credentials in .env.local');
+  const supabase = getSupabaseAdmin();
+  if (!supabase) {
+    console.error('\x1b[31m%s\x1b[0m', '❌ Failed to initialize admin client');
     process.exit(1);
   }
-
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
   let passed = 0;
   let failed = 0;
 
@@ -63,7 +54,7 @@ async function testBotFunctionality() {
     // In pg-js, vector comes back as a string '[0.1, 0.2, ...]'
     const vectorStr = embeddings[0].embedding as unknown as string;
     const dims = vectorStr.replace('[', '').replace(']', '').split(',').length;
-    
+
     if (dims === 1536) {
       console.log('\x1b[32m%s\x1b[0m', `   ✅ Dimension Lock Verified: 1536`);
       passed++;

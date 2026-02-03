@@ -1,14 +1,14 @@
-import { createClient } from '@supabase/supabase-js';
 import * as fs from 'fs';
 import * as path from 'path';
 import dotenv from 'dotenv';
+import { getSupabaseAdmin } from '../lib/supabase';
 
-dotenv.config({ path: '.env.local' });
+const supabase = getSupabaseAdmin();
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL!,
-  process.env.VITE_SUPABASE_ANON_KEY!
-);
+if (!supabase) {
+  console.error('Failed to initialize admin client');
+  process.exit(1);
+}
 
 function generateFrontMatter(docCode: string, secCode: string, varCode: string): string {
   const tokens = [
@@ -34,7 +34,7 @@ function generateFrontMatter(docCode: string, secCode: string, varCode: string):
 async function ingestFile(filePath: string, docCode: string) {
   if (!fs.existsSync(filePath)) return;
   console.log(`📂 Ingesting PDF/Doc: ${path.basename(filePath)}...`);
-  
+
   const content = `Blueprint for ${docCode}. This document defines the extraction pipeline and RAG logic. 
                    Key success metrics: 95% verifiability, <2s latency. 
                    Reference scheme: DOC:SEC:VAR:SEQ.`;

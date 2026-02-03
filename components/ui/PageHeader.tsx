@@ -10,16 +10,16 @@ type PageHeaderProps = {
 
 export function PageHeader({ title, subtitle, actions, className }: PageHeaderProps) {
   return (
-    <header className={cn('flex items-center justify-between mb-8', className)}>
-      <Box className="flex flex-col gap-1">
+    <header className={cn('flex items-center justify-between mb-[var(--space-6)] pt-[var(--space-8)]', className)}>
+      <Box className="flex flex-col gap-y-[var(--space-1)] items-start text-left">
+        <Text as="h1" className="text-[24px] font-oswald font-black italic text-[var(--text-primary)] truncate leading-tight">
+          {title}
+        </Text>
         {subtitle && (
-          <Text variant="gov-label" color="secondary" className="truncate">
+          <Text className="text-caption text-tertiary uppercase tracking-wide truncate">
             {subtitle}
           </Text>
         )}
-        <Text as="h1" variant="gov-hero" className="truncate">
-          {title}
-        </Text>
       </Box>
       {actions && <Box className="page-actions">{actions}</Box>}
     </header>

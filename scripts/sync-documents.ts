@@ -1,21 +1,12 @@
-
-import { config } from 'dotenv';
-import path from 'path';
-import { createClient } from '@supabase/supabase-js';
-
-// Load environment variables FIRST
-config({ path: path.resolve(process.cwd(), '.env.local') });
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-    console.error('Error: Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local');
-    process.exit(1);
-}
+import { getSupabaseAdmin } from '../lib/supabase';
 
 // Initialize Supabase Admin client
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = getSupabaseAdmin();
+
+if (!supabase) {
+    console.error('Failed to initialize admin client');
+    process.exit(1);
+}
 
 // Formatting helper for Project-based documents
 function formatProjectContext(project: any): string {

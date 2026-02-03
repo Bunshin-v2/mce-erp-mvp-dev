@@ -12,15 +12,14 @@ const __dirname = path.dirname(__filename);
 // Load .env.local
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+import { getSupabaseAdmin } from '../lib/supabase';
 
-if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('❌ Missing Supabase credentials in .env.local');
+const supabase = getSupabaseAdmin();
+
+if (!supabase) {
+    console.error('❌ Failed to initialize admin client');
     process.exit(1);
 }
-
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // --- THE 156-POINT MASTER REGISTRY (Parsed from Markdown) ---
 // Note: In a real production script I would parse the MD file directly. 
@@ -216,7 +215,7 @@ async function seedLiabilities() {
 
     // 2. Insert Items
     for (const item of LIABILITY_REGISTRY) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
             .from('corporate_liabilities')
             .insert({
                 category: item.category,
@@ -231,7 +230,7 @@ async function seedLiabilities() {
                 stakeholders: item.stakeholders,
                 department: item.department,
                 status: 'Active' // Default
-            });
+            } as any);
 
         if (error) {
             console.error(`❌ Failed to insert ${item.obligation_name}:`, error.message);

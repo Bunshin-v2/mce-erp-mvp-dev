@@ -34,7 +34,7 @@ export function useDashboardData(searchQuery: string = '') {
         { data: logData }
       ] = await Promise.all([
         supabase.from('tasks').select('*').order('created_at', { ascending: false }),
-        supabase.from('agent_activity').select('*').order('created_at', { ascending: false }).limit(20),
+        supabase.from('agent_activity').select('*').order('timestamp', { ascending: false }).limit(20),
         supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(50)
       ]);
 
@@ -102,10 +102,10 @@ export function useDashboardData(searchQuery: string = '') {
     const criticalHazards = criticalRisks + poBreaches;
 
     return [
-      { label: "Active Projects", value: totalCount.toString(), trend: "Full Portfolio", trendDirection: "neutral" as const, trendSentiment: "neutral" as const, description: "Universe Synchronized", icon: Briefcase, color: "blue" },
-      { label: "Portfolio Value", value: `AED ${(totalContractValue / 1000000).toFixed(1)}M`, trend: "Ledger Verified", trendDirection: "neutral" as const, trendSentiment: "positive" as const, description: "Aggregate Contract Value", icon: DollarSign, color: "emerald" },
-      { label: "Active Bids", value: activeBids.toString(), trend: "SLA Compliant", trendDirection: "neutral" as const, trendSentiment: "positive" as const, description: "Open Tenders", icon: FileText, color: "amber" },
-      { label: "Critical Hazards", value: criticalHazards.toString(), trend: "Direct Action", trendDirection: (criticalHazards > 0 ? "up" : "neutral") as "up" | "down" | "neutral", trendSentiment: (criticalHazards > 0 ? "negative" : "positive") as "positive" | "negative" | "neutral", description: "Operational Triggers", icon: AlertTriangle, color: 'rose' },
+      { label: "Active Projects", value: totalCount.toString(), status: "NOMINAL", trend: "Full Portfolio", trendDirection: "neutral" as const, trendSentiment: "neutral" as const, description: "Universe Synchronized", icon: Briefcase, color: "cyan" },
+      { label: "Portfolio Value", value: `AED ${(totalContractValue / 1000000).toFixed(1)}M`, status: "VERIFIED", trend: "Ledger Verified", trendDirection: "neutral" as const, trendSentiment: "positive" as const, description: "Aggregate Contract Value", icon: DollarSign, color: "cyan" },
+      { label: "Active Bids", value: activeBids.toString(), status: "OPEN", trend: "SLA Compliant", trendDirection: "neutral" as const, trendSentiment: "positive" as const, description: "Open Tenders", icon: FileText, color: "cyan" },
+      { label: "Critical Hazards", value: criticalHazards.toString(), status: criticalHazards > 0 ? "CRITICAL" : "STABLE", trend: "Direct Action", trendDirection: (criticalHazards > 0 ? "up" : "neutral") as "up" | "down" | "neutral", trendSentiment: (criticalHazards > 0 ? "negative" : "positive") as "positive" | "negative" | "neutral", description: "Operational Triggers", icon: AlertTriangle, color: 'cyan' },
     ];
   }, [projects, tenders, purchaseOrders]);
 

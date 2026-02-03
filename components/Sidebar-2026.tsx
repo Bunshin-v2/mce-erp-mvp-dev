@@ -155,9 +155,9 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
               className="flex items-center gap-2"
             >
               <div className="w-8 h-8 rounded-md bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center">
-                <span className="text-xs font-bold italic text-white">MCE</span>
+                <span className="text-xs font-bold text-white">MCE</span>
               </div>
-              <span className="text-sm font-bold italic text-white">Morgan</span>
+              <span className="text-sm font-bold text-white">Morgan</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -207,7 +207,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden"
                 >
-                  <span className="text-xs font-bold italic text-zinc-600 uppercase tracking-wide block mb-3">
+                  <span className="text-xs font-bold text-zinc-600 uppercase tracking-wide block mb-3">
                     {section.section}
                   </span>
                 </motion.div>
@@ -226,7 +226,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                     whileHover={{ x: isCollapsed ? 0 : 4 }}
                     whileTap={{ scale: 0.98 }}
                     className={`
-                      w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-bold italic transition-colors
+                      w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors
                       ${isActive
                         ? 'bg-white/[0.08] text-white border-l-2 border-blue-500'
                         : 'text-zinc-400 hover:text-zinc-300 hover:bg-white/[0.02] border-l-2 border-transparent'
@@ -243,7 +243,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="truncate text-[11px] font-bold italic uppercase tracking-widest"
+                            className="truncate text-[11px] font-medium uppercase tracking-widest"
                           >
                             {item.label}
                           </motion.span>
@@ -259,7 +259,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           className={`
-                            text-xs font-bold italic rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0
+                            text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center flex-shrink-0
                             ${item.badge.type === 'critical'
                               ? 'bg-rose-500/20 text-rose-500'
                               : item.badge.type === 'warning'
@@ -287,7 +287,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
         {/* Settings */}
         <motion.button
           whileHover={{ x: isCollapsed ? 0 : 4 }}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-400 hover:text-zinc-300 hover:bg-white/[0.02] transition-colors text-sm font-black italic"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-400 hover:text-zinc-300 hover:bg-white/[0.02] transition-colors text-sm font-medium"
         >
           <Settings size={18} />
           <AnimatePresence>
@@ -302,7 +302,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
         {/* Logout */}
         <motion.button
           whileHover={{ x: isCollapsed ? 0 : 4 }}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-white/[0.02] transition-colors text-sm font-black italic"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-white/[0.02] transition-colors text-sm font-medium"
         >
           <LogOut size={18} />
           <AnimatePresence>

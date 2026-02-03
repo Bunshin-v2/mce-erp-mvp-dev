@@ -9,11 +9,12 @@ interface DriftBadgeProps {
 }
 
 export const DriftBadge: React.FC<DriftBadgeProps> = ({ plannedDate, status, className }) => {
+  // Logic: Completed projects are nominal
   if (!plannedDate || status === 'Completed' || status === 'Finalized') {
     return (
-      <div className={cn("flex items-center gap-1.5 px-2 py-0.5 rounded border border-white/5 bg-white/[0.02] text-[8px] font-bold italic text-zinc-600 tracking-widest", className)}>
-        <CheckCircle2 size={10} />
-        Node Stable
+      <div className={cn("flex items-center gap-2", className)}>
+        <div className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
+        <span className="text-caption text-tertiary">NODE STABLE</span>
       </div>
     );
   }
@@ -23,27 +24,43 @@ export const DriftBadge: React.FC<DriftBadgeProps> = ({ plannedDate, status, cla
   const diffTime = today.getTime() - planned.getTime();
   const driftDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (driftDays > 0) {
+  // Critical Overdue (0 days or passed)
+  if (driftDays >= 0) {
     return (
       <div className={cn(
-        "flex items-center gap-1.5 px-2 py-0.5 rounded border animate-pulse-fast",
-        driftDays > 7 
-          ? "bg-rose-500/10 text-rose-500 border-rose-500/20 shadow-[0_0_10px_rgba(244,63,94,0.2)]" 
-          : "bg-amber-500/10 text-amber-500 border-amber-500/20",
+        "flex items-center gap-1.5 px-2 py-1 rounded-sm bg-rose-50 border border-rose-200 shadow-[0_2px_4px_rgba(190,24,93,0.1)]",
         className
       )}>
-        <AlertCircle size={10} />
-        <span className="text-[8px] font-bold italic tracking-widest">
-          Temporal Drift: {driftDays}D
+        <AlertCircle size={10} className="text-rose-600" />
+        <span className="text-caption font-bold text-rose-600">
+          OVERDUE: {driftDays}D
         </span>
       </div>
     );
   }
 
+  // Warning (< 30 Days Remaining) -> diffTime is negative, so driftDays is negative. 
+  // e.g. -5 days means 5 days remaining. 
+  // Logic: If driftDays > -30 (i.e., -29 to -1)
+  if (driftDays > -30) {
+    return (
+      <div className={cn(
+        "flex items-center gap-1.5 px-2 py-1 rounded-sm bg-amber-50 border border-amber-200",
+        className
+      )}>
+        <Clock size={10} className="text-amber-600" />
+        <span className="text-caption font-bold text-amber-600">
+          DRIFT RISK: {Math.abs(driftDays)}D
+        </span>
+      </div>
+    );
+  }
+
+  // Stable (> 30 Days Remaining)
   return (
-    <div className={cn("flex items-center gap-1.5 px-2 py-0.5 rounded border border-emerald-500/10 bg-emerald-500/[0.02] text-[8px] font-bold italic text-emerald-500/60 tracking-widest", className)}>
-      <Clock size={10} />
-      On Schedule
+    <div className={cn("flex items-center gap-2", className)}>
+      <div className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
+      <span className="text-caption text-tertiary">NODE STABLE</span>
     </div>
   );
 };

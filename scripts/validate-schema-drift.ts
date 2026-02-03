@@ -1,14 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
-import path from 'path';
+import { getSupabaseAdmin } from '../lib/supabase';
 
-// Load env vars
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+const supabase = getSupabaseAdmin();
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+if (!supabase) {
+  console.error('Failed to initialize admin client');
+  process.exit(1);
+}
 
 // Define expected schema
 const EXPECTED_SCHEMA = {
@@ -119,9 +116,9 @@ async function validateTables(): Promise<void> {
 
     results.push({
       component: 'Tables',
-      status,
+      status: status as any,
       details,
-      severity: status === 'FAIL' ? 'ERROR' : 'INFO'
+      severity: (status as any) === 'FAIL' ? 'ERROR' : 'INFO'
     });
   } catch (err: any) {
     results.push({
@@ -224,7 +221,7 @@ async function main(): Promise<void> {
 
   // Save to file
   const fs = await import('fs').then(m => m.promises);
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-') ;
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   await fs.writeFile(
     path.join(process.cwd(), `schema-validation-${timestamp}.txt`),
     report

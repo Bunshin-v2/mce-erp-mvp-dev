@@ -1,14 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
-import path from 'path';
+import { getSupabaseAdmin } from '../lib/supabase';
 
-// Load env vars
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+const supabase = getSupabaseAdmin();
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+if (!supabase) {
+  console.error('Failed to initialize admin client');
+  process.exit(1);
+}
 
 // Tables that MUST have RLS enabled
 const REQUIRED_RLS_TABLES = [

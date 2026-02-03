@@ -1,13 +1,7 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '../lib/supabase';
 
-const url = "https://ywiwcrbwvdrjtujjgejx.supabase.co";
-// Testing the "sb_publishable" key that appeared to work
-const key = "sb_publishable_rnpXwns0i7vkiOeEm7wPMw_EriC47mv";
-
-console.log("Deep Verification of Key: " + key);
-
-const supabase = createClient(url, key);
+const supabase = getSupabaseClient();
 
 async function testConnection() {
     try {

@@ -14,6 +14,8 @@ import { GlassButton } from '../ui/GlassButton';
 import { EmptyState } from '../ui/EmptyState';
 import { AnimatedCounter } from '../ui/AnimatedCounter';
 import { Badge } from '../ui/Badge';
+import { Box, Text } from '../../components/primitives';
+import { cn } from '@/lib/utils';
 import { FinancialMetricCard } from '../ui/FinancialMetricCard';
 import { FlashUpdate } from '../ui/FlashUpdate';
 import { TiltCard } from '../ui/TiltCard';
@@ -38,6 +40,7 @@ export const FinancialsPage: React.FC<FinancialsPageProps> = ({
    const [searchQuery, setSearchQuery] = useState('');
    const [invoices, setInvoices] = useState<any[]>([]);
    const [localLoading, setLocalLoading] = useState(true);
+   const [activeTab, setActiveTab] = useState('LEDGER');
 
    const isLoading = globalLoading || localLoading;
 
@@ -197,7 +200,7 @@ export const FinancialsPage: React.FC<FinancialsPageProps> = ({
          align: 'right' as const,
          accessor: (item: any) => (
             <div className="flex flex-col items-end gap-2">
-               <div className="text-sm font-mono font-bold italic text-white flex items-baseline gap-1">
+               <div className="text-sm font-mono font-bold text-white flex items-baseline gap-1">
                   <span className="text-zinc-600 text-xs opacity-70">AED</span>
                   <AnimatedCounter value={item.value >= 1000000 ? item.value / 1000000 : item.value} format={item.value >= 1000000 ? 'decimal' : 'number'} decimals={item.value >= 1000000 ? 2 : 0} />
                   {item.value >= 1000000 && <span className="text-zinc-600 text-xs opacity-70">M</span>}
@@ -218,42 +221,93 @@ export const FinancialsPage: React.FC<FinancialsPageProps> = ({
 
    return (
       <DashboardFrame
-         title="Financial Ledger"
+         title="Financial Command"
          subtitle="Fiscal Governance // Sector 03"
-         metrics={metrics}
-
+         loading={isLoading}
+         metrics={
+            <>
+               <MetricBlock
+                  label="Portfolio Value"
+                  value={stats.portfolio}
+                  isCurrency
+                  trend={{ value: 8.4, type: 'up' }}
+               />
+               <MetricBlock
+                  label="Operational Burn"
+                  value={42.5}
+                  isCurrency
+                  trend={{ value: 2.1, type: 'down' }}
+               />
+               <MetricBlock
+                  label="Invoiced"
+                  value={stats.revenue}
+                  isCurrency
+                  trend={{ value: 15.2, type: 'up' }}
+               />
+               <MetricBlock
+                  label="Pending Recovery"
+                  value={stats.portfolio - stats.revenue}
+                  isCurrency
+                  status="warning"
+               />
+            </>
+         }
          tabs={
-            <div className="flex items-center justify-between p-[var(--gov-s2)]">
-               <div className="flex items-center gap-4">
-                  <div className="relative group">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
-                     <input
-                        type="text"
-                        placeholder="REGISTRY QUERY..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-black/40 border border-glass rounded-lg pl-9 pr-4 py-2 text-[10px] font-mono text-zinc-400 w-64 focus:outline-none focus:border-blue-500/30 transition-all"
-                     />
-                  </div>
-               </div>
-               <div className="flex items-center gap-3">
-                  <button onClick={() => safeExportToCSV(combinedLedger, 'MCE_Fiscal_Ledger')} className="p-2 text-zinc-600 hover:text-white transition-colors">
-                     <Download size={16} />
+            <Box className="bg-zinc-950/40 p-1 rounded-xl border border-white/5 backdrop-blur-md flex gap-1">
+               {[
+                  { id: 'LEDGER', label: 'Financial Ledger' },
+                  { id: 'FORECAST', label: 'Capital Forecast' }
+               ].map(tab => (
+                  <button
+                     key={tab.id}
+                     onClick={() => setActiveTab(tab.id)}
+                     className={cn(
+                        "px-5 py-2.5 rounded-lg transition-all duration-300 group",
+                        activeTab === tab.id
+                           ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] border border-white/10'
+                           : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5 border border-transparent'
+                     )}
+                  >
+                     <Text variant="gov-header" className={cn(
+                        "text-[10px] transition-all",
+                        activeTab === tab.id ? "scale-105 text-white" : "text-zinc-500"
+                     )}>
+                        {tab.label}
+                     </Text>
                   </button>
-                  <GlassButton onClick={() => setIsFormOpen(true)} className="px-6 py-2 rounded-lg text-xs font-bold italic">
-                     <Plus size={14} className="mr-2" /> Register Entry
-                  </GlassButton>
+               ))}
+            </Box>
+         }
+      >
+         {/* Toolbar moved from tabs prop */}
+         <div className="flex items-center justify-between p-[var(--gov-s2)] mb-4">
+            <div className="flex items-center gap-4">
+               <div className="relative group">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={14} />
+                  <input
+                     type="text"
+                     placeholder="REGISTRY QUERY..."
+                     value={searchQuery}
+                     onChange={(e) => setSearchQuery(e.target.value)}
+                     className="bg-black/40 border border-glass rounded-lg pl-9 pr-4 py-2 text-[10px] font-mono text-zinc-400 w-64 focus:outline-none focus:border-blue-500/30 transition-all"
+                  />
                </div>
             </div>
-         }
-         loading={isLoading}
-      >
+            <div className="flex items-center gap-3">
+               <button onClick={() => safeExportToCSV(combinedLedger, 'MCE_Fiscal_Ledger')} className="p-2 text-zinc-600 hover:text-white transition-colors">
+                  <Download size={16} />
+               </button>
+               <GlassButton onClick={() => setIsFormOpen(true)} className="px-6 py-2 rounded-lg text-xs font-bold">
+                  <Plus size={14} className="mr-2" /> Register Entry
+               </GlassButton>
+            </div>
+         </div>
          {isFormOpen && <InvoiceForm projects={projects} onClose={() => setIsFormOpen(false)} onSuccess={onRefresh} />}
 
          <div className="flex flex-col lg:grid lg:grid-cols-3 gap-0 h-full divide-x divide-white/5">
             <div className="lg:col-span-2 flex flex-col h-full overflow-hidden">
                <div className="p-6 border-b border-glass bg-white/[0.01]">
-                  <h3 className="text-gov-label">Unified Fiscal Ledger</h3>
+                  <h4 className="text-gov-label">Unified Fiscal Ledger</h4>
                </div>
                <div className="flex-1 overflow-hidden">
                   {combinedLedger.length > 0 ? (
@@ -286,10 +340,10 @@ export const FinancialsPage: React.FC<FinancialsPageProps> = ({
                         {safePOs.map(po => (
                            <div key={po.id} className={`p-4 rounded-xl border ${po.remaining_balance < 0 ? 'bg-rose-500/5 border-rose-500/20' : 'bg-glass-subtle border-glass'}`}>
                               <div className="flex justify-between items-start mb-2">
-                                 <span className="text-[9px] font-bold italic text-zinc-500 font-mono tracking-tighter">{po.po_number}</span>
+                                 <span className="text-[9px] font-bold text-zinc-500 font-mono tracking-tighter">{po.po_number}</span>
                                  {po.remaining_balance < 0 && <AlertCircle size={12} className="text-rose-500 animate-pulse" />}
                               </div>
-                              <h4 className="text-[11px] font-bold italic text-white truncate mb-2">{po.vendor_name}</h4>
+                              <h4 className="text-[11px] font-bold text-white truncate mb-2">{po.vendor_name}</h4>
                               <div className="flex justify-between text-[10px] font-mono">
                                  <span className="text-zinc-600">Balance</span>
                                  <span className={po.remaining_balance < 0 ? 'text-rose-500' : 'text-emerald-500'}>AED {Number(po.remaining_balance).toLocaleString()}</span>

@@ -32,7 +32,7 @@ export const riskIntelligence = {
       });
 
       // Filter matches to only those belonging to this project
-      const projectMatches = (riskMatches || []).filter((m: any) => 
+      const projectMatches = (riskMatches || []).filter((m: any) =>
         docs.some(d => d.id === m.document_id)
       );
 
@@ -53,7 +53,7 @@ export const riskIntelligence = {
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const result = await model.generateContent([systemPrompt, context]);
       const responseText = result.response.text();
-      
+
       // Clean potential markdown wrapper
       const jsonStr = responseText.replace(/```json|```/g, '').trim();
       const analysis = JSON.parse(jsonStr);

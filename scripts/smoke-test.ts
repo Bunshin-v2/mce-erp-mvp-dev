@@ -1,15 +1,9 @@
 // scripts/smoke-test.ts
 // Verifies DB connectivity and critical schema existence
 
-import { createClient } from '@supabase/supabase-js';
-import * as dotenv from 'dotenv';
+import { getSupabaseClient } from '../lib/supabase';
 
-dotenv.config({ path: '.env.local' });
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = getSupabaseClient();
 
 async function runSmokeTest() {
   console.log("🔥 Starting MCE Command Center v2.0 Smoke Test...");
@@ -35,7 +29,7 @@ async function runSmokeTest() {
   }
 
   // 3. RAG Column Check (FTS)
-  const { data: embeddingCols } = await supabase.rpc('get_table_columns', { table_name: 'document_embeddings' });
+  const { data: embeddingCols } = await supabase.rpc('get_table_columns', { table_name: 'document_embeddings' } as any);
   // Note: if RPC doesn't exist, we fallback to a manual check
   const { error: ftsError } = await supabase.from('document_embeddings').select('fts').limit(1);
   if (ftsError) {

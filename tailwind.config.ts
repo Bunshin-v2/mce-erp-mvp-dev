@@ -12,7 +12,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // 2026 Semantic Palette
+        // --- NEW Light Theme Palette (Screenshot Matched) ---
+        'light-bg': '#f4ede8',       // Warm beige/cream background
+        'light-surface': '#8abfc1',  // Muted teal cards
+        'light-text-primary': '#2d3e50', // Dark blue-grey text
+        'light-text-secondary': '#5a6c7d', // Medium grey text
+        'subtle': 'var(--bg-subtle)', // Tokenized background
+
+        // --- ADJUSTED Accent Palette (Screenshot Matched) ---
+        'accent-teal': {
+          light: '#d4e8e9',     // Very light teal for backgrounds
+          DEFAULT: '#8abfc1',   // Muted teal - main card color
+          dark: '#6eb5b7',      // Medium teal for depth
+          darker: '#4a9598',    // Dark teal for text
+        },
+        'accent-salmon': {
+          light: '#f5d5d3',     // Light salmon
+          DEFAULT: '#d6635f',   // Muted salmon - matches screenshot
+          dark: '#b85450',      // Darker salmon
+        },
+
+        // --- EXISTING Colors (Preserved) ---
         brand: {
           50: '#F5F7FF',
           100: '#EBF0FF',
@@ -47,23 +67,28 @@ const config: Config = {
           border: 'rgba(113, 113, 122, 0.2)',
         },
 
-        // Background System
+        // Background System (Dynamic Theme)
         bg: {
-          base: '#050505',    // Neutral Charcoal
-          surface: '#0a0a0a', // Elevated
-          hover: '#121212',   // Hover state
-          active: '#18181b',  // Active state
-          input: '#080808',   // Input fields
-          glass: 'rgba(255, 255, 255, 0.03)', // Glass base
+          base: 'var(--bg-base)',
+          surface: 'var(--bg-surface)',
+          hover: 'var(--bg-hover)',
+          active: 'var(--bg-active)',
+          input: 'var(--bg-input)',
+          glass: 'rgba(255, 255, 255, 0.03)',
+          layer: 'var(--bg-layer)', // Added from tokens
         },
 
-        // Text System
+        // Text System (Dynamic Theme)
         text: {
-          primary: '#f5f5f7',
-          secondary: '#a1a1aa',
-          tertiary: '#71717a',
-          disabled: '#52525b',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary: 'var(--text-tertiary)',
+          disabled: 'var(--text-disabled)',
+          link: 'var(--text-link)',
         },
+
+        // Border System (Dynamic Theme)
+        'border-base': 'var(--surface-border)',
 
         // Legacy Gov Compatibility
         gov: {
@@ -104,22 +129,24 @@ const config: Config = {
         'premium-gradient': 'linear-gradient(135deg, #0f172a 0%, #1a1f35 40%, #0f172a 100%)',
       },
       fontFamily: {
-        sans: ['var(--font-oswald)', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-oswald)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-oswald)', 'system-ui', 'sans-serif'],
-        brand: ['var(--font-oswald)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        brand: ['var(--font-inter)', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'JetBrains Mono', 'monospace'],
-        decorative: ['var(--font-oswald)', 'sans-serif'],
+        decorative: ['var(--font-inter)', 'sans-serif'],
+        oswald: ['var(--font-oswald)', 'sans-serif'], // Added by instruction
       },
       fontSize: {
-        // Governance Scale — Bold Italic DNA (all weights 900)
+        // Governance Scale — Inter Standard Weights
         'gov-hero': ['32px', { lineHeight: '1.1', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'gov-title': ['18px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'gov-header': ['14px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'gov-body': ['13px', { lineHeight: '1.5', letterSpacing: '0', fontWeight: '700' }],
-        'gov-label': ['11px', { lineHeight: '1.4', letterSpacing: '0.05em', fontWeight: '700' }],
-        'gov-table': ['12px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
-        'gov-metric': ['13px', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'gov-title': ['18px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'gov-header': ['14px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'gov-body': ['13px', { lineHeight: '1.5', letterSpacing: '0', fontWeight: '400' }],
+        'gov-label': ['11px', { lineHeight: '1.4', letterSpacing: '0.05em', fontWeight: '500' }],
+        'caption': ['10px', { lineHeight: '1.2', letterSpacing: '0.05em', fontWeight: '500', textTransform: 'uppercase' }],
+        'gov-table': ['12px', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '500' }],
+        'gov-metric': ['13px', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '600' }],
       },
       animation: {
         'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',

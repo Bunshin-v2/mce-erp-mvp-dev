@@ -31,7 +31,7 @@ export const ProjectionPulse: React.FC<ProjectionPulseProps> = ({
       {/* Header */}
       <div className="mb-6 relative z-10">
         <div className="flex items-center gap-2 mb-1">
-          <h3 className="text-xl font-black italic text-[var(--text-primary)] tracking-tight uppercase" style={{ fontFamily: '"Oswald", sans-serif' }}>Projection Pulse</h3>
+          <h3 className="text-xl font-black italic text-[var(--text-primary)] tracking-tight uppercase">Projection Pulse</h3>
           <div className="h-1.5 w-1.5 bg-[var(--brand-accent)] rounded-full animate-pulse" />
         </div>
         <p className="text-[10px] font-bold italic text-[var(--text-secondary)] uppercase tracking-widest">Temporal Fiscal Clustering // AI Forecast</p>

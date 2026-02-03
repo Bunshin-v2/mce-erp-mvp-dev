@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
-import { Bell, Search, User, SlidersHorizontal, HelpCircle, Layout, Activity } from 'lucide-react';
+import { Bell, Search, User, SlidersHorizontal, HelpCircle, Layout, Activity, Sun, Moon } from 'lucide-react';
 import { GlassButton } from '@/components/ui/GlassButton';
+import { useTheme } from '@/hooks/useTheme';
 
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import type { Notification } from '@/components/notifications/NotificationBell';
@@ -24,14 +27,34 @@ const sampleNotifications: Notification[] = [
 ];
 
 export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate, mode = 'operational', onToggleMode, onNotificationsClick, unreadCount = 2 }) => {
-  return (
-    <header className="bg-[var(--surface-base)] sticky top-0 z-40 border-b border-[var(--surface-border)] px-8 py-3 flex items-center justify-between transition-all duration-300">
+  const { theme, toggleTheme } = useTheme();
 
-      {/* Minimalist Branding */}
+  // Dynamic page title based on activeView
+  const getPageTitle = () => {
+    switch (activeView) {
+      case 'projects': return 'Projects';
+      case 'financials': return 'Financials';
+      case 'tenders': return 'Tenders';
+      case 'documents': return 'Documents';
+      case 'tasks': return 'Tasks';
+      case 'calendar': return 'Calendar';
+      case 'reports': return 'Reports';
+      case 'field': return 'Field Operations';
+      case 'intelligence': return 'Intelligence';
+      case 'settings': return 'Settings';
+      case 'profile': return 'Profile';
+      default: return 'Operational Workspace';
+    }
+  };
+
+  return (
+    <header className="bg-[var(--sidebar-bg)] sticky top-0 z-40 border-b border-[var(--surface-border)] px-8 py-3 flex items-center justify-between transition-all duration-300">
+
+      {/* Dynamic Branding with Glow */}
       <div className="flex items-center space-x-3">
-        <div className={`w-2 h-2 rounded-full ${mode === 'executive' ? 'bg-[var(--color-info)]/60 shadow-[0_0_8px_var(--color-info)]' : 'bg-[var(--color-success)]/60 shadow-[0_0_8px_var(--color-success)]'}`} />
-        <span className="type-label-small font-sans select-none">
-          {mode === 'executive' ? 'Executive Overview' : 'Operational Workspace'}
+        <div className="w-2 h-2 rounded-full bg-[var(--color-success)]/60 shadow-[0_0_12px_var(--color-success)]" />
+        <span className="text-[13px] font-bold italic tracking-wide select-none text-[var(--text-primary)] drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+          {getPageTitle()}
         </span>
       </div>
 
@@ -67,6 +90,16 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate
               {mode === 'executive' ? <Activity size={14} /> : <Layout size={14} />}
             </GlassButton>
           )}
+          <GlassButton
+            variant="ghost"
+            size="icon"
+            onClick={toggleTheme}
+            aria-label="Toggle Light Mode"
+            className="transition-colors text-zinc-500 hover:text-white"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          </GlassButton>
           <GlassButton
             variant="ghost"
             size="icon"

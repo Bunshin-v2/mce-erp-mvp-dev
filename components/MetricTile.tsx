@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { KPIMetric } from '../types';
 import { LucideIcon } from 'lucide-react';
-import { TiltCard } from '@/components/ui/TiltCard';
 import { useFlashAnimation } from '@/hooks/useFlashAnimation';
 
 interface MetricTileProps {
@@ -13,11 +12,6 @@ interface MetricTileProps {
   index?: number;
   onClick?: () => void;
 }
-
-// ... (AnimatedCounter and Sparkline components remain unchanged) ...
-// For brevity in this tool call, I will include the full file content or just the MetricTile component. 
-// Since replace_file_content requires exact match, and I want to replace the whole MetricTile component logic.
-// I will rewrite the MetricTile component part.
 
 const AnimatedCounter: React.FC<{ value: string | number; isNumber?: boolean }> = ({ value, isNumber = true }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -67,112 +61,89 @@ const AnimatedCounter: React.FC<{ value: string | number; isNumber?: boolean }> 
 };
 
 export const MetricTile: React.FC<MetricTileProps> = ({ metric, icon: Icon, color, variant = 'default', index = 0, onClick }) => {
-  const [isHovered, setIsHovered] = React.useState(false);
-  const [hasChanged, setHasChanged] = React.useState(false);
+  // MANDATE: Disable flash animation in light mode (removed entirely for calm)
+  const flashClass = '';
 
-  React.useEffect(() => {
-    setHasChanged(true);
-    const timer = setTimeout(() => setHasChanged(false), 1000);
-    return () => clearTimeout(timer);
-  }, [metric.value]);
-
-  // Elite ERP Color Palette
-  const colors = {
-    emerald: { text: 'var(--color-success)', bg: 'rgba(16, 185, 129, 0.03)', border: 'rgba(16, 185, 129, 0.1)', trend: [20, 25, 22, 30, 35, 38] },
-    blue: { text: '#3b82f6', bg: 'rgba(59, 130, 246, 0.03)', border: 'rgba(59, 130, 246, 0.1)', trend: [10, 15, 12, 18, 25, 20] },
-    rose: { text: '#f43f5e', bg: 'rgba(244, 63, 94, 0.03)', border: 'rgba(244, 63, 94, 0.1)', trend: [2, 1, 3, 0, 1, 1] },
-    amber: { text: 'var(--color-warning)', bg: 'rgba(245, 158, 11, 0.03)', border: 'rgba(245, 158, 11, 0.1)', trend: [5, 8, 4, 10, 7, 5] },
-    cyan: { text: '#06b6d4', bg: 'rgba(6, 182, 212, 0.03)', border: 'rgba(6, 182, 212, 0.1)', trend: [15, 20, 18, 22, 30, 25] },
+  const getTrendColor = (sentiment?: 'positive' | 'negative' | 'neutral') => {
+    switch (sentiment) {
+      case 'positive': return 'text-emerald-500';
+      case 'negative': return 'text-rose-500';
+      default: return 'text-zinc-500';
+    }
   };
 
-  const activeColor = metric.trendSentiment === 'positive' ? colors.emerald :
-    metric.trendSentiment === 'negative' ? colors.rose :
-      colors.blue;
-
-  const formattedValue = typeof metric.value === 'number' && metric.value < 10
+  const formattedValue = typeof metric.value === 'number' && metric.value < 10 && metric.value > 0
     ? `0${metric.value}`
     : metric.value;
 
-  const trendData = (colors as any)[color]?.trend || [10, 20, 15, 25, 22, 30];
-
-  const flashClass = useFlashAnimation(metric.value);
-
   return (
     <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      className={cn(
+        // Morgan Manifesto Synthesis
+        "rounded-[var(--radius-lg)] flex flex-col p-5 gap-4 h-full relative overflow-hidden transition-all duration-300",
+
+        // Nominal vs Critical Evaluation
+        metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative'
+          ? "bg-white border-2 border-[var(--morgan-red-dark)] morgan-critical-card-glow"
+          : "bg-[var(--morgan-teal)] text-white shadow-[0_8px_30px_-10px_rgba(44,62,80,0.12)]",
+
+        onClick ? "cursor-pointer hover:scale-[1.01]" : "",
+        flashClass
+      )}
     >
-      <TiltCard
-        onClick={onClick}
-        className={cn(
-          "group h-full w-full rounded-[var(--gov-radius)] border transition-all duration-500 flex flex-col justify-between p-5 overflow-hidden",
-          "border-white/5 shadow-lg bg-white/[0.02]",
-          isHovered && "border-white/30 shadow-glow-strong bg-white/[0.05]",
-          hasChanged && "animate-data-pulse"
-        )}
-        maxRotation={8}
-      >
-      {/* Matte Surface Layer with Premium Gradient */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-[#1e293b] via-[#1a1f35] to-[#0f172a] border border-glass group-hover:border-glass-strong transition-colors rounded-xl shadow-elevation ${flashClass}`} />
+      {/* Structural Anchor De-emphasis: Background is now solid per Manifesto */}
 
-      <div className="relative z-10 h-full flex flex-col justify-between min-w-0">
-        <div className="flex justify-between items-start">
-          <div className="space-y-1">
-            <h4 className="text-xs font-bold italic text-zinc-600 opacity-70">
-              {metric.label}
-            </h4>
-            <div className={`inline-flex items-center px-2 py-0.5 rounded-md border text-[10px] ${metric.trendSentiment === 'positive' ? 'bg-emerald-500/5 border-emerald-500/20 text-emerald-400' :
-              metric.trendSentiment === 'negative' ? 'bg-rose-500/5 border-rose-500/20 text-rose-400' :
-                'bg-zinc-500/5 border-zinc-500/20 text-zinc-400'
-              }`}>
-              <span className="type-caption text-[10px]">{metric.trend}</span>
-            </div>
-          </div>
-          <div className="p-2 bg-black/20 border border-white/5 rounded-lg group-hover:bg-white/5 transition-all">
-            <Icon size={16} className="text-zinc-500 group-hover:text-white transition-colors" />
-          </div>
-        </div>
-
-        <div className="flex-1 flex flex-col justify-end mt-4 min-w-0">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-end gap-1.5 min-w-0">
-              {metric.label.toLowerCase().includes('value') && (
-                <span className="text-xs font-bold italic text-zinc-600 opacity-50 flex-shrink-0 leading-none pb-0.5">AED</span>
-              )}
-              <h3
-                className={cn(
-                  "text-3xl md:text-4xl text-white font-bold italic tracking-tight tabular-nums flex-1 truncate transition-colors duration-300 leading-none",
-                  flashClass && "text-blue-400"
-                )}
-              >
-                <AnimatedCounter value={formattedValue} isNumber={typeof formattedValue === 'number' || /^\d+/.test(formattedValue as string)} />
-              </h3>
-            </div>
-
-            <div className="hidden sm:block">
-              <svg viewBox="0 0 100 30" className="w-full h-6 opacity-40 group-hover:opacity-100 transition-opacity">
-                <path
-                  d={`M0 25 ${trendData.map((v: number, idx: number) => `L${(idx + 1) * (100 / trendData.length)} ${25 - (v * 0.8)}`).join(' ')}`}
-                  fill="none"
-                  stroke={activeColor.text}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-          </div>
-            <div className="mt-3 pt-2 border-t border-white/5 w-full min-w-0">
-              <span className="type-caption text-xs text-zinc-400 block truncate">
-                {metric.description}
-              </span>
-            </div>
-
-        </div>
+      {/* Label Row */}
+      <div className="flex items-center justify-between relative z-10">
+        <span className={cn(
+          "text-[11px] font-oswald font-black italic uppercase tracking-[0.14em]",
+          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)]" : "text-white opacity-90"
+        )}>
+          {metric.label}
+        </span>
+        <Icon size={14} className={cn(
+          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)]" : "text-white",
+          "opacity-40"
+        )} strokeWidth={2.5} />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.02] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-    </TiltCard>
+      {/* Value Row - Mandate: Value Dominance Reinforcement */}
+      <div className="flex flex-col items-start gap-1 relative z-10">
+        <span className={cn(
+          "text-4xl font-oswald font-black italic tracking-tight leading-none transition-transform duration-500",
+          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)] morgan-critical-glow" : "text-white"
+        )}>
+          <AnimatedCounter value={formattedValue} isNumber={typeof metric.value === 'number'} />
+          {metric.isCurrency && <span className="text-[12px] font-bold italic ml-1.5 opacity-70 tracking-widest uppercase">AED</span>}
+        </span>
+      </div>
+
+      {/* Premium Accent Bar */}
+      <div className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[var(--morgan-teal)]/40 to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      {(metric.status || metric.trend) && (
+        <div className="flex items-center gap-2 mt-auto relative z-10">
+          {metric.status && (
+            <span className={cn(
+              "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm border",
+              metric.status?.toLowerCase().includes('critical')
+                ? "bg-[var(--morgan-red-dark)] text-white border-[var(--morgan-red-dark)]"
+                : "bg-white/20 text-white border-white/30"
+            )}>
+              {metric.status}
+            </span>
+          )}
+          {metric.trend && (
+            <span className={cn(
+              "text-[10px] font-black italic flex items-center gap-1 font-oswald",
+              metric.status?.toLowerCase().includes('critical') ? "text-[var(--morgan-red-dark)]" : "text-white/80"
+            )}>
+              {metric.trendSentiment === 'positive' ? '↑' : '↓'} {metric.trend}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 };

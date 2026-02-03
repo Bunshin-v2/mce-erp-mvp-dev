@@ -51,3 +51,6 @@ ai_service/.env
 lint_log.txt
 nul
 
+
+*storybook.log
+storybook-static

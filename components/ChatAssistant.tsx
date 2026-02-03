@@ -142,15 +142,15 @@ export const ChatAssistant: React.FC = () => {
                     <Bot size={24} strokeWidth={2} />
                 </GlassButton>
             ) : (
-                <div className="w-[400px] h-[600px] bg-[var(--bg-surface)] backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col border border-[var(--border-subtle)] overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+                <div className="w-[400px] h-[600px] bg-[var(--bg-surface)] backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col border border-[var(--surface-border)] overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
                     {/* HEADER */}
-                    <div className="bg-[var(--bg-base)] p-4 flex justify-between items-center border-b border-[var(--border-subtle)]">
+                    <div className="bg-[var(--bg-base)] p-4 flex justify-between items-center border-b border-[var(--surface-border)]">
                         <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-[var(--brand-primary)]/10 rounded-lg flex items-center justify-center border border-[var(--brand-primary)]/20">
-                                <Sparkles size={16} className="text-[var(--brand-primary)]" />
+                            <div className="w-8 h-8 bg-[var(--brand-accent)]/10 rounded-lg flex items-center justify-center border border-[var(--brand-accent)]/20">
+                                <Sparkles size={16} className="text-[var(--brand-accent)]" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-[var(--text-primary)]">MCE Assistant</h3>
+                                <h3 className="text-sm font-semibold text-[var(--text-primary)]">MCE Assistant</h3>
                                 <p className="text-[10px] text-[var(--text-secondary)]">Powered by Nexus AI</p>
                             </div>
                         </div>
@@ -166,7 +166,7 @@ export const ChatAssistant: React.FC = () => {
 
                     {/* SCOPE CHIPS */}
                     {(scopeKeywords.length > 0 || scopeSummary) && (
-                        <div className="px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-active)]/30 space-y-2">
+                        <div className="px-4 py-3 border-b border-[var(--surface-border)] bg-[var(--bg-active)]/30 space-y-2">
                             {scopeKeywords.length > 0 && (
                                 <div className="flex flex-wrap gap-1.5">
                                     {scopeKeywords.map(keyword => (
@@ -175,7 +175,7 @@ export const ChatAssistant: React.FC = () => {
                                             variant="secondary"
                                             size="sm"
                                             onClick={() => handleScopeChip(keyword)}
-                                            className="h-auto py-1 px-2.5 rounded-full text-[10px] font-medium text-[var(--text-secondary)] bg-[var(--bg-surface)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)]/50"
+                                            className="h-auto py-1 px-2.5 rounded-full text-[10px] font-medium text-[var(--text-secondary)] bg-[var(--bg-surface)] hover:text-[var(--brand-accent)] hover:border-[var(--brand-accent)]/50"
                                         >
                                             {keyword}
                                         </GlassButton>
@@ -190,8 +190,8 @@ export const ChatAssistant: React.FC = () => {
                         {messages.map((msg, i) => (
                             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                    ? 'bg-[var(--brand-primary)] text-white rounded-br-sm'
-                                    : 'bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] rounded-bl-sm'
+                                    ? 'bg-[var(--brand-accent)] text-white rounded-br-sm'
+                                    : 'bg-[var(--bg-surface)] border border-[var(--surface-border)] text-[var(--text-primary)] rounded-bl-sm'
                                     }`}>
                                     {msg.text}
                                 </div>
@@ -199,8 +199,8 @@ export const ChatAssistant: React.FC = () => {
                         ))}
                         {loading && (
                             <div className="flex justify-start">
-                                <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] px-4 py-3 rounded-2xl rounded-bl-sm flex items-center space-x-2.5">
-                                    <Loader2 className="animate-spin text-[var(--brand-primary)]" size={14} />
+                                <div className="bg-[var(--bg-surface)] border border-[var(--surface-border)] px-4 py-3 rounded-2xl rounded-bl-sm flex items-center space-x-2.5">
+                                    <Loader2 className="animate-spin text-[var(--brand-accent)]" size={14} />
                                     <span className="text-xs text-[var(--text-secondary)] font-medium">Processing...</span>
                                 </div>
                             </div>
@@ -208,8 +208,8 @@ export const ChatAssistant: React.FC = () => {
                     </div>
 
                     {/* INPUT AREA */}
-                    <div className="p-4 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)]">
-                        <form onSubmit={handleSend} className="relative flex items-center bg-[var(--bg-input)] rounded-xl border border-[var(--border-subtle)] focus-within:border-[var(--brand-primary)]/50 transition-colors">
+                    <div className="p-4 bg-[var(--bg-surface)] border-t border-[var(--surface-border)]">
+                        <form onSubmit={handleSend} className="relative flex items-center bg-[var(--bg-input)] rounded-xl border border-[var(--surface-border)] focus-within:border-[var(--brand-accent)]/50 transition-colors">
                             <input
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
@@ -221,7 +221,7 @@ export const ChatAssistant: React.FC = () => {
                                 variant="ghost"
                                 size="icon"
                                 disabled={!input.trim()}
-                                className="mr-1 text-[var(--brand-primary)] disabled:opacity-30 hover:bg-[var(--brand-primary)]/10"
+                                className="mr-1 text-[var(--brand-accent)] disabled:opacity-30 hover:bg-[var(--brand-accent)]/10"
                             >
                                 <Send size={18} />
                             </GlassButton>

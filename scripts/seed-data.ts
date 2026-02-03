@@ -1,9 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseAdmin } from '../lib/supabase';
 
-const supabase = createClient(
-  'https://ywiwcrbwvdrjtujjgejx.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3aXdjcmJ3dmRyanR1ampnZWp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMTY5MjgsImV4cCI6MjA4NDU5MjkyOH0.RO_rfMk2Klrpm9qZyU62Un0Ypvnb4giocLSx1s7MROM'
-);
+const supabase = getSupabaseAdmin();
+
+if (!supabase) {
+  console.error('Failed to initialize admin client');
+  process.exit(1);
+}
 
 const PROJECTS = [
   { project_name: 'New Corniche Hospital', project_code: 'NCH-001', contract_value_excl_vat: 57000000, project_status: 'Construction', completion_percent: 75, delivery_risk_rating: 'Low' },
@@ -22,19 +24,19 @@ const INVOICES = [
 
 async function seed() {
   console.log('🌱 Seeding Projects...');
-  const { error: pError } = await supabase.from('projects_master').insert(PROJECTS);
+  const { error: pError } = await (supabase as any).from('projects_master').insert(PROJECTS as any);
   if (pError) console.error('Error seeding projects:', pError);
 
   console.log('🌱 Seeding Invoices...');
-  const { error: iError } = await supabase.from('invoices').insert(INVOICES);
+  const { error: iError } = await (supabase as any).from('invoices').insert(INVOICES as any);
   if (iError) console.error('Error seeding invoices:', iError);
 
   console.log('🌱 Seeding Documents...');
-  const { error: dError } = await supabase.from('documents').insert([
+  const { error: dError } = await (supabase as any).from('documents').insert([
     { title: 'Main Consultancy Agreement', category: 'CONTRACT', status: 'Approved' },
     { title: 'HSE Monthly Audit', category: 'SAFETY', status: 'Review' },
     { title: 'Trade License 2026', category: 'COMPLIANCE', status: 'Approved' }
-  ]);
+  ] as any);
   if (dError) console.error('Error seeding documents:', dError);
 
   console.log('✅ Seeding Complete. Dashboard should now show real data.');

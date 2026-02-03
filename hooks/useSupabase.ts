@@ -1,6 +1,6 @@
 import { useAuth } from '@clerk/clerk-react';
 import { useMemo } from 'react';
-import { createAuthenticatedClient, supabase } from '../lib/supabase';
+import { getSupabaseClient } from '../lib/supabase';
 
 /**
  * Hook to get a Supabase client authenticated with the current user's Clerk session.
@@ -27,19 +27,24 @@ export function useSupabase() {
     // Provide a method to get the client asynchronously.
 
     const getClient = async () => {
-        if (!userId) return supabase;
+        const client = getSupabaseClient();
+        if (!userId) return client;
 
         try {
-            // 'supabase' here refers to the JWT template name in Clerk Dashboard.
-            // You MUST create a template named 'supabase' in Clerk > JWT Templates.
             const token = await getToken({ template: 'supabase' });
 
-            if (!token) return supabase;
+            if (token) {
+                // Update the singleton's session with the Clerk-generated JWT
+                await client.auth.setSession({
+                    access_token: token,
+                    refresh_token: '',
+                });
+            }
 
-            return createAuthenticatedClient(token);
+            return client;
         } catch (error) {
             console.error('Error fetching Supabase token from Clerk:', error);
-            return supabase;
+            return client;
         }
     };
 

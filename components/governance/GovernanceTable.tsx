@@ -17,6 +17,8 @@ interface GovernanceTableProps<T> {
     statusField?: keyof T; // Optionally map a status field for indicator styling
     auditLogField?: keyof T; // Display a small audit label
     urgencyField?: keyof T; // Detect high-urgency for pulsing/highlighting
+    headerClassName?: string;
+    rowClassName?: (item: T) => string;
 }
 
 /**
@@ -29,7 +31,9 @@ export function GovernanceTable<T>({
     onRowClick,
     statusField,
     auditLogField,
-    urgencyField
+    urgencyField,
+    headerClassName,
+    rowClassName
 }: GovernanceTableProps<T>) {
     logger.debug(`[GovernanceTable] Rendering ${data.length} rows`);
     if (data.length > 0) {
@@ -37,9 +41,9 @@ export function GovernanceTable<T>({
     }
 
     return (
-        <Box className="w-full h-full flex flex-col bg-zinc-950/20 backdrop-blur-md rounded-xl border border-white/5 overflow-hidden">
+        <Box className="w-full h-full flex flex-col overflow-hidden">
             {/* 1. Header Row */}
-            <Box className="flex border-b border-white/10 bg-white/[0.03] backdrop-blur-md shrink-0 sticky top-0 z-20">
+            <Box className={cn("flex border-b border-white/10 shrink-0 sticky top-0 z-20", headerClassName)}>
                 {columns.map((col, idx) => (
                     <Box
                         key={idx}
@@ -49,7 +53,7 @@ export function GovernanceTable<T>({
                             col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
                         )}
                     >
-                        <Text variant="gov-header" color="tertiary" className="opacity-40">
+                        <Text variant="gov-header" color="tertiary" className={cn("opacity-40", headerClassName ? "text-inherit opacity-90" : "")}>
                             {col.header}
                         </Text>
                     </Box>
@@ -68,17 +72,19 @@ export function GovernanceTable<T>({
                         {data.map((item, rowIdx) => {
                             const isUrgent = urgencyField ? !!(item[urgencyField]) : false;
                             const auditLabel = auditLogField ? String(item[auditLogField] || '') : null;
+                            const customRowClass = rowClassName ? rowClassName(item) : '';
 
                             return (
                                 <Box
                                     key={rowIdx}
                                     onClick={() => onRowClick?.(item)}
-                                    className={`
-                                        flex hover:bg-white/[0.03] transition-all duration-300 group relative min-h-[52px] border-b border-white/[0.02]
-                                        ${onRowClick ? 'cursor-pointer' : ''}
-                                        ${isUrgent ? 'bg-rose-500/[0.02] shadow-[inset_2px_0_0_var(--color-critical)]' : ''}
-                                        ${rowIdx % 2 === 0 ? 'bg-white/[0.005]' : 'bg-transparent'}
-                                    `}
+                                    className={cn(
+                                        "flex hover:bg-white/[0.03] transition-all duration-300 group relative min-h-[52px] border-b border-white/[0.02]",
+                                        onRowClick && 'cursor-pointer',
+                                        isUrgent && 'bg-rose-500/[0.02] shadow-[inset_2px_0_0_var(--color-critical)]',
+                                        rowIdx % 2 === 0 ? 'bg-white/[0.005]' : 'bg-transparent',
+                                        customRowClass
+                                    )}
                                 >
                                     {columns.map((col, colIdx) => {
                                         const content = typeof col.accessor === 'function'
@@ -89,10 +95,10 @@ export function GovernanceTable<T>({
                                             <Box
                                                 key={colIdx}
                                                 style={{ width: col.width || 'auto', flex: col.width ? 'none' : 1 }}
-                                                className={`
-                                                    px-6 py-2.5 transition-all duration-300 flex flex-col justify-center
-                                                    ${col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'}
-                                                `}
+                                                className={cn(
+                                                    "px-6 py-2.5 transition-all duration-300 flex flex-col justify-center",
+                                                    col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
+                                                )}
                                             >
                                                 <Box className="relative z-10">
                                                     {content}

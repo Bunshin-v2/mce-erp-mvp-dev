@@ -20,7 +20,9 @@
     "check": "bash scripts/quick-health-check.sh",
     "rag:ingest": "npx tsx scripts/rag/ingest-prompts.ts",
     "rag:ingest-financial": "npx tsx scripts/rag/ingest-financial.ts",
-    "rag:status": "npx tsx scripts/rag/check-status.ts"
+    "rag:status": "npx tsx scripts/rag/check-status.ts",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.59.5",
@@ -43,6 +45,7 @@
     "lucide-react": "^0.562.0",
     "next": "^16.1.5",
     "papaparse": "^5.5.3",
+    "prom-client": "^15.1.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "recharts": "^3.7.0",
@@ -51,13 +54,28 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^5.0.0",
     "@playwright/test": "^1.58.0",
+    "@storybook/addon-a11y": "^10.2.4",
+    "@storybook/addon-docs": "^10.2.4",
+    "@storybook/addon-onboarding": "^10.2.4",
+    "@storybook/addon-themes": "^10.2.4",
+    "@storybook/addon-vitest": "^10.2.4",
+    "@storybook/nextjs-vite": "^10.2.4",
+    "@storybook/test-runner": "^0.24.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^22.14.0",
     "@types/react": "19.2.10",
+    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/coverage-v8": "^4.0.18",
     "autoprefixer": "^10.4.23",
+    "chromatic": "^15.0.0",
+    "playwright": "^1.58.1",
     "postcss": "^8.5.6",
+    "storybook": "^10.2.4",
     "tailwindcss": "^4.1.18",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   }
 }
