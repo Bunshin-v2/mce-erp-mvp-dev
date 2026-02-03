@@ -1,22 +1,42 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-// Define public routes that do not require authentication
-// We allow '/' (InputZero login), '/sign-in', '/sign-up' and any webhooks
+// Easy-mode fix for Vercel "MIDDLEWARE_INVOCATION_FAILED":
+// If Clerk isn't configured in this environment (missing env vars), do not run Clerk middleware.
+// This matches existing app behavior (Providers renders without ClerkProvider when key missing).
+const isClerkConfigured = Boolean(
+  (process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? '').trim() &&
+    (process.env.CLERK_SECRET_KEY ?? '').trim()
+);
+
+// Define public routes that do not require authentication.
 const isPublicRoute = createRouteMatcher([
   '/',
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/api/webhooks(.*)'
+
+  // Webhooks must be reachable without auth
+  '/api/webhooks(.*)',
+
+  // Health / diagnostics endpoints must return JSON to CLI probes
+  '/api/health',
+  '/api/ai/ready',
+  '/api/ai/health',
+  '/api/ai/version',
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    const { userId, redirectToSignIn } = await auth();
-    if (!userId) {
-      return redirectToSignIn();
-    }
-  }
-});
+export default isClerkConfigured
+  ? clerkMiddleware(async (auth, req) => {
+      if (!isPublicRoute(req)) {
+        const { userId, redirectToSignIn } = await auth();
+        if (!userId) {
+          return redirectToSignIn();
+        }
+      }
+    })
+  : function middleware() {
+      // Clerk not configured: let requests through rather than crashing Edge middleware.
+      return;
+    };
 
 export const config = {
   matcher: [
