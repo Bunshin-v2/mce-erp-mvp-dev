@@ -75,10 +75,10 @@ export const RiskHeatmapV2: React.FC<RiskHeatmapV2Props> = ({ projects = [], ale
                 x: Math.max(10, Math.min(90, baseX + jitterX)), // Clamp to 10-90%
                 y: Math.max(10, Math.min(90, baseY + jitterY)),
                 riskValue,
-                color: p.delivery_risk_rating === 'Critical' ? '#ef4444' : // red-500
-                    p.delivery_risk_rating === 'High' ? '#f59e0b' : // amber-500
-                        p.delivery_risk_rating === 'Moderate' ? '#3b82f6' : // blue-500
-                            '#10b981' // emerald-500
+                color: p.delivery_risk_rating === 'Critical' ? 'var(--chart-series-critical)' :
+                    p.delivery_risk_rating === 'High' ? 'var(--chart-series-warning)' :
+                        p.delivery_risk_rating === 'Moderate' ? 'var(--chart-series-1)' :
+                            'var(--chart-series-success)'
             };
         });
     }, [projects]);
@@ -108,22 +108,24 @@ export const RiskHeatmapV2: React.FC<RiskHeatmapV2Props> = ({ projects = [], ale
     }, [nodes]);
 
     return (
-        <div className="relative h-full w-full bg-[var(--bg-base)] overflow-hidden flex flex-col lg:flex-row border border-[var(--border-subtle)] rounded-2xl group/hud shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <div className="relative h-full w-full bg-[var(--surface-base)] overflow-hidden flex flex-col lg:flex-row border border-[var(--surface-border)] rounded-2xl group/hud shadow-[0_0_40px_rgba(0,0,0,0.15)]">
             {/* BACKGROUND MATRIX */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.05]"
+            <div
+                className="absolute inset-0 pointer-events-none opacity-[0.25]"
                 style={{
                     backgroundImage: `
-                        linear-gradient(to right, #ffffff 1px, transparent 1px),
-                        linear-gradient(to bottom, #ffffff 1px, transparent 1px)
+                        linear-gradient(to right, var(--chart-grid) 1px, transparent 1px),
+                        linear-gradient(to bottom, var(--chart-grid) 1px, transparent 1px)
                      `,
                     backgroundSize: '40px 40px'
-                }} />
+                }}
+            />
 
             {/* HOLOGRAPHIC SCANLINE */}
             <motion.div
                 animate={{ top: ['0%', '100%'] }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                className="absolute left-0 right-0 h-[20px] bg-gradient-to-b from-transparent via-brand-500/10 to-transparent z-0 pointer-events-none"
+                className="absolute left-0 right-0 h-[20px] bg-gradient-to-b from-transparent via-[var(--mce-primary)]/10 to-transparent z-0 pointer-events-none"
             />
 
             {/* LEFT HUD: CORRELATION MATRIX */}

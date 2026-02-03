@@ -19,72 +19,145 @@
    /* Warning (deep amber) */
    --color-success: #059669;
    /* Healthy/Success (emerald) */
-   --color-info: #2563eb;
-   /* Info/In-Progress (blue) */
+   --color-info: #51a2a8;
+   /* Info/In-Progress (MCE teal) */
    --color-neutral: #71717a;
    /* Secondary/Disabled (zinc) */
-
+ 
    /* =========================================================================
-     BACKGROUND COLORS - Surface hierarchy
+      BACKGROUND COLORS - Surface hierarchy
      ========================================================================= */
 
-   /* Background System */
-   --bg-base: #050505;
-   /* Primary background - Neutral Charcoal */
-   --bg-surface: #0a0a0a;
+   /* Default theme: LIGHT (user preference) */
+   --bg-base: #fafafa;
+   /* Page background */
+   --bg-surface: #ffffff;
    /* Elevated surfaces */
-   --bg-layer: #0e0e0e;
+   --bg-layer: #f4f4f5;
    /* Secondary surfaces */
-   --bg-hover: #121212;
+   --bg-hover: #f1f5f9;
    /* Hover state */
-   --bg-active: #18181b;
+   --bg-active: #e4e4e7;
    /* Active/Selected state */
-   --bg-input: #080808;
+   --bg-input: #ffffff;
    /* Input fields */
 
    /* Aliases for compatibility */
    --surface-base: var(--bg-base);
    --surface-surface: var(--bg-surface);
    --surface-layer: var(--bg-layer);
-   --surface-border: rgba(255, 255, 255, 0.05);
-   --surface-border-strong: rgba(255, 255, 255, 0.1);
+   --surface-border: rgba(0, 0, 0, 0.08);
+   --surface-border-strong: rgba(0, 0, 0, 0.14);
 
    /* Overlay Opacity Variants */
-   --overlay-1: rgba(255, 255, 255, 0.01);
+   --overlay-1: rgba(0, 0, 0, 0.01);
    /* Barely visible */
-   --overlay-2: rgba(255, 255, 255, 0.02);
+   --overlay-2: rgba(0, 0, 0, 0.02);
    /* Very subtle */
-   --overlay-5: rgba(255, 255, 255, 0.05);
+   --overlay-5: rgba(0, 0, 0, 0.05);
    /* Subtle background */
-   --overlay-10: rgba(255, 255, 255, 0.10);
+   --overlay-10: rgba(0, 0, 0, 0.10);
    /* Hover state */
 
    /* =========================================================================
      TEXT COLORS - Typographic hierarchy
      ========================================================================= */
 
-   --text-primary: #f5f5f7;
-   /* Main body text, headings */
-   --text-secondary: #a1a1aa;
+   --text-primary: #444444;
+   /* Main body text, headings (Pantone gray) */
+   --text-secondary: #3f3f46;
    /* Labels, captions, secondary info */
    --text-tertiary: #71717a;
    /* Very muted, disabled, timestamps */
-   --text-disabled: #52525b;
+   --text-disabled: #a1a1aa;
    /* Disabled state */
-   --text-link: #2563eb;
+   --text-link: var(--color-info);
    /* Links (use color-info) */
 
    /* =========================================================================
-     TYPOGRAPHY - Font families and scales
+     BRAND COLORS - MCE Palette (LIGHT MODE ONLY)
      ========================================================================= */
 
-   --font-sans: var(--font-oswald), system-ui, sans-serif;
-   --font-mono: var(--font-mono), 'Courier New', monospace;
+   --mce-primary: #c21719;
+   /* Pantone red */
+   --mce-accent: #ef5146;
+   /* Pantone red (accent/hover) */
+   --mce-teal: #51a2a8;
+   /* Pantone teal */
+   --mce-teal-soft: #a0d0d7;
+   /* Pantone teal tint */
+   --mce-white: #ffffff;
+   /* Pantone white */
+   --mce-gray-900: #444444;
+   /* Pantone dark gray */
 
-   /* App Font Roles */
-   --font-decorative: 'Oswald', var(--font-sans);
-   --font-ui: var(--font-decorative);
-   --font-heading: var(--font-decorative);
+}
+
+/* Dark theme override */
+html[data-theme='dark'] {
+   --bg-base: #050505;
+   --bg-surface: #0a0a0a;
+   --bg-layer: #0e0e0e;
+   --bg-hover: #121212;
+   --bg-active: #18181b;
+   --bg-input: #080808;
+
+   --surface-border: rgba(255, 255, 255, 0.05);
+   --surface-border-strong: rgba(255, 255, 255, 0.1);
+
+   --overlay-1: rgba(255, 255, 255, 0.01);
+   --overlay-2: rgba(255, 255, 255, 0.02);
+   --overlay-5: rgba(255, 255, 255, 0.05);
+   --overlay-10: rgba(255, 255, 255, 0.10);
+
+   --text-primary: #f5f5f7;
+   --text-secondary: #a1a1aa;
+   --text-tertiary: #71717a;
+   --text-disabled: #52525b;
+
+   /* Charts */
+   --chart-series-1: var(--color-info);
+   --chart-series-2: var(--mce-primary);
+   --chart-series-success: var(--color-success);
+   --chart-series-warning: var(--color-warning);
+   --chart-series-critical: var(--color-critical);
+
+   --chart-grid: var(--surface-border);
+   --chart-axis: var(--text-tertiary);
+   --chart-tooltip-bg: var(--surface-surface);
+   --chart-tooltip-border: var(--surface-border-strong);
+}
+
+:root {
+   /* =========================================================================
+     SEMANTIC COLORS - What colors mean in this system
+     ========================================================================= */
+
+   /* Status Colors - Reserved Meaning */
+   --color-critical: #be185d;
+   /* Critical/Error (deep rose) */
+   --color-warning: #b45309;
+   /* Warning (deep amber) */
+   --color-success: #059669;
+   /* Healthy/Success (emerald) */
+   --color-info: #51a2a8;
+   /* Info/In-Progress (MCE teal) */
+   --color-neutral: #71717a;
+   /* Secondary/Disabled (zinc) */
+ 
+   /* =========================================================================
+      TYPOGRAPHY - Font families and scales
+     ========================================================================= */
+
+    --font-sans: var(--font-oswald), system-ui, sans-serif;
+    --font-mono: var(--font-mono), 'Courier New', monospace;
+ 
+    /* App Font Roles */
+    --font-brand: var(--font-oswald);
+    --font-display: var(--font-oswald);
+    --font-decorative: var(--font-oswald);
+    --font-ui: var(--font-sans);
+    --font-heading: var(--font-sans);
 
 
    /* Font Sizes - Predefined Scale Only */
@@ -335,7 +408,49 @@
    --brand-accent-2: #8b5cf6;
    /* Violet Pulse */
    --bg-glass-accent: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-}
+
+   /* -------------------------------------------------------------------------
+      CHART TOKENS (Theme-safe data viz colors)
+      ------------------------------------------------------------------------- */
+   --chart-series-1: var(--color-info);       /* primary data series */
+   --chart-series-2: var(--mce-primary);      /* secondary / emphasis */
+   --chart-series-success: var(--color-success);
+   --chart-series-warning: var(--color-warning);
+   --chart-series-critical: var(--color-critical);
+
+   --chart-grid: var(--surface-border);
+   --chart-axis: var(--text-tertiary);
+   --chart-tooltip-bg: var(--surface-surface);
+   --chart-tooltip-border: var(--surface-border-strong);
+ }
+
+ .font-preview-erp {
+    --font-sans: var(--font-inter), system-ui, sans-serif;
+    --font-ui: var(--font-inter), system-ui, sans-serif;
+    --font-heading: var(--font-oswald), system-ui, sans-serif;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-style-default: normal;
+ }
+
+ .font-preview-erp .text-body,
+ .font-preview-erp .text-label,
+ .font-preview-erp .text-caption,
+ .font-preview-erp .text-mono {
+    font-style: normal;
+    font-weight: 400;
+ }
+
+ .font-preview-erp .text-title-sm,
+ .font-preview-erp .text-title-md,
+ .font-preview-erp .text-title-lg {
+    font-family: var(--font-heading);
+    font-style: normal;
+    font-weight: 700;
+ }
+
 
 /**
  * UTILITY CLASSES - Built from tokens
