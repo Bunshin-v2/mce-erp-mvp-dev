@@ -29,53 +29,53 @@ export const TenderDetail: React.FC<TenderDetailProps> = ({ tender, onBack }) =>
    const { hasPermission } = useUserTier();
    const isManager = hasPermission('L3');
 
-    useEffect(() => {
-        if (!tender?.id) return;
-        const checkRequirementsAndFetchComms = async () => {
-            setChecking(true);
-            try {
-                const { count } = await supabase.from('tasks').select('*', { count: 'exact', head: true }).eq('tender_id', tender.id);
-                setHasChecklist(count && count > 0);
-                if (count && count > 0) setShowMatrix(true);
+   useEffect(() => {
+      if (!tender?.id) return;
+      const checkRequirementsAndFetchComms = async () => {
+         setChecking(true);
+         try {
+            const { count } = await (supabase.from('tasks' as any) as any).select('*', { count: 'exact', head: true }).eq('tender_id', tender.id);
+            setHasChecklist(count && count > 0);
+            if (count && count > 0) setShowMatrix(true);
 
-                const { data: commsData, error: commsError } = await supabase.from('tender_comms_events').select('*').eq('tender_id', tender.id).order('event_at', { ascending: false });
-                if (commsError) throw commsError;
-                setCommsEvents(commsData || []);
-            } catch (err) {
-                console.error('Failed to fetch tender details:', err);
-            } finally {
-                setChecking(false);
-            }
-        };
-        checkRequirementsAndFetchComms();
-    }, [tender?.id]);
+            const { data: commsData, error: commsError } = await (supabase.from('tender_comms_events' as any) as any).select('*').eq('tender_id', tender.id).order('event_at', { ascending: false });
+            if (commsError) throw commsError;
+            setCommsEvents(commsData || []);
+         } catch (err) {
+            console.error('Failed to fetch tender details:', err);
+         } finally {
+            setChecking(false);
+         }
+      };
+      checkRequirementsAndFetchComms();
+   }, [tender?.id]);
 
-    const handleAddComms = async (newEvent: any) => {
-        const mockEvent = { id: new Date().toISOString(), tender_id: tender.id, logged_by_user_id: 'mock-user', event_at: new Date().toISOString(), ...newEvent };
-        setCommsEvents(prev => [mockEvent, ...prev]);
-    };
+   const handleAddComms = async (newEvent: any) => {
+      const mockEvent = { id: new Date().toISOString(), tender_id: tender.id, logged_by_user_id: 'mock-user', event_at: new Date().toISOString(), ...newEvent };
+      setCommsEvents(prev => [mockEvent, ...prev]);
+   };
 
-    const handleExtractRequirements = async () => {
-        if (!tender?.id) return;
-        setIsExtracting(true);
-        try {
-            const res = await fetch(`/api/documents/${tender.id}/extract-requirements`, { method: 'POST' });
-            if (!res.ok) throw new Error('Extraction API failed');
-            const data = await res.json();
-            setRequirements(data.requirements || []);
-        } catch (error) {
-            console.error("Extraction failed", error);
-            alert('Failed to extract requirements.');
-        } finally {
-            setIsExtracting(false);
-        }
+   const handleExtractRequirements = async () => {
+      if (!tender?.id) return;
+      setIsExtracting(true);
+      try {
+         const res = await fetch(`/api/documents/${tender.id}/extract-requirements`, { method: 'POST' });
+         if (!res.ok) throw new Error('Extraction API failed');
+         const data = await res.json();
+         setRequirements(data.requirements || []);
+      } catch (error) {
+         console.error("Extraction failed", error);
+         alert('Failed to extract requirements.');
+      } finally {
+         setIsExtracting(false);
+      }
    };
 
    const handleReset = async () => {
       if (!window.confirm('Reset checklist?')) return;
       setResetting(true);
       try {
-         await supabase.rpc('reset_tender_checklist', { target_tender_id: tender.id });
+         await (supabase as any).rpc('reset_tender_checklist', { target_tender_id: tender.id });
          setHasChecklist(false);
          setShowMatrix(false);
       } catch (err: any) {
@@ -108,30 +108,30 @@ export const TenderDetail: React.FC<TenderDetailProps> = ({ tender, onBack }) =>
 
          {!showMatrix ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="min-h-[65vh] flex items-center justify-center">
-                        {!hasChecklist ? (
-                           <div>
-                                <h2 className="text-3xl font-bold italic text-white">Intake Calibration Required</h2>
-                                <GlassButton onClick={() => handleStartWizard()}>Initialize Calibration</GlassButton>
-                           </div>
-                        ) : (
-                           <div>
-                                <h2 className="text-3xl font-bold italic text-white">Project Registry Synchronized</h2>
-                               <GlassButton onClick={() => setShowMatrix(true)}>Open Requirement Matrix</GlassButton>
-                           </div>
-                        )}
-                    </div>
-                    <div className="space-y-4">
-                        <GlassButton onClick={handleExtractRequirements} disabled={isExtracting} className="w-full justify-center">
-                            {isExtracting ? 'Analyzing Document...' : 'Extract Requirements from Document'}
-                        </GlassButton>
-                        {requirements.length > 0 && <RequirementsChecklist requirements={requirements} />}
-                    </div>
-                </div>
-                <div className="lg:col-span-1">
-                    <CommsLog tenderId={tender.id} commsEvents={commsEvents} onAddComms={handleAddComms} />
-                </div>
+               <div className="lg:col-span-2 space-y-6">
+                  <div className="min-h-[65vh] flex items-center justify-center">
+                     {!hasChecklist ? (
+                        <div>
+                           <h2 className="text-3xl font-bold italic text-white">Intake Calibration Required</h2>
+                           <GlassButton onClick={() => handleStartWizard()}>Initialize Calibration</GlassButton>
+                        </div>
+                     ) : (
+                        <div>
+                           <h2 className="text-3xl font-bold italic text-white">Project Registry Synchronized</h2>
+                           <GlassButton onClick={() => setShowMatrix(true)}>Open Requirement Matrix</GlassButton>
+                        </div>
+                     )}
+                  </div>
+                  <div className="space-y-4">
+                     <GlassButton onClick={handleExtractRequirements} disabled={isExtracting} className="w-full justify-center">
+                        {isExtracting ? 'Analyzing Document...' : 'Extract Requirements from Document'}
+                     </GlassButton>
+                     {requirements.length > 0 && <RequirementsChecklist requirements={requirements} />}
+                  </div>
+               </div>
+               <div className="lg:col-span-1">
+                  <CommsLog tenderId={tender.id} commsEvents={commsEvents} onAddComms={handleAddComms} />
+               </div>
             </div>
          ) : (
             <TenderChecklistTracker tenderId={tender.id} />

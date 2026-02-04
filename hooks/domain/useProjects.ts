@@ -13,7 +13,7 @@ export function useProjects(searchQuery: string = '') {
     const fetchProjects = async () => {
         setLoading(true);
         try {
-            let query = supabase.from('projects_master').select('*', { count: 'exact' });
+            let query = (supabase.from('projects_master' as any) as any).select('*', { count: 'exact' });
             if (searchQuery) {
                 query = query.or(`project_name.ilike.%${searchQuery}%,project_code.ilike.%${searchQuery}%`);
             }

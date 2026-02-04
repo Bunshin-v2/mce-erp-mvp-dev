@@ -12,8 +12,8 @@ export function usePreferences() {
 
     async function fetchPreferences() {
         // In a demo, we fetch or create a default record
-        const { data, error } = await supabase
-            .from('user_preferences')
+        const { data, error } = await (supabase
+            .from('user_preferences' as any) as any)
             .select('*')
             .maybeSingle();
 
@@ -38,8 +38,8 @@ export function usePreferences() {
 
     async function updatePreference(updates: Partial<UserPreferences>) {
         // This assumes user_preferences exists for the user
-        const { error } = await supabase
-            .from('user_preferences')
+        const { error } = await (supabase
+            .from('user_preferences' as any) as any)
             .update(updates)
             .eq('user_id', preferences?.user_id);
 

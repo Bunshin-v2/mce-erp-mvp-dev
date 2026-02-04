@@ -45,12 +45,12 @@ export const OperationalLedger: React.FC<OperationalLedgerProps> = ({ projects, 
             accessor: (p: Project) => (
                 <Box className="flex items-center gap-4 min-w-0">
                     <Box className="w-8 shrink-0 flex items-center justify-center">
-                        <Box className="w-7 h-7 bg-white/[0.03] border border-white/5 rounded flex items-center justify-center text-emerald-500">
+                        <Box className="w-7 h-7 bg-[var(--bg-layer)]/30 border border-[var(--surface-border)] rounded flex items-center justify-center text-[var(--morgan-teal)]">
                             <Building2 size={12} strokeWidth={2} />
                         </Box>
                     </Box>
                     <Box className="min-w-0 flex flex-col">
-                        <Text variant="gov-metric" className="text-white truncate group-hover:text-emerald-400 transition-colors">
+                        <Text variant="gov-metric" className="text-[var(--text-primary)] truncate group-hover:text-[var(--morgan-teal)] transition-colors">
                             {p.project_name}
                         </Text>
                         <Text variant="gov-label" color="tertiary" className="text-[9px] tracking-widest uppercase">
@@ -75,7 +75,7 @@ export const OperationalLedger: React.FC<OperationalLedgerProps> = ({ projects, 
                     <Box className="flex flex-col items-center">
                         <Text
                             variant="gov-metric"
-                            className={`${daysRemaining < 0 ? 'text-rose-600 animate-pulse' : 'text-zinc-400'}`}
+                            className={`${daysRemaining < 0 ? 'text-[var(--color-critical)] animate-pulse' : 'text-[var(--text-secondary)]'}`}
                         >
                             {daysRemaining < 0 ? `-${Math.abs(daysRemaining)}D` : `${daysRemaining}D`}
                         </Text>
@@ -92,9 +92,9 @@ export const OperationalLedger: React.FC<OperationalLedgerProps> = ({ projects, 
                 <Box className="flex flex-col items-end">
                     <Text
                         variant="gov-label"
-                        className={`px-3 py-1 rounded-sm ${p.delivery_risk_rating === 'Critical' ? 'bg-rose-500/10 text-rose-500' :
-                            p.delivery_risk_rating === 'High' ? 'bg-amber-500/10 text-amber-500' :
-                                'bg-emerald-500/10 text-emerald-500'
+                        className={`px-3 py-1 rounded-sm ${p.delivery_risk_rating === 'Critical' ? 'bg-[var(--color-critical)]/10 text-[var(--color-critical)]' :
+                            p.delivery_risk_rating === 'High' ? 'bg-[var(--color-warning)]/10 text-[var(--color-warning)]' :
+                                'bg-[var(--color-success)]/10 text-[var(--color-success)]'
                             }`}
                     >
                         {p.delivery_risk_rating || 'NOMINAL'}
@@ -107,7 +107,7 @@ export const OperationalLedger: React.FC<OperationalLedgerProps> = ({ projects, 
     return (
         <Box className="flex flex-col h-full bg-transparent">
             {/* Standardized Tab Nav Section */}
-            <Box className="px-4 border-b border-white/5 bg-white/[0.01]">
+            <Box className="px-4 border-b border-[var(--surface-border)] bg-[var(--bg-layer)]/20">
                 <TabNav
                     tabs={tabs}
                     activeTab={activeTab}

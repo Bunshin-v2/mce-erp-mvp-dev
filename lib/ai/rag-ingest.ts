@@ -19,8 +19,8 @@ interface IngestJob {
 async function ensureRagIndexVersion(): Promise<string | null> {
   try {
     // Check if there's an active index version
-    const { data: activeIndex, error: queryError } = await supabase
-      .from('rag_index_versions')
+    const { data: activeIndex, error: queryError } = await (supabase
+      .from('rag_index_versions' as any) as any)
       .select('index_version_id')
       .eq('status', 'active')
       .single();
@@ -37,8 +37,8 @@ async function ensureRagIndexVersion(): Promise<string | null> {
     }
 
     // Create initial index version
-    const { data: newIndex, error: createError } = await supabase
-      .from('rag_index_versions')
+    const { data: newIndex, error: createError } = await (supabase
+      .from('rag_index_versions' as any) as any)
       .insert({
         status: 'active',
         embedding_model: 'text-embedding-3-small',
@@ -81,8 +81,8 @@ export async function ingestSystemPrompts(): Promise<void> {
       const title = file.replace('.txt', '').replace(/_/g, ' ');
 
       // Check if already exists
-      const { data: existing } = await supabase
-        .from('system_prompts')
+      const { data: existing } = await (supabase
+        .from('system_prompts' as any) as any)
         .select('id')
         .eq('prompt_key', promptKey)
         .single();
@@ -94,8 +94,8 @@ export async function ingestSystemPrompts(): Promise<void> {
       }
 
       // Upsert into system_prompts table
-      const { error: promptError } = await supabase
-        .from('system_prompts')
+      const { error: promptError } = await (supabase
+        .from('system_prompts' as any) as any)
         .upsert({
           prompt_key: promptKey,
           title: title,
@@ -132,8 +132,8 @@ export async function ingestFinancialStatement(filePath: string): Promise<void> 
     const title = `Financial Statement - ${new Date().getFullYear()}`;
 
     // Check if already ingested
-    const { data: existing } = await supabase
-      .from('system_prompts')
+    const { data: existing } = await (supabase
+      .from('system_prompts' as any) as any)
       .select('id')
       .eq('prompt_key', promptKey)
       .single();
@@ -162,8 +162,8 @@ Key Sections:
 - Management Commentary`;
 
     // Ingest financial statement reference as system prompt
-    const { error: promptError } = await supabase
-      .from('system_prompts')
+    const { error: promptError } = await (supabase
+      .from('system_prompts' as any) as any)
       .insert({
         prompt_key: promptKey,
         title: title,
@@ -190,8 +190,8 @@ Key Sections:
 export async function checkRagStatus(): Promise<void> {
   try {
     // Get status from system_prompts table
-    const { data: prompts, error: promptError } = await supabase
-      .from('system_prompts')
+    const { data: prompts, error: promptError } = await (supabase
+      .from('system_prompts' as any) as any)
       .select('id, title, category, is_active, created_at')
       .order('created_at', { ascending: false })
       .limit(20);

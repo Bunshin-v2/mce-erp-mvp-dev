@@ -23,8 +23,8 @@ export function useResourceData() {
   // Fetch team members with optional filters
   const fetchTeamMembers = useCallback(async (filters?: ResourceFilters) => {
     try {
-      let query = supabase
-        .from('team_members')
+      let query = (supabase
+        .from('team_members' as any) as any)
         .select('*')
         .eq('is_active', true);
 
@@ -48,8 +48,8 @@ export function useResourceData() {
   // Fetch resource pools
   const fetchResourcePools = useCallback(async () => {
     try {
-      const { data, error: err } = await supabase
-        .from('resource_pools')
+      const { data, error: err } = await (supabase
+        .from('resource_pools' as any) as any)
         .select(`
           *,
           pool_members (count)
@@ -73,8 +73,8 @@ export function useResourceData() {
   // Fetch allocations
   const fetchAllocations = useCallback(async (projectId?: string) => {
     try {
-      let query = supabase
-        .from('resource_allocations')
+      let query = (supabase
+        .from('resource_allocations' as any) as any)
         .select(`
           *,
           team_members (name),
@@ -106,8 +106,8 @@ export function useResourceData() {
   // Fetch utilization metrics for current period
   const fetchUtilizationMetrics = useCallback(async (teamMemberId?: string) => {
     try {
-      let query = supabase
-        .from('utilization_metrics')
+      let query = (supabase
+        .from('utilization_metrics' as any) as any)
         .select(`
           *,
           team_members (name, utilization_target_percent)
@@ -138,8 +138,8 @@ export function useResourceData() {
   // Fetch manpower plans
   const fetchManpowerPlans = useCallback(async () => {
     try {
-      const { data, error: err } = await supabase
-        .from('manpower_plans')
+      const { data, error: err } = await (supabase
+        .from('manpower_plans' as any) as any)
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -154,8 +154,8 @@ export function useResourceData() {
   // Create team member
   const createTeamMember = useCallback(async (member: Omit<TeamMember, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const { data, error: err } = await supabase
-        .from('team_members')
+      const { data, error: err } = await (supabase
+        .from('team_members' as any) as any)
         .insert([member])
         .select()
         .single();
@@ -173,8 +173,8 @@ export function useResourceData() {
   // Create allocation
   const createAllocation = useCallback(async (allocation: Omit<ResourceAllocation, 'id' | 'created_at' | 'updated_at'>) => {
     try {
-      const { data, error: err } = await supabase
-        .from('resource_allocations')
+      const { data, error: err } = await (supabase
+        .from('resource_allocations' as any) as any)
         .insert([allocation])
         .select()
         .single();
@@ -192,8 +192,8 @@ export function useResourceData() {
   // Update allocation status
   const updateAllocationStatus = useCallback(async (id: string, status: ResourceStatus) => {
     try {
-      const { data, error: err } = await supabase
-        .from('resource_allocations')
+      const { data, error: err } = await (supabase
+        .from('resource_allocations' as any) as any)
         .update({ status })
         .eq('id', id)
         .select()

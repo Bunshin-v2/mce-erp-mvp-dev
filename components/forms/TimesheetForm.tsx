@@ -25,8 +25,8 @@ export const TimesheetForm: React.FC<TimesheetFormProps> = ({ resourceId, projec
     setLoading(true);
     try {
       const client = await getClient();
-      const { error } = await client
-        .from('timesheets')
+      const { error } = await (client
+        .from('timesheets' as any) as any)
         .insert([{
           ...formData,
           resource_id: resourceId,

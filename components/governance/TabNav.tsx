@@ -37,8 +37,8 @@ export const TabNav: React.FC<TabNavProps> = ({
                         key={tab.id}
                         onClick={() => onChange(tab.id)}
                         className={cn(
-                            "relative h-14 flex items-center space-x-2 px-1 transition-all duration-300 group selection:bg-emerald-500/30",
-                            isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                            "relative h-14 flex items-center space-x-2 px-1 transition-all duration-300 group",
+                            isActive ? 'text-[var(--text-primary)]' : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]'
                         )}
                     >
                         <Text
@@ -54,8 +54,8 @@ export const TabNav: React.FC<TabNavProps> = ({
                             <Box className={cn(
                                 "text-[9px] font-mono font-bold italic px-1.5 py-0.5 rounded-sm border transition-all duration-300",
                                 isActive
-                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                                    : 'bg-white/[0.02] border-white/5 text-zinc-600 group-hover:text-zinc-400'
+                                    ? 'bg-[var(--morgan-teal)]/10 border-[var(--morgan-teal)]/20 text-[var(--morgan-teal)]'
+                                    : 'bg-[var(--bg-layer)]/40 border-[var(--surface-border)] text-[var(--text-tertiary)] group-hover:text-[var(--text-secondary)]'
                             )}>
                                 {tab.count.toString().padStart(2, '0')}
                             </Box>
@@ -65,7 +65,7 @@ export const TabNav: React.FC<TabNavProps> = ({
                         {isActive && (
                             <motion.div
                                 layoutId="activeTabIndicator"
-                                className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)] rounded-full"
+                                className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--morgan-teal)] shadow-[0_0_12px_rgba(81,162,168,0.6)] rounded-full"
                             />
                         )}
                     </button>

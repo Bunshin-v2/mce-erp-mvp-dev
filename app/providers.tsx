@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { ToastProvider } from '@/lib/toast-context';
+import { StyleProvider } from '@/lib/StyleSystem';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { queryClient } from '@/lib/queryClient';
 
@@ -21,9 +22,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const content = (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        <StyleProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
+        </StyleProvider>
       </ErrorBoundary>
     </QueryClientProvider>
   );

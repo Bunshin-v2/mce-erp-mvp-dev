@@ -95,14 +95,14 @@ export const UnifiedRiskCommand: React.FC<UnifiedRiskCommandProps> = ({
                         {/* Status Header */}
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full animate-pulse ${hasCriticalRisks ? 'bg-rose-700 shadow-[0_0_8px_rgba(190,24,93,0.6)]' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]'
+                                <div className={`w-2 h-2 rounded-full animate-pulse ${hasCriticalRisks ? 'bg-[var(--color-critical)] shadow-[0_0_8px_var(--color-critical)]' : 'bg-[var(--color-success)] shadow-[0_0_8px_var(--color-success)]'
                                     }`} />
                                 <span className="text-xs font-bold italic text-text-secondary">
                                     {hasCriticalRisks ? 'Elevated Risk Detected' : 'System Nominal'}
                                 </span>
                             </div>
                             {activeAlerts > 0 && (
-                                <Badge variant="outline" className="bg-rose-500/10 text-rose-500 border-rose-500/20 text-xs px-1.5 py-0.5 animated-pulse">
+                                <Badge variant="outline" className="bg-[var(--color-critical)]/10 text-[var(--color-critical)] border-[var(--color-critical)]/20 text-xs px-1.5 py-0.5 animated-pulse">
                                     {activeAlerts} ACTIVE SIGNALS
                                 </Badge>
                             )}
@@ -110,45 +110,43 @@ export const UnifiedRiskCommand: React.FC<UnifiedRiskCommandProps> = ({
 
                         {/* Integrated Progress Bar */}
                         <div className="w-full h-1.5 bg-bg-base rounded-full overflow-hidden flex mb-4 border border-border-subtle">
-                            <div className="bg-rose-700 h-full transition-all duration-1000" style={{ width: getWidth(counts.critical) }} />
-                            <div className="bg-amber-600 h-full transition-all duration-1000" style={{ width: getWidth(counts.high) }} />
-                            <div className="bg-blue-600 h-full transition-all duration-1000" style={{ width: getWidth(counts.nominal) }} />
-                            <div className="bg-emerald-600 h-full transition-all duration-1000" style={{ width: getWidth(counts.stable) }} />
+                            <div className="bg-[var(--color-critical)] h-full transition-all duration-1000" style={{ width: getWidth(counts.critical) }} />
+                            <div className="bg-[var(--color-warning)] h-full transition-all duration-1000" style={{ width: getWidth(counts.high) }} />
+                            <div className="bg-[var(--morgan-teal)] h-full transition-all duration-1000" style={{ width: getWidth(counts.nominal) }} />
+                            <div className="bg-[var(--color-success)] h-full transition-all duration-1000" style={{ width: getWidth(counts.stable) }} />
                         </div>
 
                         <div className="grid grid-cols-4 gap-3 mt-2">
                             {[
-                                { label: 'CRITICAL', value: counts.critical, color: 'var(--morgan-red-dark)', bg: 'rgba(190, 24, 93, 0.05)', border: 'rgba(190, 24, 93, 0.1)' },
-                                { label: 'HIGH', value: counts.high, color: '#f08c00', bg: 'rgba(240, 140, 0, 0.05)', border: 'rgba(240, 140, 0, 0.1)' },
-                                { label: 'NOMINAL', value: counts.nominal, color: 'var(--morgan-teal)', bg: 'rgba(81, 162, 168, 0.05)', border: 'rgba(81, 162, 168, 0.1)' },
-                                { label: 'STABLE', value: counts.stable, color: '#2b8a3e', bg: 'rgba(43, 138, 62, 0.05)', border: 'rgba(43, 138, 62, 0.1)' }
+                                { label: 'CRITICAL', value: counts.critical, colorVar: '--color-critical' },
+                                { label: 'HIGH', value: counts.high, colorVar: '--color-warning' },
+                                { label: 'NOMINAL', value: counts.nominal, colorVar: '--morgan-teal' },
+                                { label: 'STABLE', value: counts.stable, colorVar: '--color-success' }
                             ].map((stat) => (
                                 <div
                                     key={stat.label}
-                                    className="text-center p-3 rounded-xl transition-all hover:scale-[1.02] relative group overflow-hidden"
+                                    className="text-center p-3 rounded-xl transition-all hover:scale-[1.02] relative group overflow-hidden border border-[var(--surface-border)] bg-[var(--bg-surface)]/50 hover:bg-[var(--bg-hover)]/30"
                                     style={{
-                                        backgroundColor: stat.bg,
-                                        border: `1px solid ${stat.border}`,
-                                        boxShadow: '0 2px 4px rgba(0,0,0,0.01)'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
                                     }}
                                 >
                                     {/* Subtle Gradient Overlay */}
-                                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+                                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
                                     <div
-                                        className="text-2xl font-oswald font-bold italic leading-none mb-1 group-hover:scale-110 transition-transform duration-300"
-                                        style={{ color: stat.color }}
+                                        className="text-3xl font-oswald font-black italic leading-none mb-2 group-hover:scale-110 transition-transform duration-300"
+                                        style={{ color: `var(${stat.colorVar})` }}
                                     >
                                         {stat.value}
                                     </div>
-                                    <div className="text-[8px] text-[var(--morgan-sidebar)] font-oswald font-black italic tracking-[0.15em] opacity-80 uppercase">
+                                    <div className="text-[9px] text-[var(--text-tertiary)] font-oswald font-black italic tracking-[0.12em] uppercase">
                                         {stat.label}
                                     </div>
 
                                     {/* Bottom Indicator */}
                                     <div
-                                        className="absolute bottom-0 inset-x-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        style={{ backgroundColor: stat.color }}
+                                        className="absolute bottom-0 inset-x-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity rounded-b-xl"
+                                        style={{ backgroundColor: `var(${stat.colorVar})` }}
                                     />
                                 </div>
                             ))}
@@ -185,8 +183,8 @@ export const UnifiedRiskCommand: React.FC<UnifiedRiskCommandProps> = ({
                                             >
                                                 <div className="flex justify-between items-start mb-1">
                                                     <div className="flex items-center gap-2">
-                                                        <AlertOctagon size={12} className="text-rose-700 flex-shrink-0" />
-                                                        <span className="text-xs font-bold italic text-rose-600 group-hover:text-rose-500 transition-colors line-clamp-1">{alert.title}</span>
+                                                        <AlertOctagon size={12} className="text-[var(--color-critical)] flex-shrink-0" />
+                                                        <span className="text-xs font-bold italic text-[var(--color-critical)] group-hover:text-[var(--color-critical)]/80 transition-colors line-clamp-1">{alert.title}</span>
                                                     </div>
                                                     <span className="text-xs text-text-tertiary flex-shrink-0">{alert.timestamp}</span>
                                                 </div>
@@ -197,9 +195,9 @@ export const UnifiedRiskCommand: React.FC<UnifiedRiskCommandProps> = ({
                                         ))}
                                     </motion.div>
                                 ) : (
-                                    <div className="h-full flex flex-col items-center justify-center p-8 text-center opacity-40">
-                                        <ShieldCheck size={24} className="text-emerald-500 mb-2" />
-                                        <span className="text-xs font-bold italic text-text-tertiary">No Active Hazards</span>
+                                    <div className="h-full flex flex-col items-center justify-center p-8 text-center opacity-60">
+                                        <ShieldCheck size={32} className="text-[var(--color-success)] mb-3" />
+                                        <span className="text-sm font-bold italic text-[var(--text-secondary)]">No Active Hazards</span>
                                     </div>
                                 )}
                             </AnimatePresence>

@@ -35,8 +35,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
 
   const fetchProject = useCallback(async () => {
     const client = await getClient();
-    const { data } = await client
-      .from('projects_master')
+    const { data } = await (client
+      .from('projects_master' as any) as any)
       .select('*')
       .eq('id', projectId)
       .single();
@@ -95,8 +95,8 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({ projectId, onBack 
 
     try {
       const client = await getClient();
-      const { error } = await client
-        .from('projects_master')
+      const { error } = await (client
+        .from('projects_master' as any) as any)
         .update(editedProject)
         .eq('id', projectId);
 

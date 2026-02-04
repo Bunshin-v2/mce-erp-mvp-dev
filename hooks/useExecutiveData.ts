@@ -9,10 +9,10 @@ export const useExecutiveData = () => {
         queryFn: async () => {
             const client = await getClient();
             const [invoices, projects, tenders, pos] = await Promise.all([
-                client.from('invoices').select('amount, created_at, status'),
-                client.from('projects_master').select('*'),
-                client.from('tenders').select('value, status, title'),
-                client.from('purchase_orders').select('*')
+                (client.from('invoices' as any) as any).select('amount, created_at, status'),
+                (client.from('projects_master' as any) as any).select('*'),
+                (client.from('tenders' as any) as any).select('value, status, title'),
+                (client.from('purchase_orders' as any) as any).select('*')
             ]);
 
             if (invoices.error) throw invoices.error;

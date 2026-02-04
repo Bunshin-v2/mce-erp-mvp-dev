@@ -24,7 +24,7 @@ export async function GET(request: Request) {
   const report = await runAllHealthProbes(baseUrl, authToken);
 
   // Persist results (append-only) for auditability.
-  const { error } = await supabaseAdmin.from('health_probe_reports').insert({
+  const { error } = await (supabaseAdmin.from('health_probe_reports' as any) as any).insert({
     environment: process.env.VERCEL_ENV || process.env.NODE_ENV || 'unknown',
     base_url: baseUrl,
     status: report.summary.status,

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../styles/design-tokens.css";
+@import "../styles/tokens-2026.css";
 
 @layer base {
   html {

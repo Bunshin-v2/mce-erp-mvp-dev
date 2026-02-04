@@ -18,8 +18,8 @@ interface AppShellProps {
 
 /**
  * AppShell (2026 AAA Grade)
- * The unified layout wrapper that orchestrates the Glass Rail navigation
- * and the main content surface.
+ * Unified layout with fixed width containment.
+ * Sidebar Spacer strategy ensures no horizontal overflow.
  */
 export const AppShell: React.FC<AppShellProps> = ({
     children,
@@ -36,12 +36,11 @@ export const AppShell: React.FC<AppShellProps> = ({
     const collapsed = config.sidebarOptimized;
 
     return (
-        <div className="flex h-screen overflow-hidden font-sans text-white relative selection:bg-brand-500/30">
+        <div className="flex h-screen w-screen overflow-hidden font-sans text-white relative selection:bg-brand-500/30">
             {/* Background Watermark */}
             <Watermark opacity={0.03} text="MORGAN" />
 
-            {/* Sidebar - 2026 Glass Rail */}
-            {/* Width is handled by the Sidebar component itself, but we need margin on content */}
+            {/* Fixed Sidebar */}
             <Sidebar
                 activeView={activeView}
                 collapsed={collapsed}
@@ -49,10 +48,14 @@ export const AppShell: React.FC<AppShellProps> = ({
                 onNavigate={onNavigate}
             />
 
-            {/* Main Content Area */}
-            <div
-                className={`flex-1 flex flex-col transition-all duration-300 ${collapsed ? 'ml-[64px]' : 'ml-[156px]'} relative z-10 h-full`}
-            >
+            {/* Layout Spacer - Matches Sidebar Width */}
+            <div 
+                style={{ width: collapsed ? 'var(--sidebar-collapsed-width)' : '156px' }}
+                className="transition-all duration-300 shrink-0" 
+            />
+
+            {/* Content Deck - flex-1 here takes EXACT remaining width */}
+            <div className="flex-1 flex flex-col h-full relative z-10 min-w-0 overflow-hidden">
                 <Header
                     onSearch={onSearch}
                     activeView={activeView}
@@ -63,9 +66,9 @@ export const AppShell: React.FC<AppShellProps> = ({
                     unreadCount={unreadCount}
                 />
 
-                {/* Content Surface - PADDING STRIPPED FOR CANONICAL CONTROL */}
-                <main className="flex-1 overflow-y-auto custom-scrollbar relative z-10 p-0">
-                    <div className="min-h-full animate-fade-in">
+                {/* Main Viewport */}
+                <main className="flex-1 overflow-y-auto custom-scrollbar relative z-10 p-0 w-full">
+                    <div className="w-full min-h-full animate-fade-in overflow-x-hidden">
                         {children}
                     </div>
                 </main>

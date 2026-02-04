@@ -66,8 +66,8 @@ export function useUserTier() {
         const client = await getClient();
 
         // Fetch profile from Supabase using Clerk user ID
-        const { data, error: fetchError } = await client
-          .from('profiles')
+        const { data, error: fetchError } = await (client
+          .from('profiles' as any) as any)
           .select('*')
           .eq('clerk_user_id', clerkUser.id)
           .single();
@@ -76,8 +76,8 @@ export function useUserTier() {
           // If profile doesn't exist, create one with default L1 tier
           if (fetchError.code === 'PGRST116') {
             // Row not found
-            const { data: newProfile, error: createError } = await client
-              .from('profiles')
+            const { data: newProfile, error: createError } = await (client
+              .from('profiles' as any) as any)
               .insert([
                 {
                   clerk_user_id: clerkUser.id,

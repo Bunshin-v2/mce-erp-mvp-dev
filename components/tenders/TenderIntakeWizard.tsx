@@ -45,7 +45,7 @@ export const TenderIntakeWizard: React.FC<TenderIntakeWizardProps> = ({ tenderId
 
         try {
             const client = await getClient();
-            const { error } = await client.rpc('generate_tender_checklist', {
+            const { error } = await (client.rpc as any)('generate_tender_checklist', {
                 target_tender_id: tenderId,
                 template_type: selectedTemplate
             });

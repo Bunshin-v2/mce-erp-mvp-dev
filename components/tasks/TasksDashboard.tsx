@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  CheckSquare, 
-  Clock, 
-  Activity, 
-  CheckCircle2, 
-  Plus, 
-  Calendar, 
-  Zap, 
+import {
+  CheckSquare,
+  Clock,
+  Activity,
+  CheckCircle2,
+  Plus,
+  Calendar,
+  Zap,
   ArrowRight,
   LayoutGrid,
   List,
@@ -33,8 +33,8 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
   }, []);
 
   const fetchTasks = async () => {
-    const { data } = await supabase
-      .from('tasks')
+    const { data } = await (supabase
+      .from('tasks' as any) as any)
       .select('*')
       .is('deleted_at', null)
       .is('archived_at', null)
@@ -48,7 +48,7 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
     if (!quickTask.trim()) return;
     setAdding(true);
     try {
-      const { error } = await supabase.from('tasks').insert([{
+      const { error } = await (supabase.from('tasks' as any) as any).insert([{
         title: quickTask,
         status: 'pending',
         priority: 'medium'
@@ -74,7 +74,7 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      
+
       {/* 1. TOP STATS: TODO TRACKER SIGNATURE COLORS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
@@ -91,29 +91,29 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
             <h3 className="text-5xl font-bold italic text-white font-mono tracking-tighter">{s.val}</h3>
             {/* Minimalist Data Strip */}
             <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-2">
-               <div className="w-1 h-1 rounded-full bg-white/50"></div>
-               <span className="text-[8px] font-bold italic text-white/50 tracking-widest">Active System Node</span>
+              <div className="w-1 h-1 rounded-full bg-white/50"></div>
+              <span className="text-[8px] font-bold italic text-white/50 tracking-widest">Active System Node</span>
             </div>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
+
         {/* LEFT COLUMN (8 cols) */}
         <div className="lg:col-span-8 space-y-8">
-          
+
           {/* OVERALL PROGRESS */}
           <GlassPanel className="p-8">
             <div className="flex justify-between items-center mb-4">
-               <div className="flex items-center gap-3">
-                  <Activity size={16} className="text-emerald-500" />
-                  <h4 className="text-xs font-bold italic text-white tracking-widest">Overall Progress</h4>
-               </div>
-               <span className="text-2xl font-bold italic text-emerald-500 font-mono">{progress}%</span>
+              <div className="flex items-center gap-3">
+                <Activity size={16} className="text-emerald-500" />
+                <h4 className="text-xs font-bold italic text-white tracking-widest">Overall Progress</h4>
+              </div>
+              <span className="text-2xl font-bold italic text-emerald-500 font-mono">{progress}%</span>
             </div>
             <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
-               <div className="h-full bg-emerald-500 transition-all duration-[2000ms]" style={{ width: `${progress}%` }} />
+              <div className="h-full bg-emerald-500 transition-all duration-[2000ms]" style={{ width: `${progress}%` }} />
             </div>
             <p className="text-[9px] text-zinc-600 mt-4 font-bold italic">{stats.completed} of {stats.total} tasks completed</p>
           </GlassPanel>
@@ -126,8 +126,8 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
             </div>
             <form onSubmit={handleQuickAdd} className="flex gap-4">
               <div className="flex-1">
-                <input 
-                  placeholder="What needs to be done?" 
+                <input
+                  placeholder="What needs to be done?"
                   value={quickTask}
                   onChange={(e) => setQuickTask(e.target.value)}
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-6 py-4 text-sm text-white focus:border-emerald-500/50 outline-none transition-all"
@@ -155,22 +155,21 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
                 <div key={task.id} className="px-8 py-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors group">
                   <div className="flex items-center gap-6">
                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-zinc-600 group-hover:text-emerald-500 transition-all">
-                       <CheckSquare size={18} />
+                      <CheckSquare size={18} />
                     </div>
                     <div>
                       <p className="text-sm font-bold italic text-zinc-200 group-hover:text-white transition-colors tracking-tight">{task.title}</p>
                       <div className="flex items-center gap-3 mt-1.5">
-                        <span className={`text-[8px] font-bold italic px-2 py-0.5 rounded border ${
-                           task.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                           'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                        }`}>{task.status}</span>
+                        <span className={`text-[8px] font-bold italic px-2 py-0.5 rounded border ${task.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                            'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                          }`}>{task.status}</span>
                         <span className="text-[9px] font-mono font-bold italic text-zinc-600">{new Date(task.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                     <button className="p-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-lg hover:bg-emerald-500 hover:text-black transition-all"><CheckCircle2 size={14}/></button>
-                     <button className="p-2 bg-white/5 text-zinc-500 border border-white/5 rounded-lg hover:text-white transition-all"><List size={14}/></button>
+                    <button className="p-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-lg hover:bg-emerald-500 hover:text-black transition-all"><CheckCircle2 size={14} /></button>
+                    <button className="p-2 bg-white/5 text-zinc-500 border border-white/5 rounded-lg hover:text-white transition-all"><List size={14} /></button>
                   </div>
                 </div>
               ))}
@@ -180,7 +179,7 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
 
         {/* RIGHT COLUMN: Sidebar (4 cols) */}
         <div className="lg:col-span-4 space-y-8">
-          
+
           {/* Upcoming Deadlines */}
           <GlassPanel className="p-8 border-white/5">
             <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/5">
@@ -188,13 +187,13 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
               <h4 className="text-xs font-bold italic text-white tracking-widest font-sans">Upcoming Deadlines</h4>
             </div>
             <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
-               <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/5 flex items-center justify-center text-zinc-700">
-                  <CheckCircle2 size={32} strokeWidth={1} />
-               </div>
-               <div>
-                  <p className="text-xs font-bold italic text-zinc-400 tracking-widest">No critical locks</p>
-                  <p className="text-[9px] text-zinc-600 font-bold italic tracking-tight mt-1">You're all caught up!</p>
-               </div>
+              <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/5 flex items-center justify-center text-zinc-700">
+                <CheckCircle2 size={32} strokeWidth={1} />
+              </div>
+              <div>
+                <p className="text-xs font-bold italic text-zinc-400 tracking-widest">No critical locks</p>
+                <p className="text-[9px] text-zinc-600 font-bold italic tracking-tight mt-1">You're all caught up!</p>
+              </div>
             </div>
           </GlassPanel>
 
@@ -205,21 +204,21 @@ export const TasksDashboard: React.FC<TasksDashboardProps> = ({ onNavigateToAll,
               <h4 className="text-xs font-bold italic text-white tracking-widest font-sans">Quick Actions</h4>
             </div>
             <div className="space-y-2">
-               {[
-                 { label: 'Add New Task', icon: Plus, onClick: () => {} },
-                 { label: 'View All Tasks', icon: List, onClick: onNavigateToAll },
-                 { label: 'Kanban Board', icon: LayoutGrid, onClick: onNavigateToKanban },
-                 { label: 'Manage Categories', icon: Zap, onClick: () => {} },
-               ].map((action, i) => (
-                 <button
-                   key={i}
-                   onClick={action.onClick}
-                   className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/5 text-zinc-500 hover:text-white hover:bg-white/[0.03] transition-all text-left group"
-                 >
-                   <action.icon size={14} className="group-hover:text-emerald-500 transition-colors" />
-                   <span className="text-[10px] font-bold italic tracking-widest">{action.label}</span>
-                 </button>
-               ))}
+              {[
+                { label: 'Add New Task', icon: Plus, onClick: () => { } },
+                { label: 'View All Tasks', icon: List, onClick: onNavigateToAll },
+                { label: 'Kanban Board', icon: LayoutGrid, onClick: onNavigateToKanban },
+                { label: 'Manage Categories', icon: Zap, onClick: () => { } },
+              ].map((action, i) => (
+                <button
+                  key={i}
+                  onClick={action.onClick}
+                  className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/5 text-zinc-500 hover:text-white hover:bg-white/[0.03] transition-all text-left group"
+                >
+                  <action.icon size={14} className="group-hover:text-emerald-500 transition-colors" />
+                  <span className="text-[10px] font-bold italic tracking-widest">{action.label}</span>
+                </button>
+              ))}
             </div>
           </GlassPanel>
 

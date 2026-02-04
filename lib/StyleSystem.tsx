@@ -15,14 +15,20 @@ interface StyleConfig {
     surface: SurfaceReliability;
     signal: SignalIntensity;
     hierarchy: PanelHierarchy;
-    theme: ThemeMode; // Added theme mode
+    theme: ThemeMode;
 
     // Granular Controls
-    sidebarOptimized: boolean; // True = Collapsed/Icon-focus, False = Full
-    sidebarWeight: SidebarWeight; // Typography weight for sidebar labels
-    sidebarSize: SidebarSize; // Font size for sidebar labels
-    kpiEmphasis: 'value' | 'label'; // Value = Numeric dominant, Label = Context dominant
+    sidebarOptimized: boolean; 
+    sidebarWeight: SidebarWeight;
+    sidebarSize: SidebarSize;
+    kpiEmphasis: 'value' | 'label';
     verticalRhythm: 'tight' | 'relaxed';
+
+    // SIDEBAR PRECISION ALIGNMENT
+    sidebarLogoPadding: number; 
+    sidebarItemPadding: number; 
+    sidebarCollapsedWidth: number;
+    sidebarCollapsedLogoOffset: number; // New: Specific offset for the 'M' logo when collapsed // Width when collapsed (e.g. 64)
 
     // Light Mode Fine-Tuning Tokens
     kpiBgLight: string;
@@ -37,19 +43,24 @@ const defaultStyle: StyleConfig = {
     surface: 'bordered',
     signal: 'standard',
     hierarchy: 'balanced',
-    theme: 'system', // Default to system theme
+    theme: 'system',
     sidebarOptimized: false,
-    sidebarWeight: 'normal', // More readable default
-    sidebarSize: 'normal', // Slightly larger by default
-    kpiEmphasis: 'label', // User requested "Label-First"
+    sidebarWeight: 'normal',
+    sidebarSize: 'normal',
+    kpiEmphasis: 'label',
     verticalRhythm: 'relaxed',
 
-    // Light Mode Defaults (Morgan Manifesto Synthesis)
-    kpiBgLight: '#51A2A8', // Morgan Teal (Nominal Surface)
+    // Golden State Baselines
+    sidebarLogoPadding: 24,
+    sidebarItemPadding: 24,
+    sidebarCollapsedWidth: 64,
+    sidebarCollapsedLogoOffset: 10,
+
+    kpiBgLight: '#51A2A8',
     kpiBorderLight: 'rgba(255, 255, 255, 0.1)',
     kpiShadowLight: '0 8px 30px -10px rgba(44, 62, 80, 0.12), 0 0 1px rgba(44, 62, 80, 0.1)',
     kpiLabelColorLight: 'rgba(255, 255, 255, 0.9)',
-    kpiValueColorLight: '#ffffff', // High Contrast White
+    kpiValueColorLight: '#ffffff',
 };
 
 interface StyleContextType {
@@ -62,13 +73,11 @@ const StyleContext = createContext<StyleContextType | undefined>(undefined);
 
 export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [config, setConfig] = useState<StyleConfig>(() => {
-        // Load from storage if available (only in browser)
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('mce-style-config');
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    // Merge with defaultStyle to ensure new properties like 'theme' are present
                     return { ...defaultStyle, ...parsed };
                 } catch (e) {
                     console.error("Failed to parse mce-style-config from localStorage", e);
@@ -80,7 +89,6 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return defaultStyle;
     });
 
-    // Persist changes
     useEffect(() => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('mce-style-config', JSON.stringify(config));
@@ -90,7 +98,6 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updateConfig = (updates: Partial<StyleConfig>) => {
         setConfig(prev => {
             const newConfig = { ...prev, ...updates };
-            // If theme is updated, apply it immediately to data-theme
             if (updates.theme && typeof window !== 'undefined') {
                 applyTheme(newConfig.theme);
             }
@@ -98,13 +105,6 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         });
     };
 
-
-
-
-
-
-
-    // Helper function to apply theme to document.documentElement
     const applyTheme = (themeMode: ThemeMode) => {
         if (typeof window === 'undefined') return;
         const root = document.documentElement;
@@ -115,32 +115,11 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
     };
 
-    // Effect for theme application and system theme listener
     useEffect(() => {
         if (typeof window === 'undefined') return;
-
         applyTheme(config.theme);
-
-        let mediaQuery: MediaQueryList | undefined;
-        const handleSystemThemeChange = (event: MediaQueryListEvent) => {
-            if (config.theme === 'system') {
-                document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
-            }
-        };
-
-        if (config.theme === 'system') {
-            mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            mediaQuery.addEventListener('change', handleSystemThemeChange);
-        }
-
-        return () => {
-            if (mediaQuery) {
-                mediaQuery.removeEventListener('change', handleSystemThemeChange);
-            }
-        };
     }, [config.theme]);
 
-    // Apply CSS Variables based on config
     useEffect(() => {
         const root = document.documentElement;
 
@@ -153,53 +132,29 @@ export const StyleProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             root.style.setProperty('--font-scale', '1');
         }
 
-        // 2. Vertical Rhythm
-        root.style.setProperty('--rhythm-y', config.verticalRhythm === 'tight' ? '0.5rem' : '1.5rem');
+        // 2. Sidebar Alignment
+        root.style.setProperty('--sidebar-logo-pl', `${config.sidebarLogoPadding}px`);
+        root.style.setProperty('--sidebar-item-pl', `${config.sidebarItemPadding}px`);
+        root.style.setProperty('--sidebar-collapsed-width', `${config.sidebarCollapsedWidth}px`);
+        root.style.setProperty('--sidebar-collapsed-logo-pl', `${config.sidebarCollapsedLogoOffset}px`);
 
-        // 3. Signal Intensity
-        if (config.signal === 'high-contrast') {
-            root.style.setProperty('--color-critical', '#ff0000'); // Pure red for max signal
-            root.style.setProperty('--surface-base', '#000000'); // Deepest black
-            root.style.setProperty('--surface-layer', '#0a0a0a');
-        } else {
-            root.style.setProperty('--color-critical', '#e11d48'); // Rose-600 standard
-        }
-
-        // 4. Sidebar Typography Weight
+        // 3. Typography
         if (config.sidebarWeight === 'light') {
-            root.style.setProperty('--sidebar-weight', '300'); // Light
-            root.style.setProperty('--sidebar-opacity', '0.6');
+            root.style.setProperty('--sidebar-weight', '300');
         } else if (config.sidebarWeight === 'normal') {
-            root.style.setProperty('--sidebar-weight', '400'); // Normal
-            root.style.setProperty('--sidebar-opacity', '0.7');
+            root.style.setProperty('--sidebar-weight', '400');
         } else {
-            root.style.setProperty('--sidebar-weight', '500'); // Bold
-            root.style.setProperty('--sidebar-opacity', '0.8');
+            root.style.setProperty('--sidebar-weight', '500');
         }
 
-        // 5. Sidebar Size
         if (config.sidebarSize === 'compact') {
-            root.style.setProperty('--sidebar-text-size', '0.75rem'); // 12px - compact
-            root.style.setProperty('--sidebar-header-size', '0.65rem'); // 10px - header
+            root.style.setProperty('--sidebar-text-size', '0.75rem');
         } else if (config.sidebarSize === 'normal') {
-            root.style.setProperty('--sidebar-text-size', '0.8125rem'); // 13px - standard
-            root.style.setProperty('--sidebar-header-size', '0.7rem'); // 11px - header
+            root.style.setProperty('--sidebar-text-size', '0.8125rem');
         } else {
-            root.style.setProperty('--sidebar-text-size', '0.875rem'); // 14px - large
-            root.style.setProperty('--sidebar-header-size', '0.75rem'); // 12px - header
-        }
-
-        // 6. Light Mode KPI Overrides (Active Injection)
-        if (root.dataset.theme === 'light') {
-            root.style.setProperty('--kpi-bg', config.kpiBgLight);
-            root.style.setProperty('--kpi-border', config.kpiBorderLight);
-            root.style.setProperty('--kpi-shadow', config.kpiShadowLight);
-            root.style.setProperty('--kpi-label-color', config.kpiLabelColorLight);
-            root.style.setProperty('--kpi-value-color', config.kpiValueColorLight);
+            root.style.setProperty('--sidebar-text-size', '0.875rem');
         }
     }, [config]);
-
-
 
     const resetToBaseline = () => {
         setConfig(defaultStyle);

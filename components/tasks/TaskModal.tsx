@@ -40,15 +40,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({ onClose, onUpdate, categor
         try {
             const client = await getClient();
             if (task) {
-                const { error: err } = await client.from('tasks').update(taskData).eq('id', task.id);
+                const { error: err } = await (client.from('tasks' as any) as any).update(taskData).eq('id', task.id);
                 error = err;
             } else {
-                const { data, error: err } = await client.from('tasks').insert([taskData]).select().single();
+                const { data, error: err } = await (client.from('tasks' as any) as any).insert([taskData]).select().single();
                 error = err;
 
                 // Handle categories for new task
                 if (!error && data && selectedCategories.length > 0) {
-                    await client.from('task_categories').insert(
+                    await (client.from('task_categories' as any) as any).insert(
                         selectedCategories.map(catId => ({ task_id: data.id, category_id: catId }))
                     );
                 }

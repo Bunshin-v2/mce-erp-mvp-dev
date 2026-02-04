@@ -39,12 +39,12 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ milestones, pr
 
     return (
         <GlassPanel className="p-6">
-            <h3 className="text-xs font-bold italic text-white tracking-widest mb-6">
+            <h3 className="text-xs font-bold italic text-[var(--text-primary)] tracking-widest mb-6">
                 Schedule Overview
             </h3>
             <div className="relative w-full py-8">
                 {/* Main timeline bar */}
-                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-zinc-700 -translate-y-1/2" />
+                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-[var(--surface-border)] -translate-y-1/2" />
                 
                 {milestones.map(milestone => {
                     const milestoneStart = new Date(milestone.start_date).getTime();
@@ -61,9 +61,9 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ milestones, pr
                             style={{ left: `${left}%`, width: `${width}%` }}
                         >
                             <div className={`h-full rounded-full ${getStatusColor(milestone.status)} transition-all duration-300 group-hover:scale-y-150 origin-center`} />
-                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-zinc-900 text-white text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-1.5 bg-[var(--bg-layer)] text-[var(--text-primary)] text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg border border-[var(--surface-border)]">
                                 <p className="font-bold italic">{milestone.title}</p>
-                                <p className="text-zinc-400 text-[10px]">{new Date(milestone.start_date).toLocaleDateString()} - {new Date(milestone.end_date).toLocaleDateString()}</p>
+                                <p className="text-[var(--text-tertiary)] text-[10px]">{new Date(milestone.start_date).toLocaleDateString()} - {new Date(milestone.end_date).toLocaleDateString()}</p>
                             </div>
                         </div>
                     )

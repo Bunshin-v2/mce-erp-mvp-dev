@@ -6,7 +6,7 @@ const supabase = getSupabaseClient();
 
 async function checkProjects() {
   logger.info('Fetching projects_master', {});
-  const { data, error } = await supabase.from('projects_master').select('*');
+  const { data, error } = await (supabase.from('projects_master' as any) as any).select('*');
 
   if (error) {
     logger.error('Error fetching projects', { error: error.message });

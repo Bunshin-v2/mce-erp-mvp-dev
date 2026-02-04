@@ -39,15 +39,15 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({ onClose, categorie
             const client = await getClient();
             if (category) {
                 // Update
-                const { error: err } = await client
-                    .from('categories')
+                const { error: err } = await (client
+                    .from('categories' as any) as any)
                     .update({ name: newName.trim(), color: newColor })
                     .eq('id', category.id);
                 error = err;
             } else {
                 // Create
-                const { error: err } = await client
-                    .from('categories')
+                const { error: err } = await (client
+                    .from('categories' as any) as any)
                     .insert([{ name: newName.trim(), color: newColor }]);
                 error = err;
             }
@@ -66,7 +66,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({ onClose, categorie
 
     const handleDelete = async (id: string) => {
         const client = await getClient();
-        const { error } = await client.from('categories').delete().eq('id', id);
+        const { error } = await (client.from('categories' as any) as any).delete().eq('id', id);
         if (!error) onUpdate();
     };
 

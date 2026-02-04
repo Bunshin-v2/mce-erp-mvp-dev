@@ -27,8 +27,8 @@ export const TenderForm: React.FC<TenderFormProps> = ({ onClose, onSuccess }) =>
     setLoading(true);
     try {
       const client = await getClient();
-      const { data, error } = await client
-        .from('tenders')
+      const { data, error } = await (client
+        .from('tenders' as any) as any)
         .insert([{
           ...formData,
           value: parseFloat(formData.value) || 0

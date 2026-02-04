@@ -35,8 +35,8 @@ export const Badge: React.FC<BadgeProps> = ({ status = '', variant, className = 
         case 'warning': return 'border-[var(--color-warning)]/20 text-[var(--color-warning)]/80 bg-[var(--color-warning)]/5 motion-warning';
         case 'danger': return 'border-[var(--color-critical)]/20 text-[var(--color-critical)]/80 bg-[var(--color-critical)]/5 motion-critical';
         case 'info': return 'border-[var(--color-info)]/20 text-[var(--color-info)]/80 bg-[var(--color-info)]/5';
-        case 'outline': return 'border-[var(--surface-border)] text-zinc-500 bg-transparent';
-        default: return 'border-[var(--surface-border)] text-zinc-500 bg-[var(--surface-base)]';
+        case 'outline': return 'border-[var(--surface-border)] text-[var(--text-secondary)] bg-transparent';
+        default: return 'border-[var(--surface-border)] text-[var(--text-secondary)] bg-[var(--surface-base)]';
       }
     }
 
@@ -53,7 +53,7 @@ export const Badge: React.FC<BadgeProps> = ({ status = '', variant, className = 
       return 'border-[var(--color-critical)]/20 text-[var(--color-critical)]/80 bg-[var(--color-critical)]/5 motion-critical';
     }
 
-    return 'border-[var(--surface-border)] text-zinc-600 bg-[var(--surface-base)]';
+    return 'border-[var(--surface-border)] text-[var(--text-secondary)] bg-[var(--surface-base)]';
   };
 
   const isCritical = variant === 'danger' || status.toLowerCase().includes('critical');

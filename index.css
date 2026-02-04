@@ -1,21 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
-@import './styles/design-tokens.css';
+@import './styles/tokens-2026.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@theme {
+    --color-border-base: var(--surface-border);
+    --color-bg-base: var(--bg-base);
+    --color-text-primary: var(--text-primary);
+}
+
 @layer base {
     :root {
-        --background: 0 0% 2%;
-        --foreground: 240 5% 96%;
-        --card: 240 10% 4%;
-        --card-foreground: 240 5% 96%;
-        --popover: 240 10% 2%;
-        --popover-foreground: 240 5% 96%;
-        --primary: 240 5.9% 10%;
-        --primary-foreground: 0 0% 98%;
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
         --secondary: 240 3.7% 15.9%;
         --secondary-foreground: 0 0% 98%;
         --muted: 240 3.7% 15.9%;
@@ -30,12 +36,41 @@
         --radius: 0.5rem;
     }
 
+    /* Morgan System Light mode mapping for Shadcn consistency */
+    [data-theme='light'] {
+        --background: 40 25% 96%;
+        /* Matches --morgan-bg-cream */
+        --foreground: 210 40% 16%;
+        /* Matches --morgan-text-dark */
+        --card: 0 0% 100%;
+        --card-foreground: 210 40% 16%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 210 40% 16%;
+        --primary: 184 35% 48%;
+        /* Matches --morgan-teal */
+        --primary-foreground: 0 0% 100%;
+        --secondary: 40 18% 92%;
+        /* Matches --morgan-bg-cream-dark */
+        --secondary-foreground: 210 40% 16%;
+        --muted: 40 18% 92%;
+        --muted-foreground: 215 15% 42%;
+        /* Matches --morgan-text-muted */
+        --accent: 40 18% 92%;
+        --accent-foreground: 210 40% 16%;
+        --destructive: 355 78% 42%;
+        /* Matches --morgan-red-dark */
+        --destructive-foreground: 0 0% 100%;
+        --border: 210 29% 24% 0.1;
+        --input: 210 29% 24% 0.1;
+        --ring: 184 35% 48%;
+    }
+
     * {
         @apply border-border-base;
     }
 
     body {
-        @apply bg-bg-base text-text-primary antialiased selection:bg-blue-500/30;
+        @apply bg-bg-base text-text-primary antialiased selection:bg-blue-500;
         font-feature-settings: "ss01", "ss02", "cv01", "cv02";
     }
 
@@ -56,8 +91,17 @@
         background-color: var(--bg-surface);
     }
 
+    [data-theme='light'] .bg-glass {
+        background-color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
     .text-shadow-glow {
         text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    [data-theme='light'] .text-shadow-glow {
+        text-shadow: 0 0 10px rgba(81, 162, 168, 0.2);
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -71,6 +115,10 @@
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
         @apply bg-zinc-800 rounded-full hover:bg-zinc-700;
+    }
+
+    [data-theme='light'] .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-zinc-300 hover:bg-zinc-400;
     }
 
     /* Phantom Red Watermark Effect */

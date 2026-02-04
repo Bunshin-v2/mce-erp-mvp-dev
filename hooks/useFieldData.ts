@@ -29,8 +29,8 @@ export const useFieldData = (projectId: string | null) => {
             // specific logic: if 'all', grab the first project with logs
 
             // 1. Fetch Latest Daily Log & Manpower
-            const { data: logData, error: logError } = await supabase
-                .from('site_logs')
+            const { data: logData, error: logError } = await (supabase
+                .from('site_logs' as any) as any)
                 .select(`
                     *,
                     site_manpower (*)
@@ -61,8 +61,8 @@ export const useFieldData = (projectId: string | null) => {
             }
 
             // 2. Fetch Activities
-            const { data: actData } = await supabase
-                .from('site_activities')
+            const { data: actData } = await (supabase
+                .from('site_activities' as any) as any)
                 .select('*')
                 .order('timestamp', { ascending: false })
                 .limit(10);
@@ -70,8 +70,8 @@ export const useFieldData = (projectId: string | null) => {
             if (actData) setActivities(actData);
 
             // 3. Fetch Observations
-            const { data: obsData } = await supabase
-                .from('safety_incidents')
+            const { data: obsData } = await (supabase
+                .from('safety_incidents' as any) as any)
                 .select('*')
                 .order('reported_at', { ascending: false })
                 .limit(5);

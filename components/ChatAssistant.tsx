@@ -1,27 +1,40 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, X, Bot, Sparkles, Paperclip, Loader2, Zap } from 'lucide-react';
+import { Send, X, Bot, Sparkles, Paperclip, Loader2, Zap, MessageSquare, Terminal } from 'lucide-react';
 import { buildAssistantContext, retrieveRelevantContext, AssistantContext } from '@/lib/ai/assistant-context';
 import { GlassButton } from '@/components/ui/GlassButton';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface Message {
     role: 'user' | 'assistant';
     text: string;
 }
 
+/**
+ * Mr. Morgan - Executive AI Assistant
+ * Revamped 2026 UI | Golden State DNA | Tactical Presets
+ */
 export const ChatAssistant: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', text: 'Hello! I\'m your MCE Assistant. I can help with projects, tenders, documents, tasks, and more. What can I assist with?' }
+        { 
+            role: 'assistant', 
+            text: 'I am Mr. Morgan. Your strategic command assistant. I have synchronized with the MCE registry. How shall we proceed with your tactical analysis?' 
+        }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [context, setContext] = useState<AssistantContext | null>(null);
-    const [scopeSummary, setScopeSummary] = useState('');
-    const [scopeKeywords, setScopeKeywords] = useState<string[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Load assistant context on mount
+    // Tactical Presets - Matters & Answerable
+    const presets = [
+        { label: 'RISK_REPORT', query: 'Show me all projects with critical delivery risk ratings.' },
+        { label: 'FISCAL_PULSE', query: 'What is the total AED value of the current tender pipeline?' },
+        { label: 'TIMELINE_SYNC', query: 'List the top 5 upcoming project deadlines for February.' },
+        { label: 'SYSTEM_STATUS', query: 'Check the health of the RAG knowledgebase and neural mesh.' }
+    ];
+
     useEffect(() => {
         buildAssistantContext().then(ctx => setContext(ctx));
     }, []);
@@ -32,203 +45,161 @@ export const ChatAssistant: React.FC = () => {
         }
     }, [messages, loading]);
 
-    useEffect(() => {
-        let isMounted = true;
-        fetch('/api/ai/scope')
-            .then(res => res.json())
-            .then(data => {
-                if (!isMounted) return;
-                if (data?.scope) {
-                    setScopeSummary(data.scope.summary || 'AI scope overview');
-                    setScopeKeywords(data.scope.keywords || []);
-                }
-            })
-            .catch(err => {
-                console.error('Failed to load scope keywords:', err);
-            });
-        return () => {
-            isMounted = false;
-        };
-    }, []);
+    const handleSend = async (queryText?: string) => {
+        const textToSend = queryText || input;
+        if (!textToSend.trim() || loading || !context) return;
 
-    const handleScopeChip = (keyword: string) => {
-        if (!keyword.trim()) return;
-        setInput(keyword);
-        if (scrollRef.current) {
-            scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-        }
-    };
-
-    const handleSend = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!input.trim() || loading || !context) return;
-
-        const userMsg: Message = { role: 'user', text: input };
+        const userMsg: Message = { role: 'user', text: textToSend };
         setMessages(prev => [...prev, userMsg]);
-        const currentInput = input;
         setInput('');
         setLoading(true);
 
         try {
-            // Retrieve relevant context for this query
-            const relevantContext = await retrieveRelevantContext(currentInput);
-
-            // Send to AI Gateway with system context and relevant prompts
-            // Send to AI Gateway with system context and relevant prompts
+            const relevantContext = await retrieveRelevantContext(textToSend);
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45s client timeout
+            const timeoutId = setTimeout(() => controller.abort(), 45000);
 
             const chatRes = await fetch('/api/ai/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    query: currentInput,
+                    query: textToSend,
                     systemPrompt: context.systemPrompt,
                     context: relevantContext,
-                    client: { app: 'vercel-nextjs', version: 'mce-assistant-v1' }
+                    client: { app: 'vercel-nextjs', version: 'mr-morgan-v1' }
                 }),
                 signal: controller.signal
             }).finally(() => clearTimeout(timeoutId));
+            
             const payload = await chatRes.json();
-
-            if (!chatRes.ok) {
-                const errorCode = payload?.error?.code || 'AI_GATEWAY_ERROR';
-                const errorMessage = payload?.error?.message || 'AI Gateway request failed.';
-                throw new Error(`${errorCode}: ${errorMessage}`);
-            }
-
-            const outcome = payload?.outcome;
-            // Support both local (payload.response) and gateway (payload.data.answer) formats
             const answer = payload?.response || payload?.data?.answer;
 
-            const text =
-                typeof answer === 'string' && answer.trim()
-                    ? answer
-                    : outcome === 'refused'
-                        ? 'I don\'t have sufficient evidence to answer that. Try asking about projects, tenders, documents, or system features.'
-                        : 'AI Service returned an invalid response.';
-
-            const aiMessage: Message = { role: 'assistant', text };
+            const aiMessage: Message = { 
+                role: 'assistant', 
+                text: typeof answer === 'string' ? answer : 'Intelligence Core returned an invalid response.' 
+            };
             setMessages(prev => [...prev, aiMessage]);
 
         } catch (err: any) {
-            console.error(err);
-            let errorMessage = "Sorry, I encountered an error. Please try again.";
-
-            if (err.name === 'AbortError') {
-                errorMessage = "The request timed out. The AI service might be waking up, please try again.";
-            } else if (err.message.includes('AI_GATEWAY_TIMEOUT') || err.message.includes('504')) {
-                errorMessage = "AI Service is busy. Please try again in a moment.";
-            } else if (err.message.includes('AI_GATEWAY_UNREACHABLE') || err.message.includes('503')) {
-                errorMessage = "AI Service is currently offline. Please check system status.";
-            }
-
-            setMessages(prev => [...prev, { role: 'assistant', text: errorMessage }]);
+            setMessages(prev => [...prev, { role: 'assistant', text: "Signal interrupted. Please re-establish neural link." }]);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="fixed bottom-6 right-8 z-[500] font-sans">
-            {!isOpen ? (
-                <GlassButton
-                    onClick={() => setIsOpen(true)}
-                    variant="primary"
-                    size="icon"
-                    className="w-14 h-14 rounded-full shadow-lg hover:scale-110 active:scale-95 border-white/10 hover:bg-[var(--brand-primary-hover)] group"
-                    title="Nexus AI Assistant"
-                >
-                    <Bot size={24} strokeWidth={2} />
-                </GlassButton>
-            ) : (
-                <div className="w-[400px] h-[600px] bg-[var(--bg-surface)] backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col border border-[var(--surface-border)] overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
-                    {/* HEADER */}
-                    <div className="bg-[var(--bg-base)] p-4 flex justify-between items-center border-b border-[var(--surface-border)]">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-[var(--brand-accent)]/10 rounded-lg flex items-center justify-center border border-[var(--brand-accent)]/20">
-                                <Sparkles size={16} className="text-[var(--brand-accent)]" />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-semibold text-[var(--text-primary)]">MCE Assistant</h3>
-                                <p className="text-[10px] text-[var(--text-secondary)]">Powered by Nexus AI</p>
-                            </div>
-                        </div>
-                        <GlassButton
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setIsOpen(false)}
-                            className="h-8 w-8 hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                        >
-                            <X size={18} />
-                        </GlassButton>
-                    </div>
+        <div className="fixed bottom-8 right-8 z-[1000] font-sans">
+            <AnimatePresence>
+                {!isOpen ? (
+                    <motion.button
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setIsOpen(true)}
+                        className="w-16 h-16 rounded-full bg-[var(--brand-accent)] shadow-[0_0_30px_rgba(81,162,168,0.4)] flex items-center justify-center text-white border-2 border-white/20 relative group"
+                    >
+                        <Bot size={28} strokeWidth={2.5} />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-[var(--mce-red)] rounded-full border-2 border-white animate-pulse" />
+                    </motion.button>
+                ) : (
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                        className="w-[420px] h-[650px] bg-white rounded-3xl shadow-5xl flex flex-col border-[4px] border-[var(--brand-accent)] overflow-hidden relative"
+                    >
+                        {/* Machined Edge Highlight */}
+                        <div className="absolute inset-0 border border-white/20 pointer-events-none z-50 rounded-2xl" />
 
-                    {/* SCOPE CHIPS */}
-                    {(scopeKeywords.length > 0 || scopeSummary) && (
-                        <div className="px-4 py-3 border-b border-[var(--surface-border)] bg-[var(--bg-active)]/30 space-y-2">
-                            {scopeKeywords.length > 0 && (
-                                <div className="flex flex-wrap gap-1.5">
-                                    {scopeKeywords.map(keyword => (
-                                        <GlassButton
-                                            key={keyword}
-                                            variant="secondary"
-                                            size="sm"
-                                            onClick={() => handleScopeChip(keyword)}
-                                            className="h-auto py-1 px-2.5 rounded-full text-[10px] font-medium text-[var(--text-secondary)] bg-[var(--bg-surface)] hover:text-[var(--brand-accent)] hover:border-[var(--brand-accent)]/50"
-                                        >
-                                            {keyword}
-                                        </GlassButton>
-                                    ))}
+                        {/* HEADER - Executive Stealth */}
+                        <div className="bg-[var(--brand-accent)] p-5 flex justify-between items-center shrink-0">
+                            <div className="flex items-center space-x-4">
+                                <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/20 backdrop-blur-md">
+                                    <Terminal size={20} className="text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-black italic text-white font-oswald uppercase tracking-widest">Mr. Morgan</h3>
+                                    <p className="text-[8px] font-bold text-white/60 uppercase tracking-[0.3em]">Neural_Command_Interface</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => setIsOpen(false)}
+                                className="p-2 hover:bg-white/10 rounded-full text-white transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* MESSAGES - Tactical Feed */}
+                        <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/50">
+                            {messages.map((msg, i) => (
+                                <motion.div 
+                                    initial={{ opacity: 0, x: msg.role === 'user' ? 10 : -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    key={i} 
+                                    className={cn("flex w-full", msg.role === 'user' ? 'justify-end' : 'justify-start')}
+                                >
+                                    <div className={cn(
+                                        "max-w-[85%] px-5 py-4 rounded-2xl text-[13px] leading-relaxed font-medium shadow-sm",
+                                        msg.role === 'user'
+                                            ? 'bg-[var(--brand-accent)] text-white rounded-br-sm'
+                                            : 'bg-white border border-[var(--surface-border)] text-[var(--text-primary)] rounded-bl-sm font-oswald italic font-bold'
+                                    )}>
+                                        {msg.text}
+                                    </div>
+                                </motion.div>
+                            ))}
+                            {loading && (
+                                <div className="flex justify-start">
+                                    <div className="bg-white border border-[var(--surface-border)] px-5 py-4 rounded-2xl rounded-bl-sm flex items-center space-x-3">
+                                        <Loader2 className="animate-spin text-[var(--brand-accent)]" size={16} />
+                                        <span className="text-[10px] text-[var(--text-tertiary)] font-black uppercase tracking-widest italic">Analyzing_Data...</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
-                    )}
 
-                    {/* MESSAGES */}
-                    <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[var(--bg-base)]/50">
-                        {messages.map((msg, i) => (
-                            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                    ? 'bg-[var(--brand-accent)] text-white rounded-br-sm'
-                                    : 'bg-[var(--bg-surface)] border border-[var(--surface-border)] text-[var(--text-primary)] rounded-bl-sm'
-                                    }`}>
-                                    {msg.text}
-                                </div>
+                        {/* PRESET ACTIONS - Matters & Answerable */}
+                        <div className="px-6 py-4 bg-white border-t border-[var(--surface-border)] shrink-0">
+                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[var(--text-tertiary)] mb-3 opacity-60 italic">Tactical_Shortcuts</p>
+                            <div className="flex flex-wrap gap-2">
+                                {presets.map(preset => (
+                                    <button
+                                        key={preset.label}
+                                        onClick={() => handleSend(preset.query)}
+                                        className="px-3 py-1.5 rounded-md border border-[var(--brand-accent)]/20 text-[9px] font-black italic uppercase tracking-wider text-[var(--brand-accent)] hover:bg-[var(--brand-accent)] hover:text-white transition-all font-oswald"
+                                    >
+                                        {preset.label}
+                                    </button>
+                                ))}
                             </div>
-                        ))}
-                        {loading && (
-                            <div className="flex justify-start">
-                                <div className="bg-[var(--bg-surface)] border border-[var(--surface-border)] px-4 py-3 rounded-2xl rounded-bl-sm flex items-center space-x-2.5">
-                                    <Loader2 className="animate-spin text-[var(--brand-accent)]" size={14} />
-                                    <span className="text-xs text-[var(--text-secondary)] font-medium">Processing...</span>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                        </div>
 
-                    {/* INPUT AREA */}
-                    <div className="p-4 bg-[var(--bg-surface)] border-t border-[var(--surface-border)]">
-                        <form onSubmit={handleSend} className="relative flex items-center bg-[var(--bg-input)] rounded-xl border border-[var(--surface-border)] focus-within:border-[var(--brand-accent)]/50 transition-colors">
-                            <input
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                placeholder="Ask about projects, tenders..."
-                                className="flex-1 bg-transparent border-none outline-none text-sm px-4 py-3 text-[var(--text-primary)] placeholder-[var(--text-tertiary)]"
-                            />
-                            <GlassButton
-                                type="submit"
-                                variant="ghost"
-                                size="icon"
-                                disabled={!input.trim()}
-                                className="mr-1 text-[var(--brand-accent)] disabled:opacity-30 hover:bg-[var(--brand-accent)]/10"
+                        {/* INPUT AREA */}
+                        <div className="p-6 bg-white border-t border-[var(--surface-border)] shrink-0">
+                            <form 
+                                onSubmit={(e) => { e.preventDefault(); handleSend(); }} 
+                                className="relative flex items-center bg-slate-100 rounded-2xl border-2 border-transparent focus-within:border-[var(--brand-accent)] focus-within:bg-white transition-all overflow-hidden shadow-inner"
                             >
-                                <Send size={18} />
-                            </GlassButton>
-                        </form>
-                    </div>
-                </div>
-            )}
+                                <input
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    placeholder="Execute command..."
+                                    className="flex-1 bg-transparent border-none outline-none text-[13px] px-5 py-4 text-[var(--text-primary)] placeholder-[var(--text-tertiary)] font-medium"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={!input.trim() || loading}
+                                    className="mr-3 p-2 bg-[var(--brand-accent)] text-white rounded-xl disabled:opacity-20 hover:scale-105 transition-all"
+                                >
+                                    <Send size={18} />
+                                </button>
+                            </form>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

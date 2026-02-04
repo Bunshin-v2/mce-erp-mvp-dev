@@ -23,7 +23,7 @@ export const ResourceForm: React.FC<ResourceFormProps> = ({ onClose, onSuccess }
     setLoading(true);
     try {
       const client = await getClient();
-      const { error } = await client.from('resources').insert([formData]);
+      const { error } = await (client.from('resources' as any) as any).insert([formData]);
       if (error) throw error;
       onSuccess();
       onClose();

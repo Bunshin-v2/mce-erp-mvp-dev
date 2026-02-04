@@ -75,16 +75,16 @@ export const ragPipeline = {
     const client = supabaseClient || supabase;
 
     // Fetch document metadata for Front Matter
-    const { data: doc } = await client
-      .from('documents')
+    const { data: doc } = await (client
+      .from('documents' as any) as any)
       .select('title, category, project_id')
       .eq('id', documentId)
       .single();
 
-    const chunks = chunkDocument(fullText, { 
+    const chunks = chunkDocument(fullText, {
       maxChunkSize: 1000
     });
-    
+
     logger.info(`Generated ${chunks.length} chunks`);
 
     // Step 2: Generate all embeddings first
@@ -105,9 +105,9 @@ export const ragPipeline = {
             document_id: documentId,
             tenant_id: tenantId,
             content: chunks[i].content,
-            metadata: { 
-              ...chunks[i].metadata, 
-              documentId, 
+            metadata: {
+              ...chunks[i].metadata,
+              documentId,
               tenantId,
               title: doc?.title,
               category: doc?.category,
@@ -126,8 +126,8 @@ export const ragPipeline = {
 
     const dbClient = supabaseClient || supabaseAdmin || supabase;
 
-    const { error } = await dbClient
-      .from('document_embeddings')
+    const { error } = await (dbClient
+      .from('document_embeddings' as any) as any)
       .insert(insertData);
 
     if (error) {
@@ -136,7 +136,7 @@ export const ragPipeline = {
     }
 
     // Step 4: Mark Document as Processed
-    await supabase.from('documents').update({ status: 'Reviewed' }).eq('id', documentId);
+    await (supabase.from('documents' as any) as any).update({ status: 'Reviewed' }).eq('id', documentId);
 
     logger.info(`RAG pipeline completed for doc: ${documentId}`, { chunksIndexed: insertData.length });
     return { success: true, chunksProcessed: insertData.length };

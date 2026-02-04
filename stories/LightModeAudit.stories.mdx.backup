@@ -1,0 +1,31 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Light Mode Audit" />
+
+# Light Mode Harmonization Audit
+
+## ✅ Completed Components
+
+### Wave 1: Core Shell
+- [x] Sidebar (Fixed Dark)
+- [x] Global CSS Variables
+
+### Wave 2: Dashboard
+- [x] GlassCard
+- [x] MetricBlock
+- [x] ExecutiveCockpit tabs
+
+### Wave 3: Data Tables
+- [x] GovernanceTable
+- [x] TabNav
+- [x] OperationalLedger
+- [x] TenderKanban
+
+## Visual Checks
+
+For each component, verify:
+1. **Text Contrast**: All text readable on cream background
+2. **Borders**: Subtle, not harsh black lines
+3. **Teal Accent**: Uses `--morgan-teal` not default blue
+4. **Hover States**: Smooth transitions, visible feedback
+5. **Shadows**: Soft elevation, not heavy drop shadows

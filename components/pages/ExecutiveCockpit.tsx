@@ -100,7 +100,7 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
             </>
          }
          tabs={
-            <Box className="bg-zinc-950/40 p-1 rounded-xl border border-white/5 backdrop-blur-md flex gap-1">
+            <Box className="bg-[var(--bg-layer)]/40 p-1 rounded-xl border border-[var(--surface-border)] backdrop-blur-md flex gap-1">
                {tabs.map(tab => (
                   <button
                      key={tab.id}
@@ -108,13 +108,13 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
                      className={cn(
                         "px-5 py-2.5 rounded-lg transition-all duration-300 group",
                         activeTab === tab.id
-                           ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(255,255,255,0.05)] border border-white/10'
-                           : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5 border border-transparent'
+                           ? 'bg-[var(--bg-active)] text-[var(--text-primary)] shadow-sm border border-[var(--surface-border-strong)]'
+                           : 'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]/40 border border-transparent'
                      )}
                   >
                      <Text variant="gov-header" className={cn(
                         "text-[10px] transition-all",
-                        activeTab === tab.id ? "scale-105 italic text-white" : "text-zinc-500"
+                        activeTab === tab.id ? "scale-105 italic text-[var(--text-primary)]" : "text-[var(--text-tertiary)]"
                      )}>
                         {tab.label}
                      </Text>

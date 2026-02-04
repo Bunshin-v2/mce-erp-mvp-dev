@@ -31,8 +31,8 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onClose, onSuccess }) 
 
     try {
       const client = await getClient();
-      const { error } = await client
-        .from('projects_master')
+      const { error } = await (client
+        .from('projects_master' as any) as any)
         .insert([{
           ...formData,
           contract_value_excl_vat: parseFloat(formData.contract_value_excl_vat) || 0,

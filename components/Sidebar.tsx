@@ -31,6 +31,7 @@ import { useUserTier } from '../hooks/useUserTier';
 import { useDashboardData } from '../hooks/useDashboardData';
 import { supabase } from '../lib/supabase';
 import * as Icons from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface SidebarProps {
   activeView: string;
@@ -58,7 +59,7 @@ type MenuGroup = {
 
 /**
  * APPLE-GRADE PRODUCTION SIDEBAR (V3 FINAL)
- * Minimalist | Obsessively Aligned | Flattened Hierarchy
+ * Tunable Alignment | Unified Vertical Axis | Golden State DNA
  */
 export const Sidebar: React.FC<SidebarProps> = ({
   activeView,
@@ -68,11 +69,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [customTabs, setCustomTabs] = useState<any[]>([]);
   const [expandedItems, setExpandedGroups] = useState<string[]>(['mesh']);
-  const [collapsedSections, setCollapsedSections] = useState<string[]>([]); // New state for section collapse
+  const [collapsedSections, setCollapsedSections] = useState<string[]>([]);
 
-  const { tier, hasPermission, loading: tierLoading } = useUserTier();
-  const { alerts } = useDashboardData();
-  const hasUnreadAlerts = alerts.length > 0;
+  const { hasPermission } = useUserTier();
 
   useEffect(() => { fetchCustomTabs(); }, []);
 
@@ -101,7 +100,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   let clerk: any;
   try { clerk = useClerk(); } catch (e) { clerk = null; }
-
   const handleLogout = () => { if (clerk) clerk.signOut(); };
 
   const menuGroups: MenuGroup[] = [
@@ -112,10 +110,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'projects', label: 'Projects', icon: Building2 },
         { id: 'tenders', label: 'Tenders', icon: Briefcase },
         { id: 'documents', label: 'Documents', icon: FileText },
-        { id: 'liability', label: 'Risk & Liability', icon: ShieldAlert },
+        { id: 'liability', label: 'Risk Desk', icon: ShieldAlert },
         { id: 'tasks', label: 'Tasks', icon: CheckCircle2 },
         { id: 'calendar', label: 'Calendar', icon: Icons.Calendar },
-        { id: 'cockpit', label: 'Executive Cockpit', icon: Activity, requiredTier: 'L3' },
+        { id: 'cockpit', label: 'Strategic', icon: Activity, requiredTier: 'L3' },
       ]
     },
     {
@@ -130,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         {
           id: 'mesh',
-          label: 'Intelligence Mesh',
+          label: 'Neural', 
           icon: Globe,
           subItems: [
             { id: 'integrations', label: 'Mesh Sync', icon: Zap },
@@ -142,13 +140,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  // Process and filter menu groups
   const filterItems = (items: MenuItem[]): MenuItem[] => {
     return items.filter(item => {
-      // const permitted = !item.requiredTier || (!tierLoading && hasPermission(item.requiredTier as any));
-      const permitted = true; // FORCE RESTORE ALL ITEMS
+      const permitted = true; 
       if (!permitted) return false;
-
       if (item.subItems) {
         item.subItems = filterItems(item.subItems);
         return item.subItems.length > 0;
@@ -161,21 +156,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     ...group,
     items: filterItems(group.items)
   })).filter(group => group.items.length > 0);
-
-  // Inject Custom Tabs
-  customTabs.forEach(tab => {
-    if (tab.required_tier && !hasPermission(tab.required_tier)) return;
-    const IconComponent = (Icons as any)[tab.icon_name] || Star;
-    const customItem: MenuItem = {
-      id: tab.target_view || tab.id,
-      label: tab.label,
-      icon: IconComponent,
-      customTab: { url: tab.target_url, viewId: tab.target_view }
-    };
-    const gIdx = visibleMenuGroups.findIndex(g => g.title === tab.group_title);
-    if (gIdx !== -1) visibleMenuGroups[gIdx].items.push(customItem);
-    else visibleMenuGroups.push({ title: tab.group_title, items: [customItem] });
-  });
 
   const renderMenuItem = (item: MenuItem, isSubItem = false) => {
     const isExpanded = expandedItems.includes(item.id);
@@ -194,34 +174,36 @@ export const Sidebar: React.FC<SidebarProps> = ({
             }
           }}
           aria-label={item.label}
-          className={`w-full flex items-center h-[36px] px-4 rounded-lg transition-all duration-300 group relative ${isActive && !item.subItems
-            ? 'bg-[var(--bg-active)] text-[var(--text-primary)] shadow-sm border border-[var(--surface-border)]'
-            : 'text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)]'
-            }`}
-
+          style={{ paddingLeft: 'var(--sidebar-item-pl)' }}
+          className={cn(
+            "w-full flex items-center h-[36px] pr-4 rounded-lg transition-all duration-300 group relative",
+            isActive && !item.subItems
+              ? 'bg-[var(--bg-active)] text-[var(--text-primary)] shadow-sm border border-[var(--surface-border)]'
+              : 'text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)]'
+          )}
         >
           {isActive && !item.subItems && (
             <div className="absolute left-0 top-[20%] bottom-[20%] w-[3px] bg-[var(--accent-primary)] rounded-r-full shadow-glow"></div>
           )}
-          <div className={`flex items-center justify-center w-4 shrink-0 transition-colors ${isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--sidebar-text-muted)] group-hover:text-[var(--sidebar-text)]'}`}>
+          <div className={cn(
+            "flex items-center justify-center w-4 shrink-0 transition-colors",
+            isActive ? 'text-[var(--brand-accent)]' : 'text-[var(--sidebar-text-muted)] group-hover:text-[var(--sidebar-text)]'
+          )}>
             <item.icon size={isSubItem ? 12 : 14} strokeWidth={isActive ? 2.5 : 2} />
           </div>
           {!collapsed && (
             <span
-              className={`ml-4 transition-colors whitespace-nowrap flex-1 text-left text-[11px] font-oswald font-bold italic uppercase tracking-[0.15em] ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'
-                }`}
+              className={cn(
+                "ml-4 transition-colors whitespace-nowrap flex-1 text-left text-[11px] font-oswald font-bold italic uppercase tracking-[0.15em]",
+                isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]'
+              )}
             >
               {item.label}
             </span>
           )}
 
           {!collapsed && item.subItems && (
-            <ChevronDown size={11} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-          )}
-          {collapsed && (
-            <div className="absolute left-[54px] px-3 py-1.5 bg-zinc-900 text-white font-bold italic tracking-wider rounded border border-zinc-800 opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-2 group-hover:translate-x-0 whitespace-nowrap shadow-2xl z-[60]" style={{ fontSize: `var(--sidebar-text-size, 0.75rem)` }}>
-              {item.label}
-            </div>
+            <ChevronDown size={11} className={cn("transition-transform duration-200", isExpanded ? 'rotate-180' : '')} />
           )}
         </button>
         {!collapsed && item.subItems && isExpanded && (
@@ -234,26 +216,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className={`fixed left-0 top-0 h-screen overflow-hidden bg-[var(--sidebar-bg)] backdrop-blur-2xl border-r border-[var(--sidebar-border)] transition-all duration-300 z-50 flex flex-col group/sidebar ${collapsed ? 'w-[64px]' : 'w-[156px]'}`}
-      style={{
-        boxShadow: 'inset -1px 0 0 rgba(255, 255, 255, 0.03)'
-      }}>
+    <aside 
+      style={{ 
+        boxShadow: 'inset -1px 0 0 rgba(255, 255, 255, 0.03)',
+        width: collapsed ? 'var(--sidebar-collapsed-width)' : '156px'
+      }}
+      className="fixed left-0 top-0 h-screen overflow-hidden bg-[var(--sidebar-bg)] backdrop-blur-2xl border-r border-[var(--sidebar-border)] transition-all duration-300 z-50 flex flex-col group/sidebar"
+    >
 
-      {/* BRAND APEX (2026 AAA Grade) */}
-      <div className="h-12 flex items-center relative bg-[var(--morgan-sidebar)]">
-        <div className={`flex items-center transition-all duration-300 ${collapsed ? 'opacity-0 scale-50' : 'opacity-100 scale-100 pl-[24px]'}`}>
+      {/* BRAND APEX */}
+      <div className="h-12 flex items-center relative bg-[var(--sidebar-bg)]">
+        <div 
+          style={{ paddingLeft: collapsed ? 'var(--sidebar-collapsed-logo-pl)' : 'var(--sidebar-logo-pl)' }}
+          className="flex items-center transition-all duration-300"
+        >
           <span className="font-oswald italic font-black text-[22px] tracking-tight select-none text-[var(--sidebar-text)]">
-            Morgan
+            {collapsed ? 'M' : 'Morgan'}
           </span>
         </div>
-
-        {collapsed && (
-          <div className="absolute inset-y-0 left-0 w-[64px] flex items-center justify-start pl-[24px]">
-            <span className="font-oswald font-black italic text-[24px] text-[var(--sidebar-text)] select-none">
-              M
-            </span>
-          </div>
-        )}
 
         <button
           onClick={onToggle}
@@ -265,7 +245,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* CORE NAVIGATION */}
-      <nav className="flex-1 py-3 px-2 flex flex-col gap-y-8 overflow-y-auto no-scrollbar scroll-smooth justify-between">
+      <nav className="flex-1 py-3 px-0 flex flex-col gap-y-8 overflow-y-auto no-scrollbar scroll-smooth justify-between">
         {visibleMenuGroups.map((group, idx) => {
           const isSectionCollapsed = collapsedSections.includes(group.title);
           return (
@@ -274,7 +254,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <button
                   onClick={() => toggleSection(group.title)}
                   aria-label={`${isSectionCollapsed ? 'Expand' : 'Collapse'} ${group.title} section`}
-                  className="w-full flex items-center justify-between px-2 mb-[var(--space-2)] group/section hover:bg-[var(--sidebar-hover)] rounded-md transition-all cursor-pointer"
+                  style={{ paddingLeft: 'var(--sidebar-item-pl)' }}
+                  className="w-full flex items-center justify-between pr-4 mb-[var(--space-2)] group/section hover:bg-[var(--sidebar-hover)] rounded-md transition-all cursor-pointer"
                 >
                   <h4
                     className="flex-1 text-left text-[10px] text-text-tertiary uppercase tracking-[0.2em] font-oswald font-bold italic group-hover/section:text-[var(--text-secondary)] transition-colors"
@@ -283,11 +264,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </h4>
                   <ChevronDown
                     size={10}
-                    className={`text-[var(--text-tertiary)] group-hover/section:text-[var(--text-secondary)] transition-transform duration-300 shrink-0 ${isSectionCollapsed ? '-rotate-90' : 'rotate-0'}`}
+                    className={cn(
+                      "text-[var(--text-tertiary)] group-hover/section:text-[var(--text-secondary)] transition-transform duration-300 shrink-0",
+                      isSectionCollapsed ? '-rotate-90' : 'rotate-0'
+                    )}
                   />
                 </button>
               )}
-              <div className={`flex flex-col gap-y-0.5 overflow-hidden transition-all duration-300 ${isSectionCollapsed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'}`}>
+              <div className={cn(
+                "flex flex-col gap-y-0.5 overflow-hidden transition-all duration-300",
+                isSectionCollapsed ? 'max-h-0 opacity-0' : 'max-h-[500px] opacity-100'
+              )}>
                 {group.items.map((item) => renderMenuItem(item))}
               </div>
             </div>
@@ -296,13 +283,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* SYSTEM ANCHOR ZONE */}
-      <div className="border-t border-[var(--sidebar-border)] px-2 py-3 space-y-0.5 mt-auto bg-black/10">
-
-        {/* Profile */}
+      <div className="border-t border-[var(--sidebar-border)] px-0 py-3 space-y-0.5 mt-auto">
         <button
           onClick={() => onNavigate('profile')}
-          aria-label="User Profile"
-          className={`w-full flex items-center h-[36px] px-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-all group ${collapsed ? 'justify-center' : ''}`}
+          style={{ paddingLeft: 'var(--sidebar-item-pl)' }}
+          className="w-full flex items-center h-[36px] pr-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-all group"
         >
           <div className="w-4 flex justify-center shrink-0">
             <Users size={14} strokeWidth={1.5} />
@@ -310,11 +295,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!collapsed && <span className="ml-4 text-[11px] font-oswald font-bold italic uppercase tracking-[0.15em]">Profile</span>}
         </button>
 
-        {/* Settings */}
         <button
           onClick={() => onNavigate('settings')}
-          aria-label="System Settings"
-          className={`w-full flex items-center h-[36px] px-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-all group ${collapsed ? 'justify-center' : ''}`}
+          style={{ paddingLeft: 'var(--sidebar-item-pl)' }}
+          className="w-full flex items-center h-[36px] pr-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-all group"
         >
           <div className="w-4 flex justify-center shrink-0">
             <Settings size={14} strokeWidth={1.5} />
@@ -324,11 +308,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className="h-1" />
 
-        {/* Terminal (Logout) */}
         <button
           onClick={handleLogout}
-          aria-label="Terminal Logout"
-          className={`w-full flex items-center h-[36px] px-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 transition-all group ${collapsed ? 'justify-center' : ''}`}
+          style={{ paddingLeft: 'var(--sidebar-item-pl)' }}
+          className="w-full flex items-center h-[36px] pr-4 rounded-md text-[var(--sidebar-text-muted)] hover:text-[var(--color-critical)] hover:bg-[var(--color-critical)]/10 transition-all group"
         >
           <div className="w-4 flex justify-center shrink-0">
             <LogOut size={14} strokeWidth={1.5} />

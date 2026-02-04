@@ -48,12 +48,15 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate
   };
 
   return (
-    <header className="bg-[var(--sidebar-bg)] sticky top-0 z-40 border-b border-[var(--surface-border)] px-8 py-3 flex items-center justify-between transition-all duration-300">
+    <header className="bg-[var(--sidebar-bg)] sticky top-0 z-40 border-b border-[var(--brand-accent)]/20 px-8 py-3 flex items-center justify-between transition-all duration-300">
 
       {/* Dynamic Branding with Glow */}
       <div className="flex items-center space-x-3">
-        <div className="w-2 h-2 rounded-full bg-[var(--color-success)]/60 shadow-[0_0_12px_var(--color-success)]" />
-        <span className="text-[13px] font-bold italic tracking-wide select-none text-[var(--text-primary)] drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+        <div className="w-2 h-2 rounded-full bg-[var(--brand-accent)] shadow-[0_0_12px_var(--brand-accent)]" />
+        <span 
+          className="text-[14px] font-oswald font-black italic tracking-wider select-none text-[var(--text-primary)] uppercase transition-all duration-500"
+          style={{ textShadow: 'var(--header-title-glow)' }}
+        >
           {getPageTitle()}
         </span>
       </div>

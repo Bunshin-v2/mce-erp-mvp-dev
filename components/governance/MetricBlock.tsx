@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { Box } from '../primitives/Box';
 import { Text } from '../primitives/Text';
 import { cn } from '../../lib/utils';
+import { motion } from 'framer-motion';
 
 interface MetricBlockProps {
     label: string;
@@ -17,6 +18,10 @@ interface MetricBlockProps {
     className?: string;
 }
 
+/**
+ * MetricBlock - THEME AWARE 2026 (GOLDEN STATE)
+ * Protects Dark Mode (Charcoal) | Enhances Light Mode (White/Blue)
+ */
 export const MetricBlock: React.FC<MetricBlockProps> = ({
     label,
     value,
@@ -27,66 +32,69 @@ export const MetricBlock: React.FC<MetricBlockProps> = ({
     lastAudited,
     className
 }) => {
-    const isCritical = status === 'critical';
-    const isWarning = status === 'warning';
+    const formattedValue = typeof value === 'number'
+        ? (value > 1000000
+            ? `${(value / 1000000).toFixed(1)}M`
+            : value.toLocaleString())
+        : value;
 
     return (
-        <Box
+        <motion.div
+            whileHover={{ y: -2, scale: 1.01 }}
             className={cn(
-                "px-4 py-3 rounded-lg flex flex-col justify-between space-y-2 relative overflow-hidden transition-none",
+                "relative group flex flex-col p-5 rounded-xl border transition-all duration-300",
+                "bg-[var(--kpi-bg)] border-[var(--kpi-border)] shadow-[var(--kpi-shadow)]",
                 className
             )}
-            style={{
-                backgroundColor: 'var(--bg-subtle)', // Zinc-100
-                border: '1px solid var(--border-subtle)', // Neutral border
-                boxShadow: 'none'
-            }}
         >
-            <Box className="flex justify-between items-start">
-                <Text className="text-caption text-tertiary uppercase tracking-wide font-medium">
+            {/* Top Accent Bar - Theme Aware */}
+            <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl bg-[var(--kpi-accent-bar)]" />
+
+            {/* Label Row */}
+            <Box className="flex justify-between items-start mb-4">
+                <Text className="text-[10px] font-black italic uppercase tracking-[0.2em] text-[var(--kpi-text-label)]">
                     {label}
                 </Text>
-
-                {/* Critical Badge or Trend */}
-                {isCritical ? (
-                    <span className="bg-[var(--color-critical)] text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-wide shadow-[0_2px_4px_rgba(190,24,93,0.3)]">
-                        CRITICAL
-                    </span>
-                ) : (
-                    <Box className="flex flex-col items-end">
-                        {trend && (
-                            <Text variant="caption" className={cn("font-medium uppercase tracking-tighter", trend.type === 'up' ? 'text-emerald-600' : 'text-rose-600')}>
-                                {trend.type === 'up' ? '↑' : '↓'} {trend.value}%
-                            </Text>
-                        )}
-                    </Box>
-                )}
             </Box>
 
-            <Box className="flex items-baseline gap-2">
-                <Text className="text-[var(--text-primary)] font-bold text-lg italic tracking-tight">
-                    {isCurrency && typeof value === 'number'
-                        ? (value > 1000000
-                            ? `${(value / 1000000).toFixed(1)}M`
-                            : value.toLocaleString())
-                        : (typeof value === 'number' ? value.toLocaleString() : value)}
+            {/* Value Row */}
+            <Box className="flex items-baseline gap-1.5 mb-1">
+                <Text className="text-4xl font-black italic tracking-tighter font-oswald leading-none text-[var(--kpi-text-primary)]">
+                    {isCurrency && <span className="text-[14px] align-top mr-0.5 opacity-60">AED</span>}
+                    {formattedValue}
                 </Text>
-                {(unit || isCurrency) && (
-                    <Text className="text-caption text-tertiary mb-0.5 uppercase tracking-widest opacity-60">
-                        {unit || (isCurrency ? 'AED' : '')}
+                {unit && !isCurrency && (
+                    <Text className="text-[10px] font-black italic uppercase tracking-widest text-[var(--kpi-text-label)] opacity-60">
+                        {unit}
                     </Text>
                 )}
             </Box>
 
-            {/* Audit label - subtle footer */}
-            {lastAudited && (
-                <Box className="mt-1 pt-2 border-t border-[var(--border-subtle)]">
-                    <Text className="text-[10px] text-tertiary font-medium uppercase tracking-widest opacity-60">
-                        SYNC_LOCK: {lastAudited}
+            {/* Footer Row */}
+            <Box className="mt-auto pt-3 flex items-center justify-between border-t border-[var(--surface-border)]">
+                {trend ? (
+                    <Box className={cn(
+                        "flex items-center gap-1 text-[10px] font-black italic font-oswald uppercase",
+                        trend.type === 'up' ? "text-emerald-500" : "text-[var(--mce-red)]"
+                    )}>
+                        {trend.type === 'up' ? '↑' : '↓'} {trend.value}%
+                        <span className="text-[8px] opacity-40 font-sans tracking-tight ml-1 font-normal not-italic">vs prev</span>
+                    </Box>
+                ) : (
+                    <div />
+                )}
+
+                {lastAudited && (
+                    <Text className="text-[8px] text-[var(--kpi-text-label)] font-bold uppercase tracking-widest opacity-40">
+                        LOCK_{lastAudited}
                     </Text>
-                </Box>
-            )}
-        </Box>
+                )}
+            </Box>
+
+            {/* Subtle Grid Pattern */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden rounded-xl">
+                <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
+            </div>
+        </motion.div>
     );
 };
-

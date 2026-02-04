@@ -25,8 +25,8 @@ export const InvoiceForm: React.FC<InvoiceFormProps> = ({ projects, onClose, onS
     setLoading(true);
     try {
       const client = await getClient();
-      const { error } = await client
-        .from('invoices')
+      const { error } = await (client
+        .from('invoices' as any) as any)
         .insert([{
           ...formData,
           amount: parseFloat(formData.amount) || 0

@@ -13,7 +13,7 @@ export function useDocuments(searchQuery: string = '') {
     const fetchDocuments = async () => {
         setLoading(true);
         try {
-            let query = supabase.from('documents').select('*');
+            let query = (supabase.from('documents' as any) as any).select('*');
             if (searchQuery) query = query.or(`title.ilike.%${searchQuery}%,project_name.ilike.%${searchQuery}%`);
 
             const { data, error } = await query.order('created_at', { ascending: false }).limit(20);

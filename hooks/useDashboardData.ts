@@ -33,9 +33,9 @@ export function useDashboardData(searchQuery: string = '') {
         { data: activityData },
         { data: logData }
       ] = await Promise.all([
-        supabase.from('tasks').select('*').order('created_at', { ascending: false }),
-        supabase.from('agent_activity').select('*').order('timestamp', { ascending: false }).limit(20),
-        supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(50)
+        (supabase.from('tasks' as any) as any).select('*').order('created_at', { ascending: false }),
+        (supabase.from('agent_activity' as any) as any).select('*').order('timestamp', { ascending: false }).limit(20),
+        (supabase.from('audit_logs' as any) as any).select('*').order('created_at', { ascending: false }).limit(50)
       ]);
 
       if (tasksData) setTasks(tasksData);

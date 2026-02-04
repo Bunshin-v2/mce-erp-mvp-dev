@@ -12,24 +12,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // --- NEW Light Theme Palette (Screenshot Matched) ---
-        'light-bg': '#f4ede8',       // Warm beige/cream background
-        'light-surface': '#8abfc1',  // Muted teal cards
-        'light-text-primary': '#2d3e50', // Dark blue-grey text
-        'light-text-secondary': '#5a6c7d', // Medium grey text
+        // --- NEW Light Theme Palette (Teal Professional) ---
+        'light-bg': '#f5f1eb',       // Warm cream/beige background
+        'light-surface': '#7db5b8',  // Primary teal cards
+        'light-text-primary': '#2b3940', // Dark teal-gray text
+        'light-text-secondary': '#4a5c66', // Medium gray text
         'subtle': 'var(--bg-subtle)', // Tokenized background
 
-        // --- ADJUSTED Accent Palette (Screenshot Matched) ---
+        // --- ADJUSTED Accent Palette (Teal Professional) ---
         'accent-teal': {
-          light: '#d4e8e9',     // Very light teal for backgrounds
-          DEFAULT: '#8abfc1',   // Muted teal - main card color
-          dark: '#6eb5b7',      // Medium teal for depth
-          darker: '#4a9598',    // Dark teal for text
+          light: '#a0d0d7',     // Light teal tint
+          DEFAULT: '#7db5b8',   // Primary teal
+          dark: '#68a4a8',      // Dark teal
+          darker: '#5e9599',    // Interactive/Hover teal
         },
         'accent-salmon': {
-          light: '#f5d5d3',     // Light salmon
-          DEFAULT: '#d6635f',   // Muted salmon - matches screenshot
-          dark: '#b85450',      // Darker salmon
+          light: '#ff9b9b',     // Light coral
+          DEFAULT: '#ff6b6b',   // Coral/Salmon - Critical
+          dark: '#e05e5e',      // Darker coral
         },
 
         // --- EXISTING Colors (Preserved) ---

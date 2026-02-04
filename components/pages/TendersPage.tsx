@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Plus, Search, TrendingUp, Target, LayoutGrid, List } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Plus, Search, Target, LayoutGrid, List, TrendingUp, Zap } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { MetricBlock } from '../governance/MetricBlock';
 import { DashboardFrame } from '../governance/DashboardFrame';
@@ -23,6 +23,10 @@ interface TendersPageProps {
   loading?: boolean;
 }
 
+/**
+ * TendersPage - HARMONIZED 2026 (GOLDEN STATE)
+ * Tactical Pipeline | Pantone Precision | Blue Frame Integration
+ */
 export const TendersPage: React.FC<TendersPageProps> = ({
   tenders,
   onRefresh,
@@ -38,114 +42,122 @@ export const TendersPage: React.FC<TendersPageProps> = ({
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>('list');
   const toast = useToast();
 
-  const totalValue = tenders.reduce((sum, t) => sum + (Number(String(t.value || "0").replace(/[^0-9.-]+/g, "")) || 0), 0);
-  const winRate = tenders.length > 0 ? Math.round((tenders.filter(t => t.probability === 'High').length / tenders.length) * 100) : 0;
+  const totalValue = useMemo(() => tenders.reduce((sum, t) => sum + (Number(String(t.value || "0").replace(/[^0-9.-]+/g, "")) || 0), 0), [tenders]);
+  const winRate = useMemo(() => tenders.length > 0 ? Math.round((tenders.filter(t => t.probability === 'High').length / tenders.length) * 100) : 0, [tenders]);
 
-  const filteredTenders = tenders.filter(t =>
+  const filteredTenders = useMemo(() => tenders.filter(t =>
     t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     t.client.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const metrics = [
-    <MetricBlock key="nodes" label="Active Nodes" value={tenders.length} />,
-    <MetricBlock key="integrity" label="Pipeline Integrity" value={`AED ${(totalValue / 1000000).toFixed(1)}M`} status="nominal" />,
-    <MetricBlock key="saturation" label="Win Saturation" value={`${winRate}%`} status={winRate > 60 ? 'nominal' : 'warning'} />
-  ];
+  ), [tenders, searchQuery]);
 
   const columns = [
     {
-      header: 'REF_ID',
+      header: 'OPPORTUNITY IDENTITY',
+      width: '45%',
       accessor: (item: any) => (
-        <Text variant="gov-label" color="tertiary">
-          #{item.id.slice(0, 4)}
-        </Text>
-      ),
-      className: 'w-[80px]'
-    },
-    {
-      header: 'OPPORTUNITY_NODE',
-      accessor: (item: any) => (
-        <Box className="flex items-center gap-4">
-          <Box className={cn(
-            "w-8 h-8 flex items-center justify-center transition-all shrink-0",
-            item.probability === 'High' ? 'text-emerald-500' : 'text-amber-500'
-          )}>
-            <Target size={14} strokeWidth={1.5} />
+        <Box className="flex items-center gap-4 min-w-0">
+          <Box className="w-8 h-8 bg-[var(--bg-layer)] border border-[var(--surface-border)] rounded flex items-center justify-center text-[var(--brand-accent)] shrink-0">
+            <Target size={14} />
           </Box>
-          <Box className="flex flex-col gap-1">
-            <Text className="text-white font-bold truncate text-[12px]">{item.title}</Text>
-            <Text variant="gov-label" color="tertiary" className="truncate text-[9px]">{item.client || 'MCE_INTERNAL'}</Text>
+          <Box className="min-w-0 flex flex-col">
+            <Text className="truncate text-[13px] font-oswald font-black italic text-[var(--text-primary)] uppercase tracking-wide group-hover:text-[var(--brand-accent)] transition-colors">
+              {item.title}
+            </Text>
+            <Text className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-widest opacity-60">
+              {item.client || 'MCE INTERNAL'} • REF_{item.id.slice(0, 4).toUpperCase()}
+            </Text>
           </Box>
         </Box>
       )
     },
     {
-      header: 'EXECUTION_STATUS',
+      header: 'PIPELINE_STATUS',
+      width: '15%',
+      align: 'center' as const,
       accessor: (item: any) => (
-        <Box className="flex justify-center">
-          <Badge variant={item.status === 'Active' ? 'success' : 'outline'} className="text-[9px] px-3 py-1 font-bold tracking-widest">
-            {item.status}
-          </Badge>
+        <Badge variant={item.status === 'Active' ? 'success' : 'outline'} className="text-[9px] px-3 py-1 font-black italic uppercase tracking-widest">
+          {item.status}
+        </Badge>
+      )
+    },
+    {
+      header: 'DEADLINE',
+      width: '20%',
+      align: 'center' as const,
+      accessor: (item: any) => (
+        <Box className="flex flex-col items-center">
+          <Text className="text-[12px] font-black font-oswald italic text-[var(--text-primary)] uppercase">
+            {item.submissionDate || 'PENDING'}
+          </Text>
+          <Text className="text-[8px] font-black uppercase tracking-widest text-[var(--text-tertiary)] opacity-40">Submission_Date</Text>
         </Box>
-      ),
-      align: 'center' as const
+      )
     },
     {
-      header: 'SUBMISSION',
-      accessor: (item: any) => (
-        <Text variant="gov-metric" color="tertiary">
-          {item.submissionDate}
-        </Text>
-      ),
-      align: 'center' as const
-    },
-    {
-      header: 'REGISTRY_VALUE',
+      header: 'VALUATION',
+      width: '20%',
+      align: 'right' as const,
       accessor: (item: any) => (
         <Box className="flex flex-col items-end">
-          <Text variant="gov-metric" className="text-white text-[14px]">
-            {item.value}
-          </Text>
-          <Text variant="gov-label" className={cn("mt-1", item.probability === 'High' ? 'text-emerald-500' : 'text-amber-500')}>
-            {item.probability} PROB
+          <Box className="flex items-baseline gap-1">
+            <Text className="text-[9px] font-black italic text-[var(--brand-accent)] opacity-40">AED</Text>
+            <Text className="text-[13px] font-black font-oswald italic text-[var(--brand-accent)]">
+              {item.value ? (Number(String(item.value).replace(/[^0-9.-]+/g, "")) / 1000000).toFixed(1) + 'M' : '0.0M'}
+            </Text>
+          </Box>
+          <Text className={cn(
+            "text-[8px] font-black uppercase tracking-widest italic",
+            item.probability === 'High' ? 'text-emerald-500' : 'text-amber-500'
+          )}>
+            {item.probability || 'MEDIUM'} PROBABILITY
           </Text>
         </Box>
-      ),
-      align: 'right' as const
+      )
     }
   ];
 
-  const tabs = (
-    <div className="flex items-center justify-between w-full">
-      <div className="flex items-center bg-black p-1 rounded-xl border border-glass shadow-inner">
-        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white/10 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-300'}`}><List size={16} /></button>
-        <button onClick={() => setViewMode('kanban')} className={`p-2 rounded-lg transition-all ${viewMode === 'kanban' ? 'bg-white/10 text-white shadow-lg' : 'text-zinc-600 hover:text-zinc-300'}`}><LayoutGrid size={16} /></button>
-      </div>
-      <div className="flex items-center gap-4">
-        <div className="relative group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors" size={14} />
-          <input
-            type="text"
-            placeholder="QUERY_PIPELINE..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-zinc-900/40 border border-glass rounded-xl pl-9 pr-4 py-2.5 text-[10px] font-mono text-zinc-300 w-64 focus:outline-none focus:border-emerald-500/30 transition-all placeholder:text-zinc-600 tracking-widest shadow-inner"
-          />
-        </div>
-        <GlassButton onClick={() => setIsFormOpen(true)} className="font-bold italic text-[10px] px-8 py-2.5 rounded-xl tracking-[0.2em] shadow-[0_0_20px_rgba(16,185,129,0.2)]">
-          <Plus size={16} className="mr-2" strokeWidth={3} /> INITIALIZE_NODE
-        </GlassButton>
-      </div>
-    </div>
-  );
-
   return (
     <DashboardFrame
-      title="Opportunity Ledger"
-      subtitle="Growth Pipeline // Sector 02"
-      metrics={metrics}
-      tabs={tabs}
+      title="Tender Registry"
       loading={loading}
+      metrics={
+        <>
+          <MetricBlock label="Active Bids" value={tenders.length} trend={{ value: 3, type: 'up' }} />
+          <MetricBlock label="Pipeline Value" value={totalValue} isCurrency trend={{ value: 8, type: 'up' }} />
+          <MetricBlock label="Win Saturation" value={`${winRate}%`} status={winRate > 60 ? 'nominal' : 'warning'} />
+          <MetricBlock label="High Prob nodes" value={tenders.filter(t => t.probability === 'High').length} />
+        </>
+      }
+      tabs={
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-1 bg-[var(--bg-layer)]/40 rounded-xl border border-[var(--surface-border)]">
+          <div className="flex items-center gap-3 ml-2">
+            <div className="flex items-center bg-white border border-[var(--surface-border)] p-1 rounded-lg">
+              <button onClick={() => setViewMode('list')} className={cn("p-1.5 rounded transition-all", viewMode === 'list' ? "bg-[var(--brand-accent)] text-white" : "text-[var(--text-tertiary)] hover:bg-[var(--bg-layer)]")}>
+                <List size={14} />
+              </button>
+              <button onClick={() => setViewMode('kanban')} className={cn("p-1.5 rounded transition-all", viewMode === 'kanban' ? "bg-[var(--brand-accent)] text-white" : "text-[var(--text-tertiary)] hover:bg-[var(--bg-layer)]")}>
+                <LayoutGrid size={14} />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 pr-2">
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] group-focus-within:text-[var(--brand-accent)] transition-colors" size={14} />
+              <input
+                type="text"
+                placeholder="QUERY PIPELINE..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-white border border-[var(--surface-border)] rounded-lg pl-9 pr-4 py-2 text-[10px] font-bold italic font-oswald text-[var(--text-primary)] w-48 focus:outline-none focus:border-[var(--brand-accent)]/30 transition-all placeholder:text-[var(--text-tertiary)]/40"
+              />
+            </div>
+            <GlassButton onClick={() => setIsFormOpen(true)} className="px-4 py-2 rounded-lg text-[9px] font-bold tracking-widest bg-[var(--brand-accent)] text-white hover:opacity-90">
+              <Plus size={14} className="mr-2" /> Initialize Node
+            </GlassButton>
+          </div>
+        </div>
+      }
     >
       {isFormOpen && (
         <TenderForm
@@ -179,35 +191,42 @@ export const TendersPage: React.FC<TendersPageProps> = ({
       )}
 
       {viewMode === 'list' ? (
-        <div className="animate-in fade-in duration-500">
-          {filteredTenders.length > 0 ? (
-            <GovernanceTable
-              data={filteredTenders}
-              columns={columns}
-              onRowClick={(item: any) => {
-                logger.debug('TENDER_SELECTED', { id: item.id });
-                onSelectTender(item.id);
-              }}
-              statusField="status"
-              auditLogField="last_action"
-              urgencyField="is_urgent"
-            />
-          ) : (
-            <div className="p-12">
-              <EmptyState
-                icon={Target}
-                title="Pipeline Quiescent"
-                description="No active opportunity nodes detected in this quadrant. Initialize a new node to begin capture."
-                action={{
-                  label: "Initialize Node",
-                  onClick: () => setIsFormOpen(true)
+        <div className="flex flex-col h-full bg-[var(--bg-surface)]">
+          <div className="px-8 py-3 border-b border-[var(--surface-border)] bg-[var(--bg-layer)]/30 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Zap size={12} className="text-[var(--brand-accent)] animate-pulse" />
+              <span className="text-[10px] font-black italic font-oswald text-[var(--text-tertiary)] uppercase tracking-widest">{filteredTenders.length} Opportunity nodes tracked</span>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-hidden">
+            {filteredTenders.length > 0 ? (
+              <GovernanceTable
+                data={filteredTenders}
+                columns={columns}
+                headerClassName="bg-[var(--brand-accent)] text-white border-none shadow-md"
+                onRowClick={(item: any) => {
+                  logger.debug('TENDER_SELECTED', { id: item.id });
+                  onSelectTender(item.id);
                 }}
               />
-            </div>
-          )}
+            ) : (
+              <div className="p-12">
+                <EmptyState
+                  icon={Target}
+                  title="Pipeline Quiescent"
+                  description="No active opportunity nodes detected in this quadrant. Initialize a new node to begin capture."
+                  action={{
+                    label: "Initialize Node",
+                    onClick: () => setIsFormOpen(true)
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
       ) : (
-        <div className="animate-in slide-in-from-bottom-4 duration-500">
+        <div className="p-8 bg-[var(--bg-surface)] min-h-screen">
           <TenderKanban
             tenders={filteredTenders}
             onSelectTender={onSelectTender}

@@ -43,7 +43,7 @@ export function GovernanceTable<T>({
     return (
         <Box className="w-full h-full flex flex-col overflow-hidden">
             {/* 1. Header Row */}
-            <Box className={cn("flex border-b border-white/10 shrink-0 sticky top-0 z-20", headerClassName)}>
+            <Box className={cn("flex border-b border-[var(--surface-border)] shrink-0 sticky top-0 z-20", headerClassName)}>
                 {columns.map((col, idx) => (
                     <Box
                         key={idx}
@@ -79,10 +79,10 @@ export function GovernanceTable<T>({
                                     key={rowIdx}
                                     onClick={() => onRowClick?.(item)}
                                     className={cn(
-                                        "flex hover:bg-white/[0.03] transition-all duration-300 group relative min-h-[52px] border-b border-white/[0.02]",
+                                        "flex hover:bg-[var(--brand-accent)]/[0.04] hover:text-[var(--brand-accent)] transition-all duration-300 group relative min-h-[52px] border-b border-[var(--surface-border)]",
                                         onRowClick && 'cursor-pointer',
-                                        isUrgent && 'bg-rose-500/[0.02] shadow-[inset_2px_0_0_var(--color-critical)]',
-                                        rowIdx % 2 === 0 ? 'bg-white/[0.005]' : 'bg-transparent',
+                                        isUrgent && 'shadow-[inset_2px_0_0_var(--color-critical)]',
+                                        rowIdx % 2 === 0 ? 'bg-[var(--bg-layer)]' : 'bg-transparent',
                                         customRowClass
                                     )}
                                 >

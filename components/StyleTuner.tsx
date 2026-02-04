@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
-import { Settings, X, Sidebar, Layout, Zap, Monitor, Sliders, ChevronRight } from 'lucide-react';
-import { useStyleSystem, DensityMode, SurfaceReliability, SignalIntensity, PanelHierarchy } from '../lib/StyleSystem';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, X, Sidebar, Layout, Zap, Monitor, Sliders, ChevronRight, Type, Ruler } from 'lucide-react';
+import { useStyleSystem } from '../lib/StyleSystem';
 
 export const StyleTuner: React.FC = () => {
    const [isOpen, setIsOpen] = useState(false);
    const { config, updateConfig, resetToBaseline } = useStyleSystem();
 
+   // KEYBOARD SHORTCUT: Shift + D
+   useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+         if (e.shiftKey && e.key.toUpperCase() === 'D') {
+            e.preventDefault();
+            setIsOpen(prev => !prev);
+         }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+   }, []);
+
    const Section = ({ label, children }: { label: string, children: React.ReactNode }) => (
       <div className="space-y-3">
-         <h4 className="text-[9px] font-bold text-zinc-500 tracking-[0.2em] flex items-center">
+         <h4 className="text-[9px] font-bold text-zinc-500 tracking-[0.2em] flex items-center uppercase">
             <ChevronRight size={10} className="mr-1 text-[var(--color-critical)]" />
             {label}
          </h4>
@@ -18,48 +31,114 @@ export const StyleTuner: React.FC = () => {
       </div>
    );
 
+   const SliderSection = ({ label, value, min, max, onChange, icon: Icon }: any) => (
+      <div className="space-y-3">
+         <div className="flex justify-between items-center">
+            <h4 className="text-[9px] font-bold text-zinc-500 tracking-[0.2em] flex items-center uppercase">
+               <ChevronRight size={10} className="mr-1 text-[var(--color-critical)]" />
+               {label}
+            </h4>
+            <span className="text-[9px] font-mono text-zinc-400 bg-white/5 px-1 rounded">{value}px</span>
+         </div>
+         <div className="flex items-center space-x-3 bg-[var(--bg-layer)] p-2 rounded border border-[var(--surface-border)]">
+            {Icon && <Icon size={12} className="text-zinc-500" />}
+            <input 
+               type="range" 
+               min={min} 
+               max={max} 
+               value={value} 
+               onChange={(e) => onChange(parseInt(e.target.value))}
+               className="flex-1 accent-[var(--color-critical)] h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+            />
+         </div>
+      </div>
+   );
+
    const ToggleBtn = ({ active, onClick, label, icon: Icon }: any) => (
       <button
          onClick={onClick}
          className={`p-3 rounded border text-[10px] font-bold tracking-widest text-left flex items-center space-x-3 transition-all ${active
-            ? 'bg-[var(--surface-apex)] border-[var(--surface-border)] text-black shadow-sm'
-            : 'bg-[var(--surface-layer)] border-[var(--surface-border)] text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+            ? 'bg-[var(--brand-accent)] border-none text-white shadow-lg'
+            : 'bg-[var(--bg-layer)] border-[var(--surface-border)] text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
             }`}
       >
-         {Icon && <Icon size={12} className={active ? 'text-[var(--color-critical)]' : 'opacity-50'} />}
+         {Icon && <Icon size={12} className={active ? 'text-white' : 'opacity-50'} />}
          <span>{label}</span>
       </button>
    );
 
    return (
-      <div className="fixed right-6 bottom-6 z-[100] flex flex-col items-end">
-         {/* Trigger */}
-         <button
+      <div className="fixed right-8 bottom-8 z-[9999] flex flex-col items-end">
+         {/* Trigger - High Visibility */}
+         <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            animate={!isOpen ? { 
+               boxShadow: ["0 0 0 0px rgba(194, 23, 25, 0.4)", "0 0 0 15px rgba(194, 23, 25, 0)"] 
+            } : {}}
+            transition={{ duration: 1.5, repeat: Infinity }}
             onClick={() => setIsOpen(!isOpen)}
-            className={`p-3 rounded-full shadow-2xl border transition-all duration-300 hover:scale-105 ${isOpen ? 'bg-[var(--surface-apex)] border-zinc-300 text-black' : 'bg-[var(--surface-base)] border-[var(--surface-border)] text-zinc-500 hover:text-white'}`}
-            title="System Command"
+            className={`p-4 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.3)] border-2 transition-all duration-300 ${isOpen ? 'bg-white border-zinc-200 text-black' : 'bg-[var(--mce-red)] border-white/20 text-white'}`}
+            title="Precision Tuner (Shift+D)"
          >
-            {isOpen ? <X size={20} /> : <Sliders size={20} />}
-         </button>
+            {isOpen ? <X size={24} /> : <Sliders size={24} />}
+         </motion.button>
 
          {/* Panel */}
          {isOpen && (
-            <div className="absolute bottom-16 right-0 bg-[var(--surface-base)] border border-[var(--surface-border)] p-6 rounded-lg shadow-2xl w-80 animate-in slide-in-from-bottom-4 duration-300 backdrop-blur-xl">
+            <div className="absolute bottom-16 right-0 bg-zinc-950 border border-zinc-800 p-6 rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-80 animate-in slide-in-from-bottom-4 duration-300 backdrop-blur-3xl ring-1 ring-white/10">
                <div className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
                   <div>
-                     <h3 className="text-[10px] font-bold text-white flex items-center tracking-[0.3em] font-brand">
-                        Interface Command
+                     <h3 className="text-[10px] font-black italic text-white flex items-center tracking-[0.3em] font-oswald uppercase">
+                        Precision_Tuner
                      </h3>
-                     <p className="text-[9px] text-zinc-600 font-bold tracking-wider mt-1 font-mono">v2.4.0 • Authorized</p>
+                     <p className="text-[9px] text-zinc-600 font-bold tracking-wider mt-1 font-mono uppercase">Shift + D to Toggle</p>
                   </div>
-                  <button onClick={resetToBaseline} className="text-[9px] text-zinc-500 hover:text-[var(--color-critical)] underline decoration-dotted transition-colors font-mono">
+                  <button onClick={resetToBaseline} className="text-[9px] text-zinc-500 hover:text-white underline decoration-dotted transition-colors font-mono">
                      RESET
                   </button>
                </div>
 
                <div className="space-y-8 max-h-[60vh] overflow-y-auto custom-scrollbar pr-2">
 
-                  {/* 1. Sidebar Logic */}
+                  {/* 1. Sidebar Precision Alignment */}
+                  <SliderSection 
+                     label="Logo Alignment" 
+                     value={config.sidebarLogoPadding}
+                     min={0}
+                     max={100}
+                     onChange={(val: number) => updateConfig({ sidebarLogoPadding: val })}
+                     icon={Ruler}
+                  />
+
+                  <SliderSection 
+                     label="Collapsed M Align" 
+                     value={config.sidebarCollapsedLogoOffset}
+                     min={0}
+                     max={100}
+                     onChange={(val: number) => updateConfig({ sidebarCollapsedLogoOffset: val })}
+                     icon={Ruler}
+                  />
+
+                  <SliderSection 
+                     label="Item Alignment" 
+                     value={config.sidebarItemPadding}
+                     min={0}
+                     max={100}
+                     onChange={(val: number) => updateConfig({ sidebarItemPadding: val })}
+                     icon={Ruler}
+                  />
+
+                  <SliderSection 
+                     label="Collapsed Width" 
+                     value={config.sidebarCollapsedWidth}
+                     min={40}
+                     max={120}
+                     onChange={(val: number) => updateConfig({ sidebarCollapsedWidth: val })}
+                     icon={Ruler}
+                  />
+
+                  {/* 2. Nav Physics */}
                   <Section label="Nav Physics">
                      <ToggleBtn
                         active={!config.sidebarOptimized}
@@ -75,7 +154,29 @@ export const StyleTuner: React.FC = () => {
                      />
                   </Section>
 
-                  {/* 2. Density Control */}
+                  {/* 3. Typography Tuning */}
+                  <Section label="Nav Weight">
+                     <ToggleBtn
+                        active={config.sidebarWeight === 'light'}
+                        onClick={() => updateConfig({ sidebarWeight: 'light' })}
+                        label="Light"
+                        icon={Type}
+                     />
+                     <ToggleBtn
+                        active={config.sidebarWeight === 'normal'}
+                        onClick={() => updateConfig({ sidebarWeight: 'normal' })}
+                        label="Normal"
+                        icon={Type}
+                     />
+                     <ToggleBtn
+                        active={config.sidebarWeight === 'bold'}
+                        onClick={() => updateConfig({ sidebarWeight: 'bold' })}
+                        label="Bold"
+                        icon={Type}
+                     />
+                  </Section>
+
+                  {/* 4. Density Control */}
                   <Section label="Information Density">
                      <ToggleBtn
                         active={config.density === 'executive'}
@@ -91,95 +192,19 @@ export const StyleTuner: React.FC = () => {
                      />
                   </Section>
 
-                  {/* 3. Surface Physics */}
-                  <Section label="Surface Physics">
+                  {/* 5. Theme Sync */}
+                  <Section label="Environmental Sync">
                      <ToggleBtn
-                        active={config.surface === 'flat'}
-                        onClick={() => updateConfig({ surface: 'flat' })}
-                        label="Minimal Flat"
-                        icon={Monitor}
-                     />
-                     <ToggleBtn
-                        active={config.surface === 'bordered'}
-                        onClick={() => updateConfig({ surface: 'bordered' })}
-                        label="Structural"
-                        icon={Monitor}
-                     />
-                  </Section>
-
-                  {/* 4. Signal Intensity */}
-                  <Section label="Signal Matrix">
-                     <ToggleBtn
-                        active={config.signal === 'standard'}
-                        onClick={() => updateConfig({ signal: 'standard' })}
-                        label="Standard"
-                        icon={Zap}
-                     />
-                     <ToggleBtn
-                        active={config.signal === 'high-contrast'}
-                        onClick={() => updateConfig({ signal: 'high-contrast' })}
-                        label="High Contrast"
-                        icon={Zap}
-                     />
-                  </Section>
-
-                  {/* 5. KPI Emphasis */}
-                  <Section label="Metric Emphasis">
-                     <ToggleBtn
-                        active={config.kpiEmphasis === 'value'}
-                        onClick={() => updateConfig({ kpiEmphasis: 'value' })}
-                        label="Value-First"
-                        icon={Zap}
-                     />
-                     <ToggleBtn
-                        active={config.kpiEmphasis === 'label'}
-                        onClick={() => updateConfig({ kpiEmphasis: 'label' })}
-                        label="Label-First"
-                        icon={Zap}
-                     />
-                  </Section>
-
-                  {/* 6. Sidebar Typography Weight */}
-                  <Section label="Nav Weight">
-                     <ToggleBtn
-                        active={config.sidebarWeight === 'light'}
-                        onClick={() => updateConfig({ sidebarWeight: 'light' })}
+                        active={config.theme === 'light'}
+                        onClick={() => updateConfig({ theme: 'light' })}
                         label="Light"
-                        icon={Sidebar}
+                        icon={Monitor}
                      />
                      <ToggleBtn
-                        active={config.sidebarWeight === 'normal'}
-                        onClick={() => updateConfig({ sidebarWeight: 'normal' })}
-                        label="Normal"
-                        icon={Sidebar}
-                     />
-                     <ToggleBtn
-                        active={config.sidebarWeight === 'bold'}
-                        onClick={() => updateConfig({ sidebarWeight: 'bold' })}
-                        label="Bold"
-                        icon={Sidebar}
-                     />
-                  </Section>
-
-                  {/* 7. Sidebar Size */}
-                  <Section label="Nav Size">
-                     <ToggleBtn
-                        active={config.sidebarSize === 'compact'}
-                        onClick={() => updateConfig({ sidebarSize: 'compact' })}
-                        label="Compact"
-                        icon={Sidebar}
-                     />
-                     <ToggleBtn
-                        active={config.sidebarSize === 'normal'}
-                        onClick={() => updateConfig({ sidebarSize: 'normal' })}
-                        label="Normal"
-                        icon={Sidebar}
-                     />
-                     <ToggleBtn
-                        active={config.sidebarSize === 'large'}
-                        onClick={() => updateConfig({ sidebarSize: 'large' })}
-                        label="Large"
-                        icon={Sidebar}
+                        active={config.theme === 'dark'}
+                        onClick={() => updateConfig({ theme: 'dark' })}
+                        label="Dark"
+                        icon={Monitor}
                      />
                   </Section>
 

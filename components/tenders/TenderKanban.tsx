@@ -41,17 +41,17 @@ export const TenderKanban: React.FC<TenderKanbanProps> = ({ tenders, onSelectTen
                 return (
                     <div key={col.id} className="min-w-[320px] w-[320px] flex flex-col gap-3">
                         {/* Column Header */}
-                        <GlassPanel className="p-3 flex justify-between items-center bg-[var(--surface-base)]/40 sticky top-0 z-10">
+                        <GlassPanel className="p-3 flex justify-between items-center bg-[var(--bg-layer)]/60 sticky top-0 z-10">
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold italic tracking-widest text-zinc-400 font-brand">
+                                <span className="text-xs font-bold italic tracking-widest text-[var(--text-secondary)] font-brand">
                                     {col.label}
                                 </span>
-                                <span className="bg-zinc-800 text-zinc-500 text-[9px] font-bold italic px-1.5 py-0.5 rounded-full">
+                                <span className="bg-[var(--bg-layer)]/80 text-[var(--text-tertiary)] text-[9px] font-bold italic px-1.5 py-0.5 rounded-full border border-[var(--surface-border)]">
                                     {items.length}
                                 </span>
                             </div>
                             {totalValue > 0 && (
-                                <span className="text-[9px] font-mono text-emerald-500/80">
+                                <span className="text-[9px] font-mono text-[var(--color-success)]/80">
                                     {col.id === 'AWARDED' ? 'WON' : 'EST'}: ${(totalValue / 1000000).toFixed(1)}M
                                 </span>
                             )}
@@ -68,7 +68,7 @@ export const TenderKanban: React.FC<TenderKanbanProps> = ({ tenders, onSelectTen
                                     scale={1.02}
                                 >
                                     <div
-                                        className="h-full bg-[var(--bg-subtle)] border border-[var(--border-subtle)] rounded-lg px-4 py-3 cursor-pointer hover:border-[var(--text-tertiary)] transition-all"
+                                        className="h-full bg-[var(--bg-surface)]/90 border border-[var(--surface-border)] rounded-lg px-4 py-3 cursor-pointer hover:border-[var(--morgan-teal)]/40 hover:shadow-md transition-all"
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <Badge status={tender.status}>{tender.status}</Badge>

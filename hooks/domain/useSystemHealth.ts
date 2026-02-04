@@ -13,8 +13,8 @@ export function useSystemHealth() {
     const fetchAlerts = async () => {
         setLoading(true);
         try {
-            const { data, error } = await supabase
-                .from('system_notifications')
+            const { data, error } = await (supabase
+                .from('system_notifications' as any) as any)
                 .select('*')
                 .order('timestamp', { ascending: false })
                 .limit(10);

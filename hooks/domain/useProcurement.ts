@@ -22,7 +22,7 @@ export function useProcurement(searchQuery: string = '') {
     const fetchPOs = async () => {
         setLoading(true);
         try {
-            let query = supabase.from('purchase_orders').select('*');
+            let query = (supabase.from('purchase_orders' as any) as any).select('*');
 
             if (searchQuery) {
                 query = query.or(`po_number.ilike.%${searchQuery}%,vendor_name.ilike.%${searchQuery}%`);

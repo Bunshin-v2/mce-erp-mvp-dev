@@ -43,12 +43,12 @@ const TenderWorkflow: WorkflowDefinition = {
 
 async function checkDocuments(entityId: string, docType: string): Promise<boolean> {
   // In a real app, this queries the 'documents' table for a linked doc of the specific type
-  const { count } = await supabase
-    .from('documents')
+  const { count } = await (supabase
+    .from('documents' as any) as any)
     .select('*', { count: 'exact', head: true })
     .eq('category', docType) // Simplified check
     .or(`project_id.eq.${entityId},tender_id.eq.${entityId}`);
-  
+
   return (count || 0) > 0;
 }
 
@@ -88,8 +88,8 @@ export const workflowEngine = {
     // 1. Fetch current state
     const table = type === 'project' ? 'projects_master' : 'tenders';
     const stateField = type === 'project' ? 'project_status' : 'status';
-    
-    const { data: entity } = await supabase.from(table).select(stateField).eq('id', entityId).single();
+
+    const { data: entity } = await (supabase.from(table as any) as any).select(stateField).eq('id', entityId).single();
     if (!entity) throw new Error('Entity not found');
 
     const currentState = entity[stateField]?.toLowerCase() || 'planning'; // Normalize
@@ -101,12 +101,12 @@ export const workflowEngine = {
     // 3. Determine next state
     const def = this.getDefinition(type);
     const transition = def.transitions.find(t => t.from === currentState && t.action === action);
-    
+
     if (!transition) throw new Error('Transition logic error'); // Should be caught by canTransition
 
     // 4. Update DB
-    const { error } = await supabase
-      .from(table)
+    const { error } = await (supabase
+      .from(table as any) as any)
       .update({ [stateField]: transition.to })
       .eq('id', entityId);
 

@@ -37,8 +37,8 @@ export const useLiabilityData = () => {
         try {
             setLoading(true);
             // Try to fetch from real table
-            const { data, error } = await supabase
-                .from('corporate_liabilities')
+            const { data, error } = await (supabase
+                .from('corporate_liabilities' as any) as any)
                 .select('*')
                 .order('expiry_date', { ascending: true });
 

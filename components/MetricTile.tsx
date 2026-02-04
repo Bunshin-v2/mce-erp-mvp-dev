@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { KPIMetric } from '../types';
 import { LucideIcon } from 'lucide-react';
-import { useFlashAnimation } from '@/hooks/useFlashAnimation';
+import { motion } from 'framer-motion';
 
 interface MetricTileProps {
   metric: KPIMetric;
@@ -60,90 +60,67 @@ const AnimatedCounter: React.FC<{ value: string | number; isNumber?: boolean }> 
   return <>{Math.round(displayValue)}</>;
 };
 
+/**
+ * MetricTile - THEME AWARE 2026 (GOLDEN STATE)
+ * Protects Dark Mode (Charcoal) | Enhances Light Mode (White/Blue)
+ */
 export const MetricTile: React.FC<MetricTileProps> = ({ metric, icon: Icon, color, variant = 'default', index = 0, onClick }) => {
-  // MANDATE: Disable flash animation in light mode (removed entirely for calm)
-  const flashClass = '';
-
-  const getTrendColor = (sentiment?: 'positive' | 'negative' | 'neutral') => {
-    switch (sentiment) {
-      case 'positive': return 'text-emerald-500';
-      case 'negative': return 'text-rose-500';
-      default: return 'text-zinc-500';
-    }
-  };
-
   const formattedValue = typeof metric.value === 'number' && metric.value < 10 && metric.value > 0
     ? `0${metric.value}`
     : metric.value;
 
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -2, scale: 1.01 }}
       onClick={onClick}
       className={cn(
-        // Morgan Manifesto Synthesis
-        "rounded-[var(--radius-lg)] flex flex-col p-5 gap-4 h-full relative overflow-hidden transition-all duration-300",
-
-        // Nominal vs Critical Evaluation
-        metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative'
-          ? "bg-white border-2 border-[var(--morgan-red-dark)] morgan-critical-card-glow"
-          : "bg-[var(--morgan-teal)] text-white shadow-[0_8px_30px_-10px_rgba(44,62,80,0.12)]",
-
-        onClick ? "cursor-pointer hover:scale-[1.01]" : "",
-        flashClass
+        "relative flex flex-col p-5 rounded-xl border transition-all duration-300 h-full overflow-hidden",
+        "bg-[var(--kpi-bg)] border-[var(--kpi-border)] shadow-[var(--kpi-shadow)]",
+        onClick ? "cursor-pointer" : ""
       )}
     >
-      {/* Structural Anchor De-emphasis: Background is now solid per Manifesto */}
+      {/* Top Accent Bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 rounded-t-xl bg-[var(--kpi-accent-bar)]" />
 
       {/* Label Row */}
-      <div className="flex items-center justify-between relative z-10">
-        <span className={cn(
-          "text-[11px] font-oswald font-black italic uppercase tracking-[0.14em]",
-          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)]" : "text-white opacity-90"
-        )}>
+      <div className="flex items-center justify-between mb-4 relative z-10">
+        <span className="text-[10px] font-black italic uppercase tracking-[0.2em] text-[var(--kpi-text-label)]">
           {metric.label}
         </span>
-        <Icon size={14} className={cn(
-          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)]" : "text-white",
-          "opacity-40"
-        )} strokeWidth={2.5} />
+        <Icon size={14} className="text-[var(--kpi-text-primary)] opacity-40" strokeWidth={2.5} />
       </div>
 
-      {/* Value Row - Mandate: Value Dominance Reinforcement */}
-      <div className="flex flex-col items-start gap-1 relative z-10">
-        <span className={cn(
-          "text-4xl font-oswald font-black italic tracking-tight leading-none transition-transform duration-500",
-          (metric.status?.toLowerCase().includes('critical') || metric.trendSentiment === 'negative') ? "text-[var(--morgan-red-dark)] morgan-critical-glow" : "text-white"
-        )}>
+      {/* Value Row */}
+      <div className="flex flex-col items-start gap-1 relative z-10 mb-2">
+        <span className="text-4xl font-black italic tracking-tighter font-oswald leading-none text-[var(--kpi-text-primary)]">
           <AnimatedCounter value={formattedValue} isNumber={typeof metric.value === 'number'} />
-          {metric.isCurrency && <span className="text-[12px] font-bold italic ml-1.5 opacity-70 tracking-widest uppercase">AED</span>}
+          {metric.isCurrency && <span className="text-[14px] align-top ml-1 opacity-60">AED</span>}
         </span>
       </div>
 
-      {/* Premium Accent Bar */}
-      <div className="absolute bottom-0 left-0 h-[3px] bg-gradient-to-r from-[var(--morgan-teal)]/40 to-transparent w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+      {/* Footer / Trend Pill */}
       {(metric.status || metric.trend) && (
-        <div className="flex items-center gap-2 mt-auto relative z-10">
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-[var(--surface-border)] relative z-10">
           {metric.status && (
-            <span className={cn(
-              "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm border",
-              metric.status?.toLowerCase().includes('critical')
-                ? "bg-[var(--morgan-red-dark)] text-white border-[var(--morgan-red-dark)]"
-                : "bg-white/20 text-white border-white/30"
-            )}>
+            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-sm border bg-[var(--brand-accent)]/5 text-[var(--brand-accent)] border-[var(--brand-accent)]/20">
               {metric.status}
             </span>
           )}
           {metric.trend && (
             <span className={cn(
-              "text-[10px] font-black italic flex items-center gap-1 font-oswald",
-              metric.status?.toLowerCase().includes('critical') ? "text-[var(--morgan-red-dark)]" : "text-white/80"
+              "text-[10px] font-black italic font-oswald uppercase flex items-center gap-1",
+              metric.trendSentiment === 'positive' ? "text-emerald-600" : "text-[var(--mce-red)]"
             )}>
               {metric.trendSentiment === 'positive' ? '↑' : '↓'} {metric.trend}
             </span>
           )}
         </div>
       )}
-    </div>
+
+      {/* Subtle Blueprint Pattern Overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden rounded-xl">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+      </div>
+    </motion.div>
   );
 };

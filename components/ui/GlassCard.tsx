@@ -22,10 +22,10 @@ export const GlassCard: React.FC<GlassCardProps> = ({
     ...props
 }) => {
     const variants = {
-        base: "bg-zinc-950/40 border-white/5 shadow-xl backdrop-blur-xl",
-        hover: "bg-zinc-950/40 border-white/10 shadow-2xl backdrop-blur-xl hover:bg-white/5 hover:border-white/20 transition-all duration-300",
-        active: "bg-zinc-900/60 border-brand-500/30 shadow-glow-brand",
-        neon: "bg-zinc-950/80 border-brand-500/50 shadow-[0_0_20px_rgba(51,57,153,0.3)]"
+        base: "bg-[var(--bg-surface)]/80 border-[var(--surface-border)] shadow-xl backdrop-blur-xl",
+        hover: "bg-[var(--bg-surface)]/80 border-[var(--surface-border)] shadow-2xl backdrop-blur-xl hover:bg-[var(--bg-hover)]/40 hover:border-[var(--surface-border-strong)] transition-all duration-300",
+        active: "bg-[var(--bg-active)] border-[var(--morgan-teal)]/30 shadow-glow-brand",
+        neon: "bg-[var(--bg-layer)]/90 border-[var(--morgan-teal)]/50 shadow-[0_0_20px_rgba(81,162,168,0.2)]"
     };
 
     return (

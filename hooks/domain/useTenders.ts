@@ -13,7 +13,7 @@ export function useTenders(searchQuery: string = '') {
     const fetchTenders = async () => {
         setLoading(true);
         try {
-            let query = supabase.from('tenders').select('*');
+            let query = (supabase.from('tenders' as any) as any).select('*');
             if (searchQuery) query = query.or(`title.ilike.%${searchQuery}%,client.ilike.%${searchQuery}%`);
 
             const { data, error } = await query.order('created_at', { ascending: false });
