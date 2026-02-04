@@ -277,7 +277,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
       {isFormOpen && <ProjectForm onClose={() => setIsFormOpen(false)} onSuccess={onRefresh} />}
 
       {viewMode === 'list' ? (
-        <div className="flex flex-col h-full !bg-[#050505]">
+        <div className="flex flex-col h-full bg-[var(--bg-base)]">
 
           <div className="px-6 py-3 border-b border-glass !bg-transparent flex items-center justify-between">
             <div className="flex items-center gap-2">

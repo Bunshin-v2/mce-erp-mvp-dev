@@ -93,7 +93,7 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
     <div className="page-container space-y-8 animate-in fade-in duration-700 pb-32">
       <PageHeader
         title="Agent Command"
-        subtitle="Mission Control // Sector 01"
+        subtitle="Mission Control"
         actions={
           <div className="flex items-center gap-4">
             <button
@@ -192,7 +192,7 @@ export const AgentConsole: React.FC<AgentConsoleProps> = ({ activity, auditLogs 
           </div>
 
           {/* Live Terminal */}
-          <div className="lg:col-span-5 bg-[#050505] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col h-[600px] shadow-3xl">
+          <div className="lg:col-span-5 bg-[var(--bg-layer)] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col h-[600px] shadow-3xl">
             <div className="px-6 py-4 border-b border-glass bg-black/40 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <Terminal size={14} className="text-emerald-500" />

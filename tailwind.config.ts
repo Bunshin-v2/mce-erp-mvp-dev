@@ -13,7 +13,7 @@ const config: Config = {
     extend: {
       colors: {
         // --- NEW Light Theme Palette (Teal Professional) ---
-        'light-bg': '#f5f1eb',       // Warm cream/beige background
+        'light-bg': '#ffffff',       // Pure White brand spec
         'light-surface': '#7db5b8',  // Primary teal cards
         'light-text-primary': '#2b3940', // Dark teal-gray text
         'light-text-secondary': '#4a5c66', // Medium gray text
@@ -57,9 +57,9 @@ const config: Config = {
           border: 'rgba(5, 150, 105, 0.2)',
         },
         info: {
-          DEFAULT: '#2563eb', // blue-600
-          bg: 'rgba(37, 99, 235, 0.1)',
-          border: 'rgba(37, 99, 235, 0.2)',
+          DEFAULT: '#71717a', // zinc-500 (neutral)
+          bg: 'rgba(113, 113, 122, 0.1)',
+          border: 'rgba(113, 113, 122, 0.2)',
         },
         neutral: {
           DEFAULT: '#71717a', // zinc-500

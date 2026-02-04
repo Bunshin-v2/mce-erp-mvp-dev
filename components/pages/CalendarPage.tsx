@@ -151,10 +151,10 @@ export const CalendarPage: React.FC<CalendarPageProps> = ({
         }
 
         return (
-            <div className="grid grid-cols-7 gap-px bg-zinc-800/50 rounded-lg overflow-hidden border border-zinc-800">
+            <div className="grid grid-cols-7 gap-px bg-[var(--surface-border)] rounded-2xl overflow-hidden border border-[var(--surface-border)] shadow-2xl">
                 {/* Header */}
                 {weekDays.map((day) => (
-                    <div key={day} className="bg-zinc-900/50 p-3 text-center text-xs font-bold italic text-zinc-500 tracking-wider">
+                    <div key={day} className="bg-[var(--bg-layer)]/80 p-4 text-center text-[10px] font-black italic text-[var(--text-tertiary)] uppercase tracking-[0.2em] border-b border-[var(--surface-border)]">
                         {day}
                     </div>
                 ))}
@@ -174,29 +174,34 @@ export const CalendarPage: React.FC<CalendarPageProps> = ({
                     return (
                         <div
                             key={day.toISOString()}
-                            className={`min-h-[140px] bg-zinc-900/30 p-2 transition-colors hover:bg-zinc-800/30 group relative flex flex-col ${!isCurrentMonth && viewMode === 'month' ? 'opacity-30 bg-zinc-950' : ''
+                            className={`min-h-[150px] bg-[var(--bg-surface)] p-3 transition-all duration-500 hover:bg-[var(--bg-hover)]/50 group relative flex flex-col ${!isCurrentMonth && viewMode === 'month' ? 'opacity-20 grayscale' : ''
                                 }`}
                         >
                             {/* Day Number */}
-                            <div className="flex justify-between items-start mb-2">
+                            <div className="flex justify-between items-start mb-3">
                                 <span
-                                    className={`text-sm font-bold italic w-7 h-7 flex items-center justify-center rounded-full ${isCurrentDay
-                                            ? 'bg-blue-500 text-white shadow-[0_0_10px_rgba(59,130,246,0.5)]'
-                                            : 'text-zinc-400 group-hover:text-zinc-200'
+                                    className={`text-lg font-black italic font-oswald w-8 h-8 flex items-center justify-center rounded-xl transition-all ${isCurrentDay
+                                            ? 'bg-[var(--brand-accent)] text-white shadow-[0_0_20px_rgba(162,162,168,0.4)] scale-110'
+                                            : 'text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)]'
                                         }`}
                                 >
                                     {format(day, 'd')}
                                 </span>
+                                {dayEvents.length > 0 && (
+                                    <div className="flex gap-0.5 mt-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--brand-accent)] animate-pulse" />
+                                    </div>
+                                )}
                             </div>
 
                             {/* Events */}
-                            <div className="flex-1 space-y-1 overflow-y-auto custom-scrollbar">
+                            <div className="flex-1 space-y-1.5 overflow-y-auto no-scrollbar">
                                 {dayEvents.map(ev => {
                                     const isProject = ev.kind === 'project';
                                     const colorClass = isProject
-                                        ? 'bg-blue-500/10 border-blue-500/20 border-l-blue-500 text-blue-200'
+                                        ? 'bg-[var(--brand-accent)]/10 border-[var(--brand-accent)]/20 border-l-[var(--brand-accent)] text-[var(--brand-accent)]'
                                         : ev.priority === 'high'
-                                            ? 'bg-rose-500/10 border-rose-500/20 border-l-rose-500 text-rose-200'
+                                            ? 'bg-[var(--mce-red)]/10 border-[var(--mce-red)]/20 border-l-[var(--mce-red)] text-[var(--mce-red)]'
                                             : ev.priority === 'medium'
                                                 ? 'bg-amber-500/10 border-amber-500/20 border-l-amber-500 text-amber-200'
                                                 : 'bg-emerald-500/10 border-emerald-500/20 border-l-emerald-500 text-emerald-200';
@@ -210,8 +215,8 @@ export const CalendarPage: React.FC<CalendarPageProps> = ({
                                                     onSelectProject?.(ev.projectId);
                                                 }
                                             }}
-                                            className={`w-full text-left text-[10px] px-2 py-1.5 rounded border border-l-2 truncate hover:scale-[1.02] transition-transform ${colorClass} ${
-                                                ev.kind === 'task' && ev.status === 'completed' ? 'opacity-50 line-through' : ''
+                                            className={`w-full text-left text-[9px] font-bold italic px-2 py-2 rounded-lg border border-l-2 transition-all hover:scale-[1.03] active:scale-95 uppercase tracking-wide font-oswald ${colorClass} ${
+                                                ev.kind === 'task' && ev.status === 'completed' ? 'opacity-40 grayscale' : ''
                                             }`}
                                             title={ev.title}
                                         >

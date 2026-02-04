@@ -5,6 +5,7 @@ import { queryClient } from '../lib/queryClient';
 import { ToastProvider } from '../lib/toast-context';
 import { ErrorBoundary } from '../components/ui/ErrorBoundary';
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import { StyleProvider } from '../lib/StyleSystem';
 import '../index.css';
 
 const preview: Preview = {
@@ -18,6 +19,9 @@ const preview: Preview = {
         backgrounds: {
             disable: true, // Let the theme-switcher handle backgrounds
         },
+        a11y: {
+            test: 'todo'
+        }
     },
     decorators: [
         withThemeByDataAttribute({
@@ -30,13 +34,22 @@ const preview: Preview = {
         }),
         (Story) => (
             <QueryClientProvider client={queryClient}>
-                <ErrorBoundary>
-                    <ToastProvider>
-                        <div className="font-sans antialiased bg-base text-primary min-h-screen p-4">
-                            <Story />
-                        </div>
-                    </ToastProvider>
-                </ErrorBoundary>
+                <StyleProvider>
+                    <ErrorBoundary>
+                        <ToastProvider>
+                            <div className="--font-inter var(--font-inter) --font-mono var(--font-mono) --font-oswald var(--font-oswald) font-sans antialiased bg-base text-primary min-h-screen p-4">
+                                <style dangerouslySetInnerHTML={{ __html: `
+                                    :root {
+                                        --font-inter: 'Inter', system-ui, sans-serif;
+                                        --font-mono: 'JetBrains Mono', monospace;
+                                        --font-oswald: 'Oswald', sans-serif;
+                                    }
+                                `}} />
+                                <Story />
+                            </div>
+                        </ToastProvider>
+                    </ErrorBoundary>
+                </StyleProvider>
             </QueryClientProvider>
         ),
     ],

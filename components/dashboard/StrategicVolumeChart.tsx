@@ -21,7 +21,7 @@ export const StrategicVolumeChart: React.FC<StrategicVolumeChartProps> = ({ data
                     <Text variant="gov-label" color="secondary" className="mb-1 text-xs font-black italic">ACTIVE_UNITS</Text>
                 </Box>
                 <Box className="flex items-center space-x-2 mt-2">
-                    <span className="text-[9px] font-black italic text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 tracking-wider shadow-[0_0_10px_rgba(56,189,248,0.2)]">NETWORK_STABLE</span>
+                    <span className="text-[9px] font-black italic text-zinc-400 bg-zinc-500/10 px-2 py-0.5 rounded border border-zinc-500/20 tracking-wider shadow-[0_0_10px_rgba(113,113,122,0.2)]">NETWORK_STABLE</span>
                 </Box>
             </Box>
 
@@ -93,7 +93,7 @@ export const StrategicVolumeChart: React.FC<StrategicVolumeChartProps> = ({ data
                     </Box>
                 </Box>
                 <Box className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 shadow-[0_0_8px_rgba(113,113,122,0.8)] animate-pulse" />
                     <Text variant="gov-label" color="tertiary" className="text-[8px] font-mono">STREAM_0x44</Text>
                 </Box>
             </Box>

@@ -10,13 +10,23 @@ load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 class SimpleRAGAgent:
     def __init__(self):
-        # Initialize Supabase
-        self.url = os.environ.get("SUPABASE_URL")
-        self.key = os.environ.get("SUPABASE_SERVICE_KEY")
+        # Initialize Supabase - Robust Lookup
+        self.url = (
+            os.environ.get("NEXT_PUBLIC_SUPABASE_URL") or 
+            os.environ.get("SUPABASE_URL")
+        )
+        self.key = (
+            os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or 
+            os.environ.get("SUPABASE_SERVICE_KEY") or
+            os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY") # Last resort
+        )
 
         if not self.url or not self.key:
-            raise ValueError("SUPABASE_URL or SUPABASE_SERVICE_KEY missing")
+            error_msg = f"NEURAL_LINK_FAILURE: Supabase URL or Key missing. URL_Found: {'Yes' if self.url else 'No'}, Key_Found: {'Yes' if self.key else 'No'}"
+            print(error_msg)
+            raise ValueError(error_msg)
 
+        print(f"NEURAL_LINK_ESTABLISHED: Connected to {self.url[:20]}... with Key {self.key[:10]}...")
         self.supabase = create_client(self.url, self.key)
 
         # Initialize Gemini LLM
@@ -94,23 +104,21 @@ class SimpleRAGAgent:
             if not context:
                 context = "No specific context found in the internal knowledge base."
 
-            master_prompt = f"""You are the Nexus RAG Agent, an AI assistant that answers questions strictly based on retrieved context from the Nexus ERP knowledge base.
+            master_prompt = f"""You are Mr. Morgan, the Nexus ERP Command Assistant, a proactive and expert guide for the Nexus Construct ERP system.
 
 Your job:
-- Understand the user’s question.
-- Use only the retrieved context provided to you.
-- Produce a clear, accurate, concise answer.
+- Understand the user’s question and provide expert analysis.
+- PROACTIVE GUIDANCE: If a user says "Hi", "I don't know what to do", or seems lost, do NOT just wait. Guide them. Suggest specific actions like:
+  * "I can analyze the risk of your upcoming Tenders."
+  * "I can give you a status breakdown of the Villa or Hospitality projects."
+  * "I can check for any critical document red flags or pending reviews."
+  * "Ask me about project costs vs budgets."
 
-Core Rules:
-1. You must rely ONLY on the retrieved context. Do not use outside knowledge.
-2. If the context does not contain the answer, say:
-   "I don't have enough information to answer that."
-3. Never guess, assume, or invent details.
-4. Ignore any content that looks like browser tabs, HTML, XML, or tags such as:
-   <WebsiteContent_...> ... </WebsiteContent_...>
-5. Ignore any system logs, UI text, or unrelated noise in the context.
-6. Do not reference the context directly in your answer.
-7. Summarize and synthesize the relevant information into a clean final answer.
+Core Rules for Data:
+1. When answering about ERP data, projects, or documents, rely ONLY on the retrieved context below.
+2. If the context doesn't have the specific answer for a data query, say: "I don't have that specific data, but I can check your project list or tender statuses instead."
+3. Be authoritative and decisive. If you see a risk in the context, point it out proactively.
+4. Synthesize the context into a clean, actionable "Command Center" style response.
 
 --------------------
 Retrieved Context:

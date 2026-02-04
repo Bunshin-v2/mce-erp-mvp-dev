@@ -72,7 +72,7 @@ export const ExecutiveCockpit: React.FC<CockpitProps> = ({ projects: propProject
    return (
       <DashboardFrame
          title="Executive Cockpit"
-         subtitle="Strategic Command Interface // Sector 01"
+         subtitle="Strategic Command Interface"
          metrics={
             <>
                <MetricBlock

@@ -79,10 +79,10 @@
    ENHANCED LIGHT MODE - Applied only via data-theme="light"
    ========================================================================= */
 [data-theme="light"] {
-    --bg-base: #f5f1eb;
+    --bg-base: #ffffff;
     --bg-surface: var(--white);
-    --bg-layer: #f0ede8;
-    --bg-hover: #e8e4de;
+    --bg-layer: #f8f9fa;
+    --bg-hover: #f1f3f5;
     --bg-active: rgba(81, 162, 168, 0.1);
     --bg-input: var(--white);
 

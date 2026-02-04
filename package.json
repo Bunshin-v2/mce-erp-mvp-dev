@@ -26,6 +26,7 @@
     "test:design": "test-storybook --accessibility"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
     "@clerk/clerk-react": "^5.59.5",
     "@clerk/nextjs": "^6.36.10",
     "@google/genai": "^1.38.0",

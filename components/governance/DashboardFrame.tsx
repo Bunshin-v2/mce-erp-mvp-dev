@@ -39,6 +39,18 @@ export const DashboardFrame: React.FC<DashboardFrameProps> = ({
                 )}
             </AnimatePresence>
 
+            {/* 1. Header Section (Restored) */}
+            <header className="mb-6 shrink-0 w-full min-w-0">
+                <h1 className="text-3xl font-black italic uppercase tracking-tighter font-oswald text-[var(--text-primary)]">
+                    {title}
+                </h1>
+                {subtitle && (
+                    <p className="text-sm text-[var(--text-secondary)] font-medium mt-1">
+                        {subtitle}
+                    </p>
+                )}
+            </header>
+
             {/* 2. Metric Summary Row */}
             {metrics && (
                 <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--space-6)] mb-[var(--space-8)] shrink-0 w-full min-w-0">

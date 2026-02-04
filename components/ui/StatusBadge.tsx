@@ -42,7 +42,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
         success: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
         warning: "bg-amber-500/10 text-amber-500 border-amber-500/20",
         critical: "bg-rose-500/10 text-rose-500 border-rose-500/20 cursor-alert",
-        info: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+        info: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
         inactive: "bg-zinc-800/40 text-zinc-500 border-zinc-700/30",
     };
 
@@ -51,7 +51,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
         success: "bg-emerald-500",
         warning: "bg-amber-500",
         critical: "bg-rose-500",
-        info: "bg-blue-500",
+        info: "bg-zinc-500",
         inactive: "bg-zinc-500",
     };
 

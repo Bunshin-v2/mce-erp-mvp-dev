@@ -6,6 +6,8 @@ import { logger } from '@/lib/logger';
 // Initialize Gemini for Global Knowledge
 const GEMINI_KEY = process.env.GEMINI_API_KEY || "";
 const genAI = GEMINI_KEY ? new GoogleGenerativeAI(GEMINI_KEY) : null;
+// Simple concurrency tracker for Anthropic calls
+let anthropicConcurrent = 0;
 
 export type AgentStatus = 'idle' | 'processing' | 'completed' | 'awaiting_hil' | 'failed';
 
@@ -191,6 +193,18 @@ export class KnowledgeAgent extends BaseAgent {
   description = 'High-precision reasoning engine with Hybrid RAG (Vector + BM25). Capability Layer: Activated.';
 
   private async callAiService(query: string) {
+    const pickProvider = () => {
+      const len = query.trim().length;
+      const easyKeywords = ['status','list','count','what','who','help','summary','todo','how many','show'];
+      const q = query.toLowerCase();
+      const hasEasy = easyKeywords.some(k => q.includes(k));
+      if (len < 80 && hasEasy) return { provider: 'copilot', model: 'copilot-5o', style: 'haiku' };
+      if (len < 140) return { provider: 'copilot', model: 'copilot-4o', style: 'short' };
+      return { provider: 'anthropic', model: 'claude-4.5', style: 'sonnet' };
+    };
+
+    const selection = pickProvider();
+
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000);
@@ -198,7 +212,11 @@ export class KnowledgeAgent extends BaseAgent {
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: query, client: { app: 'vercel-nextjs', version: 'unknown' } }),
+        body: JSON.stringify({
+          message: query,
+          client: { app: 'vercel-nextjs', version: 'unknown' },
+          routing: { provider: selection.provider, model: selection.model, style: selection.style }
+        }),
         signal: controller.signal
       }).finally(() => clearTimeout(timeoutId));
       const data = await response.json();

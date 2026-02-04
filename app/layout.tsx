@@ -26,7 +26,7 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
-  title: 'Morgan ERP • Financial Command',
+  title: 'The Morgan ERP • Financial Command',
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',

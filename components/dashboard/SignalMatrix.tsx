@@ -1,5 +1,7 @@
 import React from 'react';
-import { Search, Briefcase, FileText, CheckCircle2, Zap, ArrowRight, Database } from 'lucide-react';
+import { Search, Briefcase, FileText, CheckCircle2, Zap, ArrowRight, Database, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface SignalMatrixProps {
     query: string;
@@ -19,131 +21,143 @@ export const SignalMatrix: React.FC<SignalMatrixProps> = ({ query, results, onCl
     const totalResults = results.projects.length + results.tenders.length + results.documents.length + results.tasks.length;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-24 pb-20 px-4 bg-zinc-950/80 backdrop-blur-md animate-in fade-in duration-300">
-            <div
-                className="w-full max-w-4xl bg-[#1e293b]/90 border border-[var(--color-info)]/20 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col max-h-full overflow-hidden animate-in slide-in-from-top-4 duration-500"
+        <div className="fixed inset-0 z-[1000] flex items-start justify-center pt-24 pb-20 px-4 bg-black/60 backdrop-blur-xl animate-in fade-in duration-500">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="w-full max-w-5xl bg-[var(--bg-surface)] border border-[var(--surface-border)] rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.5)] flex flex-col max-h-[85vh] overflow-hidden relative"
                 onClick={(e) => e.stopPropagation()}
             >
+                {/* Machined Edge Highlight */}
+                <div className="absolute inset-0 border border-white/5 pointer-events-none z-50 rounded-[2.5rem]" />
+
                 {/* Search Header */}
-                <div className="p-8 border-b border-glass flex items-center justify-between bg-glass">
+                <div className="p-8 border-b border-[var(--surface-border)] flex items-center justify-between bg-[var(--bg-hover)]/30 backdrop-blur-md">
                     <div className="flex items-center space-x-6">
-                        <div className="p-3 bg-[var(--color-info)]/10 rounded-xl border border-[var(--color-info)]/30">
-                            <Search className="text-[var(--color-info)]" size={24} />
+                        <div className="w-14 h-14 bg-[var(--brand-accent)]/10 rounded-2xl border border-[var(--brand-accent)]/20 flex items-center justify-center text-[var(--brand-accent)]">
+                            <Search size={28} strokeWidth={2.5} />
                         </div>
                         <div>
-                            <h2 className="type-personality type-hero italic tracking-[0.2em] text-white">
-                                Signal Matrix <span className="type-caption type-personality-soft text-[var(--color-info)]/80 ml-2 text-sm not-italic font-mono">v0.1</span>
+                            <h2 className="text-2xl font-black italic font-oswald uppercase tracking-tighter text-[var(--text-primary)]">
+                                Signal Matrix <span className="text-[10px] font-mono font-bold text-[var(--brand-accent)] opacity-60 ml-2 tracking-widest">V2.4_SEARCH</span>
                             </h2>
-                            <p className="type-caption type-personality-soft text-slate-400 uppercase tracking-[0.4em] mt-1">
-                                Cross-Module Query Results for: <span className="text-white">"{query}"</span>
+                            <p className="text-[10px] font-black text-[var(--text-tertiary)] uppercase tracking-[0.25em] mt-1">
+                                Cross-Module Intel for: <span className="text-[var(--brand-accent)]">"{query.toUpperCase()}"</span>
                             </p>
                         </div>
-
                     </div>
                     <button
                         onClick={onClose}
-                        className="px-6 py-2 bg-glass hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold italic text-slate-400 hover:text-white transition-all"
+                        className="p-3 bg-[var(--bg-hover)] hover:bg-[var(--brand-accent)] hover:text-white border border-[var(--surface-border)] rounded-2xl transition-all group"
                     >
-                        Close Shield
+                        <X size={20} className="group-hover:rotate-90 transition-transform" />
                     </button>
                 </div>
 
                 {/* Results Matrix */}
-                <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+                <div className="flex-1 overflow-y-auto p-10 custom-scrollbar bg-gradient-to-b from-transparent to-[var(--bg-base)]/20">
                     {totalResults === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-20 opacity-30 grayscale">
-                            <Database size={64} className="mb-6" />
-                            <p className="type-caption type-personality-soft uppercase tracking-[0.4em]">
+                        <div className="flex flex-col items-center justify-center py-32 opacity-20 text-center">
+                            <Database size={80} className="mb-6" />
+                            <p className="text-sm font-black font-oswald italic uppercase tracking-[0.3em]">
                                 No Cluster Matches Detected
                             </p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Projects Column */}
                             {results.projects.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="type-title type-personality-soft uppercase tracking-[0.35em] text-[var(--color-info)] mb-4 flex items-center gap-2">
-                                        <Briefcase size={14} className="" /> Projects ({results.projects.length})
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black italic font-oswald uppercase tracking-[0.2em] text-[var(--brand-accent)] flex items-center gap-2 border-b border-[var(--brand-accent)]/10 pb-3">
+                                        <Briefcase size={14} /> Portfolio Matches ({results.projects.length})
                                     </h3>
-                                    {results.projects.map(p => (
-                                        <button
-                                            key={p.id}
-                                            onClick={() => onNavigate('projects', p.id)}
-                                            className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-[var(--color-info)]/30 transition-all group"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="text-[13px] font-normal text-[var(--color-text-secondary)] font-mono tracking-tighter">{p.project_code}</span>
-                                                <ArrowRight size={14} className="text-slate-700 group-hover:text-[var(--color-info)] -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
-                                            </div>
-                                            <p className="text-[15px] font-medium text-[var(--color-text-primary)] group-hover:text-[var(--color-info)] transition-colors">{p.project_name}</p>
-                                        </button>
-                                    ))}
+                                    <div className="space-y-3">
+                                        {results.projects.map(p => (
+                                            <button
+                                                key={p.id}
+                                                onClick={() => onNavigate('projects', p.id)}
+                                                className="w-full text-left p-5 bg-[var(--bg-surface)] border border-[var(--surface-border)] rounded-[1.25rem] hover:border-[var(--brand-accent)]/40 hover:bg-[var(--bg-hover)] transition-all group shadow-sm"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[10px] font-mono font-bold text-[var(--brand-accent)] opacity-60">{p.project_code || 'PRJ-CORE'}</span>
+                                                    <ArrowRight size={14} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                                                </div>
+                                                <p className="text-sm font-black italic font-oswald uppercase text-[var(--text-primary)] group-hover:text-[var(--brand-accent)] transition-colors truncate">{p.project_name}</p>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
                             {/* Tenders Column */}
                             {results.tenders.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="type-title type-personality-soft uppercase tracking-[0.35em] text-amber-500 mb-4 flex items-center gap-2">
-                                        <Zap size={14} className="" /> Tenders ({results.tenders.length})
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black italic font-oswald uppercase tracking-[0.2em] text-amber-500 flex items-center gap-2 border-b border-amber-500/10 pb-3">
+                                        <Zap size={14} /> Pipeline Matches ({results.tenders.length})
                                     </h3>
-                                    {results.tenders.map(t => (
-                                        <button
-                                            key={t.id}
-                                            onClick={() => onNavigate('tenders', t.id)}
-                                            className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-amber-500/30 transition-all group"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="text-[13px] font-normal text-[var(--color-text-secondary)] font-mono tracking-tighter">{t.client}</span>
-                                                <ArrowRight size={14} className="text-slate-700 group-hover:text-amber-500 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
-                                            </div>
-                                            <p className="text-[15px] font-medium text-[var(--color-text-primary)] group-hover:text-amber-400 transition-colors">{t.title}</p>
-                                        </button>
-                                    ))}
+                                    <div className="space-y-3">
+                                        {results.tenders.map(t => (
+                                            <button
+                                                key={t.id}
+                                                onClick={() => onNavigate('tenders', t.id)}
+                                                className="w-full text-left p-5 bg-[var(--bg-surface)] border border-[var(--surface-border)] rounded-[1.25rem] hover:border-amber-500/40 hover:bg-[var(--bg-hover)] transition-all group shadow-sm"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[10px] font-mono font-bold text-amber-500/60 uppercase">{t.client || 'TENDER-NODE'}</span>
+                                                    <ArrowRight size={14} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                                                </div>
+                                                <p className="text-sm font-black italic font-oswald uppercase text-[var(--text-primary)] group-hover:text-amber-500 transition-colors truncate">{t.title}</p>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
                             {/* Documents Column */}
                             {results.documents.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="type-title type-personality-soft uppercase tracking-[0.35em] text-blue-500 mb-4 flex items-center gap-2">
-                                        <FileText size={14} className="" /> Documents ({results.documents.length})
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black italic font-oswald uppercase tracking-[0.2em] text-[var(--text-tertiary)] flex items-center gap-2 border-b border-[var(--surface-border)] pb-3">
+                                        <FileText size={14} /> Vault Matches ({results.documents.length})
                                     </h3>
-                                    {results.documents.map(d => (
-                                        <button
-                                            key={d.id}
-                                            onClick={() => onNavigate('documents', d.id)}
-                                            className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-blue-500/30 transition-all group"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="text-xs font-bold italic text-slate-500 font-mono tracking-tighter">{d.type}</span>
-                                                <ArrowRight size={14} className="text-slate-700 group-hover:text-blue-400 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
-                                            </div>
-                                            <p className="text-sm font-bold italic text-white group-hover:text-blue-300 transition-colors">{d.title}</p>
-                                        </button>
-                                    ))}
+                                    <div className="space-y-3">
+                                        {results.documents.map(d => (
+                                            <button
+                                                key={d.id}
+                                                onClick={() => onNavigate('documents', d.id)}
+                                                className="w-full text-left p-5 bg-[var(--bg-surface)] border border-[var(--surface-border)] rounded-[1.25rem] hover:border-[var(--brand-accent)]/40 hover:bg-[var(--bg-hover)] transition-all group shadow-sm"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[9px] font-mono font-bold text-[var(--text-tertiary)] uppercase tracking-tighter">{d.type || 'DOCUMENT'}</span>
+                                                    <ArrowRight size={14} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                                                </div>
+                                                <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--brand-accent)] transition-colors truncate">{d.title}</p>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
 
                             {/* Tasks Column */}
                             {results.tasks.length > 0 && (
-                                <div className="space-y-4">
-                                    <h3 className="type-title type-personality-soft uppercase tracking-[0.35em] text-emerald-500 mb-4 flex items-center gap-2">
-                                        <CheckCircle2 size={14} className="" /> Action Items ({results.tasks.length})
+                                <div className="space-y-6">
+                                    <h3 className="text-xs font-black italic font-oswald uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-2 border-b border-emerald-500/10 pb-3">
+                                        <CheckCircle2 size={14} /> Action Matches ({results.tasks.length})
                                     </h3>
-                                    {results.tasks.map(t => (
-                                        <button
-                                            key={t.id}
-                                            onClick={() => onNavigate('tasks', null)}
-                                            className="w-full text-left p-4 bg-glass border border-glass rounded-xl hover:bg-white/10 hover:border-emerald-500/30 transition-all group"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <span className="text-xs font-bold italic text-slate-500 font-mono tracking-tighter">{t.status}</span>
-                                                <ArrowRight size={14} className="text-slate-700 group-hover:text-emerald-400 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
-                                            </div>
-                                            <p className="text-sm font-bold italic text-white group-hover:text-emerald-300 transition-colors">{t.title}</p>
-                                        </button>
-                                    ))}
+                                    <div className="space-y-3">
+                                        {results.tasks.map((t, i) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => onNavigate('tasks', null)}
+                                                className="w-full text-left p-5 bg-[var(--bg-surface)] border border-[var(--surface-border)] rounded-[1.25rem] hover:border-emerald-500/40 hover:bg-[var(--bg-hover)] transition-all group shadow-sm"
+                                            >
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <span className="text-[9px] font-mono font-bold text-emerald-500/60 uppercase">{t.status || 'PENDING'}</span>
+                                                    <ArrowRight size={14} className="text-[var(--text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                                                </div>
+                                                <p className="text-sm font-bold text-[var(--text-primary)] group-hover:text-emerald-500 transition-colors truncate">{t.title}</p>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -151,15 +165,14 @@ export const SignalMatrix: React.FC<SignalMatrixProps> = ({ query, results, onCl
                 </div>
 
                 {/* Footer Metrics */}
-                <div className="p-6 bg-black/40 border-t border-glass flex items-center justify-between text-xs font-bold italic text-slate-600 font-mono">
-                    <div className="flex items-center space-x-6">
-                        <span>Cluster Density: {totalResults > 10 ? 'HIGH' : 'NOMINAL'}</span>
-                        <span>Sync TTL: 240ms</span>
+                <div className="p-6 bg-[var(--bg-hover)]/50 border-t border-[var(--surface-border)] flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[var(--text-tertiary)] italic">
+                    <div className="flex items-center space-x-8">
+                        <span>Cluster Density: <span className={cn(totalResults > 10 ? "text-amber-500" : "text-emerald-500")}>{totalResults > 10 ? 'CRITICAL' : 'NOMINAL'}</span></span>
+                        <span className="hidden sm:inline">Temporal_Sync: ACTIVE</span>
                     </div>
-                    <div className="text-[var(--color-info)]">MATRIX ALPHA READY</div>
+                    <div className="text-[var(--brand-accent)] drop-shadow-[0_0_8px_var(--brand-accent)]">MATRIX_NODE_ONLINE</div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
-

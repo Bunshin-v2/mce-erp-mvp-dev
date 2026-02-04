@@ -154,7 +154,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
               exit={{ opacity: 0, width: 0 }}
               className="flex items-center gap-2"
             >
-              <div className="w-8 h-8 rounded-md bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-md bg-gradient-to-br from-zinc-700 to-zinc-600 flex items-center justify-center">
                 <span className="text-xs font-bold text-white">MCE</span>
               </div>
               <span className="text-sm font-bold text-white">Morgan</span>
@@ -186,7 +186,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
             <input
               type="text"
               placeholder="Search..."
-              className="w-full bg-white/[0.02] border border-zinc-700 rounded-md pl-9 pr-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 transition-colors"
+              className="w-full bg-white/[0.02] border border-zinc-700 rounded-md pl-9 pr-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
             />
           </motion.div>
         )}
@@ -228,14 +228,14 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                     className={`
                       w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors
                       ${isActive
-                        ? 'bg-white/[0.08] text-white border-l-2 border-blue-500'
+                        ? 'bg-white/[0.08] text-white border-l-2 border-white'
                         : 'text-zinc-400 hover:text-zinc-300 hover:bg-white/[0.02] border-l-2 border-transparent'
                       }
                     `}
                     aria-current={isActive ? 'page' : 'false'}
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className={isActive ? 'text-blue-500' : 'text-zinc-600'}>{item.icon}</span>
+                      <span className={isActive ? 'text-white' : 'text-zinc-600'}>{item.icon}</span>
 
                       <AnimatePresence>
                         {!isCollapsed && (
@@ -264,7 +264,7 @@ export const SidebarEnt2026: React.FC<SidebarProps> = ({ activeView, onNavigate 
                               ? 'bg-rose-500/20 text-rose-500'
                               : item.badge.type === 'warning'
                                 ? 'bg-amber-500/20 text-amber-500'
-                                : 'bg-blue-500/20 text-blue-500'
+                                : 'bg-zinc-500/20 text-zinc-400'
                             }
                           `}
                         >

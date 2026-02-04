@@ -27,8 +27,11 @@ app.add_middleware(
 from pydantic import BaseModel
 from nexus_rag import get_rag_agent
 
+from typing import Optional
+
 class ChatRequest(BaseModel):
-    query: str
+    query: Optional[str] = None
+    message: Optional[str] = None
 
 class ChatResponse(BaseModel):
     response: str
@@ -41,14 +44,31 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+@app.post("/neural-reset")
+async def neural_reset():
+    """
+    Force a re-initialization of the AI environment.
+    """
+    try:
+        # Reload .env
+        load_dotenv(os.path.join(os.path.dirname(__file__), ".env"), override=True)
+        # The next chat call will create a new agent with new env vars
+        return {"status": "success", "message": "Neural mesh rebooted and environment re-synchronized."}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
     """
     Process natural language queries using the RAG Agent.
     """
     try:
+        query_text = request.query or request.message
+        if not query_text:
+            return ChatResponse(response="Error: No query or message provided.")
+            
         agent = get_rag_agent()
-        result = agent.invoke(request.query)
+        result = agent.invoke(query_text)
         # LangChain agent result is typically a dict with 'output' key
         return ChatResponse(response=result.get("output", "I couldn't generate a response."))
     except Exception as e:

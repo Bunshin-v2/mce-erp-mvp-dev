@@ -38,8 +38,8 @@
 
     /* Morgan System Light mode mapping for Shadcn consistency */
     [data-theme='light'] {
-        --background: 40 25% 96%;
-        /* Matches --morgan-bg-cream */
+        --background: 0 0% 100%;
+        /* Matches pure white brand spec */
         --foreground: 210 40% 16%;
         /* Matches --morgan-text-dark */
         --card: 0 0% 100%;
@@ -70,7 +70,7 @@
     }
 
     body {
-        @apply bg-bg-base text-text-primary antialiased selection:bg-blue-500;
+        @apply bg-bg-base text-text-primary antialiased selection:bg-zinc-700;
         font-feature-settings: "ss01", "ss02", "cv01", "cv02";
     }
 

@@ -43,7 +43,7 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({ projects, onSelectProj
         <div className="w-full bg-glass h-3 rounded-full overflow-hidden flex shadow-inner">
           <div className="bg-rose-500 h-full transition-all duration-1000 shadow-[0_0_15px_rgba(244,63,94,0.3)] opacity-95" style={{ width: getWidth(counts.critical) }}></div>
           <div className="bg-amber-500 h-full transition-all duration-1000 opacity-80" style={{ width: getWidth(counts.high) }}></div>
-          <div className="bg-blue-500 h-full transition-all duration-1000 opacity-60" style={{ width: getWidth(counts.nominal) }}></div>
+          <div className="bg-zinc-500 h-full transition-all duration-1000 opacity-60" style={{ width: getWidth(counts.nominal) }}></div>
           <div className="bg-[var(--color-success)] h-full transition-all duration-1000 opacity-40" style={{ width: getWidth(counts.stable) }}></div>
         </div>
 
@@ -65,7 +65,7 @@ export const RiskHeatmap: React.FC<RiskHeatmapProps> = ({ projects, onSelectProj
           </div>
           <div className="text-center group">
             <div className="flex items-center justify-center space-x-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+              <div className="w-2 h-2 rounded-full bg-zinc-500"></div>
               <span className="text-xs font-bold italic text-zinc-500 opacity-60">Nominal</span>
             </div>
             <p className="text-2xl font-bold italic text-white tabular-nums tracking-tighter">{counts.nominal}</p>

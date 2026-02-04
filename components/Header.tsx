@@ -53,28 +53,19 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate
       {/* Dynamic Branding with Glow */}
       <div className="flex items-center space-x-3">
         <div className="w-2 h-2 rounded-full bg-[var(--brand-accent)] shadow-[0_0_12px_var(--brand-accent)]" />
-        <span 
-          className="text-[14px] font-oswald font-black italic tracking-wider select-none text-[var(--text-primary)] uppercase transition-all duration-500"
-          style={{ textShadow: 'var(--header-title-glow)' }}
-        >
-          {getPageTitle()}
-        </span>
+        <div className="flex flex-col">
+          <span 
+            className="text-[14px] font-oswald font-black italic tracking-wider select-none text-[var(--text-primary)] uppercase transition-all duration-500"
+            style={{ textShadow: 'var(--header-title-glow)' }}
+          >
+            {getPageTitle()}
+          </span>
+          <span className="text-[7px] font-bold text-[var(--brand-accent)] uppercase tracking-[0.3em] -mt-0.5">Beta Release V1.0</span>
+        </div>
       </div>
 
       {/* High-Fidelity Actions */}
-      <div className="flex items-center space-x-8">
-
-        {/* Global Search - Matrix */}
-        <div className="hidden md:flex items-center bg-zinc-900/50 border border-white/5 rounded-full px-4 py-2 w-72 focus-within:w-96 focus-within:border-[var(--color-info)]/30 focus-within:bg-zinc-900/80 transition-all shadow-inner">
-          <Search size={14} className="text-zinc-500 mr-2" />
-          <input
-            type="text"
-            onChange={(e) => onSearch(e.target.value)}
-            placeholder="Search system..."
-            className="bg-transparent border-none outline-none text-[12px] text-zinc-300 placeholder-zinc-600 w-full font-bold italic tracking-wide font-sans"
-          />
-          <kbd className="hidden sm:inline-block text-[9px] text-zinc-700 font-bold italic border border-zinc-800 rounded px-1.5 py-0.5 bg-zinc-900/50">/</kbd>
-        </div>
+      <div className="flex items-center space-x-4">
 
         {/* Global Control Group */}
         <div className="flex items-center space-x-2">
@@ -124,10 +115,9 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, activeView, onNavigate
           <button
             onClick={() => onNavigate && onNavigate('profile')}
             aria-label="User Profile"
-            className="flex items-center space-x-3 group ml-4"
+            className="flex items-center group ml-4"
           >
             <div className="w-6 h-6 rounded bg-[var(--surface-layer)] border border-[var(--surface-border)] text-[10px] flex items-center justify-center font-bold italic text-white group-hover:bg-white/10 transition-colors font-mono">MC</div>
-            <span className="type-label-small text-zinc-500 group-hover:text-white transition-colors font-brand">Morgan Corp</span>
           </button>
         </div>
       </div>

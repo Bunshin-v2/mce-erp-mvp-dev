@@ -10,6 +10,8 @@ import { StyleProvider, useStyleSystem } from '@/lib/StyleSystem';
 import { RouteGuard } from '@/components/auth/RouteGuard';
 import { logger } from '@/lib/logger';
 
+import { MorganCommandCenter } from '@/components/dashboard/MorganCommandCenter';
+
 // Standard Lucide icons - reduced set for initial load
 import {
   AlertTriangle,
@@ -66,11 +68,11 @@ function AppContent() {
   } = useDashboardData();
   const { config } = useStyleSystem();
 
-  const [activeView, setActiveView] = useState('dashboard');
+  const [activeView, setActiveView] = useState('command');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [selectedTenderId, setSelectedTenderId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [dashboardMode, setDashboardMode] = useState<'operational' | 'executive'>('operational');
+  const [dashboardMode, setDashboardMode] = useState<'operational' | 'executive' | 'command'>('command');
   const [archivedSignals, setArchivedSignals] = useState<string[]>([]);
 
   // Unified Navigation Handler
@@ -105,11 +107,12 @@ function AppContent() {
 
   const notificationFeed = useMemo(() => (alerts || []).map((n: any) => ({
     id: n.id,
-    message: n.message || n.title || '',
-    severity: (n.priority || 'info') as 'info' | 'warning' | 'critical',
-    created_at: new Date().toISOString(),
-    read_at: n.acked_at,
-    ack_required: true,
+    title: n.title || n.message || '',
+    message: n.message || '',
+    priority: (n.priority || 'info') as 'info' | 'warning' | 'critical',
+    timestamp: n.created_at || new Date().toISOString(),
+    isUnread: !n.acked_at,
+    acked_at: n.acked_at,
   })), [alerts]);
 
   const handleSearch = (query: string) => {
@@ -128,39 +131,40 @@ function AppContent() {
     }
 
     switch (activeView) {
-      case 'cockpit':
-        return (
-          <RouteGuard requiredTier="L3">
-            <ExecutiveCockpit
-              projects={projects || []}
-              tenders={tenders || []}
-              kpis={kpis}
-              onNavigate={handleNavigate}
-              onSelectProject={setSelectedProjectId}
-              notifications={notificationFeed}
-            />
-          </RouteGuard>
-        );
-      case 'notifications':
-        return <NotificationsPage notifications={notificationFeed} onAcknowledge={handleAcknowledge} />;
+      case 'command':
       case 'projects':
-        return <ProjectsPage projects={projects || []} onSelectProject={setSelectedProjectId} onRefresh={refetch} searchQuery={searchQuery} onNavigate={handleNavigate} loading={loading} />;
       case 'tenders':
+      case 'financials':
+      case 'reports':
+      case 'tasks':
+      case 'calendar':
+      case 'cockpit':
+      case 'documents':
+      case 'agents':
+      case 'integrations':
+      case 'field':
+      case 'liability': // Map liability to risk
+      case 'dashboard':
         return (
-          <TendersPage
-            tenders={tenders || []}
-            onSelectTender={setSelectedTenderId}
-            onRefresh={refetch}
-            onNavigate={handleNavigate}
-            loading={loading}
+          <MorganCommandCenter
+             kpis={kpis || []}
+             projects={projects || []}
+             tenders={tenders || []}
+             tasks={tasks || []}
+             alerts={notificationFeed}
+             agentActivity={agentActivity || []}
+             auditLogs={auditLogs || []}
+             onSearch={handleSearch}
+             onNavigate={handleNavigate}
+             initialView={
+               activeView === 'liability' ? 'risk' : 
+               activeView === 'dashboard' ? 'command' : 
+               activeView === 'cockpit' ? 'strategic' :
+               activeView === 'field' ? 'field' :
+               activeView as any
+             }
           />
         );
-      case 'documents':
-        return <DocumentsPage documents={documents || []} onRefresh={refetch} onNavigate={handleNavigate} loading={loading} />;
-      case 'financials':
-        return <FinancialsPage projects={projects || []} onRefresh={refetch} onNavigate={handleNavigate} onSelectProject={setSelectedProjectId} loading={loading} />;
-      case 'tasks':
-        return <TasksPage projects={projects || []} onSelectProject={setSelectedProjectId} />;
       case 'personaltasks':
         return <PersonalTasksPage />;
       case 'admin/rules':
@@ -177,14 +181,6 @@ function AppContent() {
         );
       case 'redaction':
         return <RedactionPage />;
-      case 'calendar':
-        return (
-          <TasksPage
-            projects={projects || []}
-            onSelectProject={setSelectedProjectId}
-            initialView="calendar"
-          />
-        );
       case 'profile':
         return <ProfilePage />;
       case 'team':
@@ -203,19 +199,11 @@ function AppContent() {
             <SettingsPage />
           </RouteGuard>
         );
-      case 'reports':
-        return <ReportsPage />;
-      case 'liability':
-        return <LiabilityDashboard />;
-      case 'field':
-        return <FieldOperationsPage projects={projects || []} onNavigate={handleNavigate} />;
-      case 'dashboard':
       default:
         return (
           <div className={`flex flex-col ${config.density === 'executive' ? 'gap-1' : 'gap-4'} bg-[var(--surface-base)] p-1`}>
-
             <DashboardLayout
-              mode={dashboardMode}
+              mode={(dashboardMode === 'command' ? 'operational' : dashboardMode) as 'operational' | 'executive'}
               signals={signals}
               kpis={kpis || []}
               projects={projects || []}
@@ -262,7 +250,7 @@ function AppContent() {
       activeView={activeView}
       onNavigate={handleNavigate}
       onSearch={handleSearch}
-      mode={dashboardMode}
+      mode={(dashboardMode === 'command' ? 'operational' : dashboardMode) as 'operational' | 'executive'}
       onToggleMode={() => setDashboardMode(prev => prev === 'operational' ? 'executive' : 'operational')}
       onNotificationsClick={() => handleNavigate('notifications')}
       unreadCount={unreadCount}

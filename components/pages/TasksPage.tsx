@@ -80,7 +80,7 @@ export const TasksPage: React.FC<TasksPageProps> = ({ projects = [], onSelectPro
 
 
       {/* INTERNAL TODOTRACKER SIDEBAR */}
-      <aside className="w-56 border-r border-glass bg-[#050505]/60 backdrop-blur-xl flex flex-col p-8 shadow-2xl">
+      <aside className="w-56 border-r border-glass bg-[var(--bg-surface)]/60 backdrop-blur-xl flex flex-col p-8 shadow-2xl">
         <div className="mb-12 px-2">
           <h2 className="text-2xl font-bold italic text-white tracking-tighter flex items-center gap-3">
             <CheckSquare className="text-emerald-500" size={24} /> Matrix

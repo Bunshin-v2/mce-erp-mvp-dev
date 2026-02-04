@@ -204,7 +204,7 @@ export const TendersPage: React.FC<TendersPageProps> = ({
               <GovernanceTable
                 data={filteredTenders}
                 columns={columns}
-                headerClassName="bg-[var(--brand-accent)] text-white border-none shadow-md"
+                headerClassName="bg-[var(--bg-layer)] text-[var(--text-primary)] border-b border-[var(--surface-border)] shadow-sm"
                 onRowClick={(item: any) => {
                   logger.debug('TENDER_SELECTED', { id: item.id });
                   onSelectTender(item.id);

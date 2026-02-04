@@ -54,3 +54,6 @@ nul
 
 *storybook.log
 storybook-static
+
+# Private Management Scripts
+*.bat

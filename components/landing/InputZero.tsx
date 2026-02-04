@@ -1,65 +1,105 @@
+'use client';
+
 import React from 'react';
 import { SignIn } from '@clerk/clerk-react';
+import { motion } from 'framer-motion';
+import { ShieldCheck, Database, Zap, Lock, Terminal } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
+/**
+ * InputZero - The Prestige Landing Page
+ * Overhauled for the 'Designing Excellence' Golden State iteration.
+ */
 export const InputZero: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[var(--surface-base)] text-[var(--text-primary)]">
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-6 py-12 md:flex-row md:items-stretch">
-        <div className="flex flex-1 flex-col justify-between rounded-3xl border border-[var(--surface-border)] bg-[var(--overlay-1)] p-8 backdrop-blur md:p-10">
-          <div className="space-y-10">
-            <div className="space-y-3">
-              <div className="text-[56px] font-black italic leading-none tracking-tight md:text-[78px]">
-                <span className="text-[var(--color-critical)]">Morgan</span>
-                <span className="text-[var(--text-primary)]">.</span>
-              </div>
+    <div className="relative min-h-screen w-full bg-[var(--bg-base)] text-[var(--text-primary)] overflow-hidden flex flex-col items-center justify-center selection:bg-[var(--brand-accent)]/30">
+      
+      {/* Cinematic Background Atmosphere */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-[var(--brand-accent)]/5 blur-[120px] rounded-full mix-blend-screen" />
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+      </div>
 
-              <div className="flex items-center gap-3">
-                <div className="h-px w-10 bg-[var(--surface-border-strong)]" />
-                <div className="text-[12px] font-bold italic uppercase tracking-[0.22em] text-[var(--text-secondary)]">
-                  Designing Excellence
-                </div>
-              </div>
-
-              <div className="max-w-lg text-sm leading-relaxed text-[var(--text-secondary)]">
-                Sign in to access projects, tenders, documents, tasks, and the unified calendar — in one operational workspace.
-              </div>
+      <div className="relative z-10 w-full max-w-6xl px-6 py-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+        
+        {/* Left Side: Brand Identity & Intelligence Value */}
+        <div className="flex-1 text-center lg:text-left space-y-12">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* The Branded Apex */}
+            <div className="mb-4">
+              <span className="text-7xl md:text-9xl font-black font-oswald italic text-[var(--text-primary)] tracking-tighter select-none drop-shadow-[0_0_20px_rgba(81,162,168,0.2)]">
+                Morgan<span className="text-[var(--mce-red)]">.</span>
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {[
-                { label: 'Projects', detail: 'Delivery status, milestones, drift.' },
-                { label: 'Tenders', detail: 'Pipeline, probability, next actions.' },
-                { label: 'Documents', detail: 'Review, extract, compliance gates.' },
-                { label: 'AI', detail: 'RAG-assisted answers via gateway.' },
-              ].map(item => (
-                <div
-                  key={item.label}
-                  className="rounded-2xl border border-[var(--surface-border)] bg-[var(--overlay-2)] p-4"
-                >
-                  <div className="text-[10px] font-bold italic uppercase tracking-widest text-[var(--text-tertiary)]">
-                    {item.label}
-                  </div>
-                  <div className="mt-2 text-xs font-semibold text-[var(--text-primary)]">{item.detail}</div>
+            <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter font-oswald text-transparent bg-clip-text bg-gradient-to-b from-[var(--text-primary)] to-[var(--text-secondary)] mb-6">
+              Designing Excellence
+            </h1>
+            
+            <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
+              Unified intelligence for high-stakes delivery environments. 
+              Secure access to the <span className="text-[var(--brand-accent)]">Morgan Neural Mesh</span>.
+            </p>
+          </motion.div>
+
+          {/* Core Feature Pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto lg:mx-0">
+            {[
+              { label: 'Strategic Cockpit', icon: Zap, desc: 'Real-time portfolio saturation & risk mapping.' },
+              { label: 'Mission Control', icon: Terminal, desc: 'Coordinated task execution & node sync.' },
+              { label: 'Intelligence Vault', icon: Database, desc: 'Secure repository for critical artifacts.' },
+              { label: 'Iron Dome Security', icon: ShieldCheck, desc: 'Deterministic governance & audit trails.' },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + (i * 0.1) }}
+                className="p-5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--surface-border)] shadow-xl group hover:border-[var(--brand-accent)]/30 transition-all text-left"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <item.icon size={16} className="text-[var(--brand-accent)]" />
+                  <span className="text-xs font-black uppercase tracking-widest text-[var(--text-primary)] font-oswald italic">{item.label}</span>
                 </div>
-              ))}
-            </div>
+                <p className="text-xs text-[var(--text-tertiary)] font-medium leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="pt-10">
-            <div className="text-[10px] font-bold italic uppercase tracking-widest text-[var(--text-tertiary)]">
-              Secure access • Role-based governance • Audit-ready workflows
-            </div>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            transition={{ delay: 1 }}
+            className="flex items-center justify-center lg:justify-start gap-6 text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-tertiary)]"
+          >
+            <span>v2026.04_LOCKED</span>
+            <div className="w-1 h-1 rounded-full bg-emerald-500 shadow-[0_0_8px_var(--brand-accent)]" />
+            <span>ENCRYPTED_UPLINK</span>
+          </motion.div>
         </div>
 
-        <div className="flex w-full flex-col justify-center md:w-[420px]">
-          <div className="rounded-3xl border border-[var(--surface-border-strong)] bg-[var(--overlay-1)] p-2 backdrop-blur">
-            <div className="rounded-2xl border border-[var(--surface-border)] bg-[var(--surface-layer)] p-6">
-              <div className="mb-6">
-                <div className="text-[10px] font-bold italic uppercase tracking-widest text-[var(--text-tertiary)]">
-                  Morgan ERP
+        {/* Right Side: Sign-In Command Interface */}
+        <div className="w-full max-w-[440px] shrink-0">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="relative p-1 rounded-[2.5rem] bg-gradient-to-br from-white/10 to-transparent shadow-3xl overflow-hidden group"
+          >
+            {/* Edge Glow Animation */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--brand-accent)]/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-[2000ms] pointer-events-none" />
+
+            <div className="relative p-10 rounded-[2.25rem] bg-[var(--bg-surface)]/80 backdrop-blur-3xl border border-[var(--surface-border)]">
+              <div className="mb-8 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--bg-hover)] border border-[var(--surface-border)] text-[9px] font-black uppercase tracking-widest text-[var(--brand-accent)] mb-4">
+                  <Lock size={10} /> Authorized Access Only
                 </div>
-                <div className="mt-2 text-xl font-black italic tracking-tight">Sign In</div>
+                <h2 className="text-3xl font-black italic tracking-tighter font-oswald uppercase text-[var(--text-primary)]">Initialize Session</h2>
+                <p className="text-xs text-[var(--text-tertiary)] mt-2 font-medium">Verify credentials to enter the command environment.</p>
               </div>
 
               <SignIn
@@ -73,22 +113,31 @@ export const InputZero: React.FC = () => {
                     card: 'bg-transparent shadow-none p-0 w-full',
                     headerTitle: 'hidden',
                     headerSubtitle: 'hidden',
+                    socialButtonsBlockButton: 'bg-[var(--bg-hover)] border-[var(--surface-border)] hover:bg-[var(--bg-surface)] transition-all rounded-xl',
                     formButtonPrimary:
-                      'bg-[var(--text-primary)] hover:opacity-90 text-[var(--surface-base)] font-bold italic py-3 rounded-xl normal-case',
+                      'bg-[var(--brand-accent)] hover:opacity-90 text-white font-black italic uppercase tracking-[0.2em] py-4 rounded-xl text-xs shadow-glow',
                     formFieldInput:
-                      'bg-[var(--bg-input)] border-[var(--surface-border)] text-[var(--text-primary)] focus:border-[var(--surface-border-strong)] rounded-xl',
+                      'bg-[var(--bg-input)] border-[var(--surface-border)] text-[var(--text-primary)] focus:border-[var(--brand-accent)] rounded-xl py-3 px-4 transition-all',
                     formFieldLabel:
-                      'text-[var(--text-tertiary)] text-xs font-bold italic uppercase tracking-widest',
+                      'text-[var(--text-tertiary)] text-[10px] font-black italic uppercase tracking-widest mb-2',
                     footerAction: 'hidden',
                     dividerLine: 'bg-[var(--surface-border)]',
                     dividerText:
-                      'text-[var(--text-tertiary)] text-[10px] font-bold italic uppercase tracking-widest bg-[var(--surface-layer)]',
+                      'text-[var(--text-tertiary)] text-[10px] font-bold italic uppercase tracking-widest bg-[var(--bg-surface)] px-4',
+                    identityPreviewText: 'text-[var(--text-primary)] font-bold',
+                    identityPreviewEditButton: 'text-[var(--brand-accent)] font-bold hover:text-white',
                   },
                 }}
               />
+              
+              <div className="mt-8 pt-8 border-t border-[var(--surface-border)] flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-[var(--text-tertiary)] opacity-40 italic">
+                <span>Node_ID: BR-01</span>
+                <span>Calibrating...</span>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
+
       </div>
     </div>
   );
