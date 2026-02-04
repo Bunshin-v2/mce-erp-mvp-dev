@@ -22,20 +22,32 @@ export function useProcurement(searchQuery: string = '') {
     const fetchPOs = async () => {
         setLoading(true);
         try {
-            let query = (supabase.from('purchase_orders' as any) as any).select('*');
+            const { fetchWithRetry, getErrorMessage } = await import('@/lib/fetch-utils');
 
-            if (searchQuery) {
-                query = query.or(`po_number.ilike.%${searchQuery}%,vendor_name.ilike.%${searchQuery}%`);
-            }
+            const data = await fetchWithRetry(async () => {
+                let query = (supabase.from('purchase_orders' as any) as any).select('*');
 
-            const { data, error } = await query.order('created_at', { ascending: false });
+                if (searchQuery) {
+                    query = query.or(`po_number.ilike.%${searchQuery}%,vendor_name.ilike.%${searchQuery}%`);
+                }
 
-            if (error) throw error;
-            setPurchaseOrders(data || []);
+                const { data, error } = await query.order('created_at', { ascending: false });
+
+                if (error) throw error;
+                return data || [];
+            }, {
+                maxRetries: 3,
+                baseDelay: 1000,
+                timeoutMs: 10000
+            });
+
+            setPurchaseOrders(data);
             setError(null);
         } catch (e: any) {
+            const { getErrorMessage } = await import('@/lib/fetch-utils');
+            const friendlyMessage = getErrorMessage(e);
             logger.error('DOMAIN_PROCUREMENT_ERROR', e);
-            setError(e.message);
+            setError(friendlyMessage);
         } finally {
             setLoading(false);
         }

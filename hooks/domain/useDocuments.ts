@@ -13,17 +13,29 @@ export function useDocuments(searchQuery: string = '') {
     const fetchDocuments = async () => {
         setLoading(true);
         try {
-            let query = (supabase.from('documents' as any) as any).select('*');
-            if (searchQuery) query = query.or(`title.ilike.%${searchQuery}%,project_name.ilike.%${searchQuery}%`);
+            const { fetchWithRetry, getErrorMessage } = await import('@/lib/fetch-utils');
 
-            const { data, error } = await query.order('created_at', { ascending: false }).limit(20);
+            const data = await fetchWithRetry(async () => {
+                let query = (supabase.from('documents' as any) as any).select('*');
+                if (searchQuery) query = query.or(`title.ilike.%${searchQuery}%,project_name.ilike.%${searchQuery}%`);
 
-            if (error) throw error;
-            setDocuments(data || []);
+                const { data, error } = await query.order('created_at', { ascending: false }).limit(20);
+
+                if (error) throw error;
+                return data || [];
+            }, {
+                maxRetries: 3,
+                baseDelay: 1000,
+                timeoutMs: 10000
+            });
+
+            setDocuments(data);
             setError(null);
         } catch (e: any) {
+            const { getErrorMessage } = await import('@/lib/fetch-utils');
+            const friendlyMessage = getErrorMessage(e);
             logger.error('DOMAIN_DOCUMENTS_ERROR', e);
-            setError(e.message);
+            setError(friendlyMessage);
         } finally {
             setLoading(false);
         }

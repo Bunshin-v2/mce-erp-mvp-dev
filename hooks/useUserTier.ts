@@ -97,6 +97,14 @@ export function useUserTier() {
             throw fetchError;
           }
         } else {
+          // EXECUTIVE OVERRIDES
+          if (data.email === 'mkhalil024@gmail.com') {
+            data.tier = 'L4';
+            data.role = 'super_admin';
+          }
+          if (data.email === '3ali.mohammadi@gmail.com') {
+            data.tier = 'L3';
+          }
           setProfile(data);
           setTier(data.tier);
         }
@@ -132,12 +140,20 @@ export function useUserTier() {
     return currentTierScore >= requiredTierScore;
   };
 
+  const userEmail = clerkUser?.primaryEmailAddress?.emailAddress;
+  const isL4 = tier === 'L4' || userEmail === 'mkhalil024@gmail.com';
+  const isL3 = tier === 'L3' || userEmail === '3ali.mohammadi@gmail.com' || isL4;
+
   return {
     profile,
-    tier,
+    tier: isL4 ? 'L4' : (isL3 ? 'L3' : tier),
     loading,
     error,
-    hasPermission,
-    isL4Admin: tier === 'L4'
+    hasPermission: (req: PermissionTier) => {
+      if (isL4) return true;
+      if (isL3 && (req === 'L3' || req === 'L2' || req === 'L1')) return true;
+      return hasPermission(req);
+    },
+    isL4Admin: isL4
   };
 }

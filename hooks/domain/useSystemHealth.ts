@@ -13,18 +13,30 @@ export function useSystemHealth() {
     const fetchAlerts = async () => {
         setLoading(true);
         try {
-            const { data, error } = await (supabase
-                .from('system_notifications' as any) as any)
-                .select('*')
-                .order('timestamp', { ascending: false })
-                .limit(10);
+            const { fetchWithRetry, getErrorMessage } = await import('@/lib/fetch-utils');
 
-            if (error) throw error;
-            setAlerts(data || []);
+            const data = await fetchWithRetry(async () => {
+                const { data, error } = await (supabase
+                    .from('system_notifications' as any) as any)
+                    .select('*')
+                    .order('timestamp', { ascending: false })
+                    .limit(10);
+
+                if (error) throw error;
+                return data || [];
+            }, {
+                maxRetries: 3,
+                baseDelay: 1000,
+                timeoutMs: 10000
+            });
+
+            setAlerts(data);
             setError(null);
         } catch (e: any) {
+            const { getErrorMessage } = await import('@/lib/fetch-utils');
+            const friendlyMessage = getErrorMessage(e);
             logger.error('DOMAIN_ALERTS_ERROR', e);
-            setError(e.message);
+            setError(friendlyMessage);
         } finally {
             setLoading(false);
         }

@@ -17,9 +17,9 @@ interface Message {
 export const ChatAssistant: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { 
-            role: 'assistant', 
-            text: 'I am Mr. Morgan. Your strategic command assistant. I have synchronized with the MCE registry. How shall we proceed with your tactical analysis?' 
+        {
+            role: 'assistant',
+            text: 'I am Mr. Morgan. Your strategic command assistant. I have synchronized with the MCE registry. How shall we proceed with your tactical analysis?'
         }
     ]);
     const [input, setInput] = useState('');
@@ -35,7 +35,7 @@ export const ChatAssistant: React.FC = () => {
         { label: 'RED_FLAGS', query: 'Detect critical compliance gaps or missing technical approvals.' }
     ];
 
-    const [suggestions, setSuggestions] = useState<{label:string, query:string}[]>([]);
+    const [suggestions, setSuggestions] = useState<{ label: string, query: string }[]>([]);
     const [focusedSuggestion, setFocusedSuggestion] = useState<number | null>(null);
     const [suggestionsLoading, setSuggestionsLoading] = useState(false);
 
@@ -48,7 +48,7 @@ export const ChatAssistant: React.FC = () => {
         ];
         setSuggestions(items);
         setFocusedSuggestion(items.length ? 0 : null);
-        suggestionRefs.current = suggestionRefs.current.slice(0, items.length); 
+        suggestionRefs.current = suggestionRefs.current.slice(0, items.length);
     }
 
     const resetChat = async () => {
@@ -56,9 +56,9 @@ export const ChatAssistant: React.FC = () => {
         try {
             await fetch('/api/ai/chat/reset', { method: 'POST' }); // We'll add this proxy route next
             setMessages([
-                { 
-                    role: 'assistant', 
-                    text: 'System reboot complete. Neural link re-established. How shall we proceed?' 
+                {
+                    role: 'assistant',
+                    text: 'System reboot complete. Neural link re-established. How shall we proceed?'
                 }
             ]);
         } catch (err) {
@@ -118,19 +118,57 @@ export const ChatAssistant: React.FC = () => {
             });
 
             const payload = await chatRes.json();
-            const answerText = payload?.data?.answer || payload?.response || 'Neural link established, but current data stream is restricted.';
-            
+
+            // Handle error responses from the proxy
+            if (payload.outcome === 'failed' && payload.error) {
+                let errorMessage = 'Neural link interrupted. ';
+
+                switch (payload.error.code) {
+                    case 'AI_GATEWAY_UNREACHABLE':
+                        errorMessage += 'AI Service is offline. Please start the AI service with: python ai_service/main.py';
+                        break;
+                    case 'AI_GATEWAY_TIMEOUT':
+                        errorMessage += 'AI Service is taking too long to respond. It may be starting up.';
+                        break;
+                    case 'AI_GATEWAY_MISCONFIGURED':
+                        errorMessage += 'AI Gateway is not configured. Check AI_GATEWAY_URL environment variable.';
+                        break;
+                    case 'AUTH_REQUIRED':
+                    case 'AUTH_TOKEN_MISSING':
+                        errorMessage += 'Authentication required. Please sign in.';
+                        break;
+                    default:
+                        errorMessage += payload.error.message || 'Unknown error occurred.';
+                }
+
+                setMessages(prev => {
+                    const copy = [...prev];
+                    const lastIdx = copy.length - 1;
+                    copy[lastIdx] = { role: 'assistant', text: errorMessage };
+                    return copy;
+                });
+                return;
+            }
+
+            // Extract the response from various possible fields
+            const answerText = payload?.response || payload?.data?.answer || payload?.message || 'Neural link established, but data stream is currently restricted.';
+
             setMessages(prev => {
                 const copy = [...prev];
                 const lastIdx = copy.length - 1;
                 copy[lastIdx] = { role: 'assistant', text: answerText };
                 return copy;
             });
-            
+
             setSuggestionsLoading(true);
             generateSuggestions(answerText).finally(() => setSuggestionsLoading(false));
         } catch (err: any) {
-            setMessages(prev => [...prev, { role: 'assistant', text: "Signal interrupted. Please re-establish neural link." }]);
+            setMessages(prev => {
+                const copy = [...prev];
+                const lastIdx = copy.length - 1;
+                copy[lastIdx] = { role: 'assistant', text: `Signal interrupted. Network error: ${err.message}` };
+                return copy;
+            });
         } finally {
             setLoading(false);
         }
@@ -152,7 +190,7 @@ export const ChatAssistant: React.FC = () => {
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-[var(--mce-red)] rounded-full border-2 border-white animate-pulse" />
                     </motion.button>
                 ) : (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -168,14 +206,14 @@ export const ChatAssistant: React.FC = () => {
                                 </div>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <button 
+                                <button
                                     onClick={resetChat}
                                     className="p-1.5 hover:bg-white/10 rounded-full text-white/80 transition-colors"
                                     title="Restart Neural Link"
                                 >
                                     <RefreshCw size={14} />
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => setIsOpen(false)}
                                     className="p-1.5 hover:bg-white/10 rounded-full text-white/80 transition-colors"
                                 >
@@ -187,10 +225,10 @@ export const ChatAssistant: React.FC = () => {
                         {/* MESSAGES */}
                         <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-4 custom-scrollbar bg-[var(--bg-base)]">
                             {messages.map((msg, i) => (
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, y: 5 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    key={i} 
+                                    key={i}
                                     className={cn("flex w-full", msg.role === 'user' ? 'justify-end' : 'justify-start')}
                                 >
                                     <div className={cn(
@@ -246,8 +284,8 @@ export const ChatAssistant: React.FC = () => {
 
                         {/* INPUT */}
                         <div className="p-4 bg-[var(--bg-surface)] border-t border-[var(--surface-border)]">
-                            <form 
-                                onSubmit={(e) => { e.preventDefault(); handleSend(); }} 
+                            <form
+                                onSubmit={(e) => { e.preventDefault(); handleSend(); }}
                                 className="relative flex items-center bg-[var(--bg-base)] rounded-xl border-2 border-[var(--surface-border)] focus-within:border-[var(--brand-accent)] transition-all overflow-hidden shadow-inner"
                             >
                                 <input

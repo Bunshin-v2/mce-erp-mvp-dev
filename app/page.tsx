@@ -147,22 +147,22 @@ function AppContent() {
       case 'dashboard':
         return (
           <MorganCommandCenter
-             kpis={kpis || []}
-             projects={projects || []}
-             tenders={tenders || []}
-             tasks={tasks || []}
-             alerts={notificationFeed}
-             agentActivity={agentActivity || []}
-             auditLogs={auditLogs || []}
-             onSearch={handleSearch}
-             onNavigate={handleNavigate}
-             initialView={
-               activeView === 'liability' ? 'risk' : 
-               activeView === 'dashboard' ? 'command' : 
-               activeView === 'cockpit' ? 'strategic' :
-               activeView === 'field' ? 'field' :
-               activeView as any
-             }
+            kpis={kpis || []}
+            projects={projects || []}
+            tenders={tenders || []}
+            tasks={tasks || []}
+            alerts={notificationFeed}
+            agentActivity={agentActivity || []}
+            auditLogs={auditLogs || []}
+            onSearch={handleSearch}
+            onNavigate={handleNavigate}
+            initialView={
+              activeView === 'liability' ? 'risk' :
+                activeView === 'dashboard' ? 'command' :
+                  activeView === 'cockpit' ? 'strategic' :
+                    activeView === 'field' ? 'field' :
+                      activeView as any
+            }
           />
         );
       case 'personaltasks':
@@ -231,15 +231,28 @@ function AppContent() {
     return (
       <div className="h-screen w-screen flex items-center justify-center bg-zinc-950">
         <div className="flex flex-col items-center max-w-md text-center p-8 bg-zinc-900 rounded border border-zinc-800">
-          <AlertTriangle size={32} className="text-zinc-500 mb-6" />
-          <h2 className="text-xl font-bold text-zinc-50 mb-2">System Variance Detected</h2>
-          <p className="text-zinc-400 mb-8 text-sm">{error}</p>
-          <button
-            onClick={() => refetch()}
-            className="px-6 py-2 bg-zinc-50 text-zinc-950 rounded text-xs font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors"
-          >
-            Neutralize & Retry
-          </button>
+          <AlertTriangle size={32} className="text-amber-500 mb-6" />
+          <h2 className="text-xl font-bold text-zinc-50 mb-2">Connection Issue</h2>
+          <p className="text-zinc-400 mb-4 text-sm">
+            {error}
+          </p>
+          <p className="text-zinc-600 mb-8 text-xs">
+            This is usually temporary. The system will automatically retry.
+          </p>
+          <div className="flex gap-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-zinc-50 text-zinc-950 rounded text-xs font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors"
+            >
+              Reload Page
+            </button>
+            <button
+              onClick={() => refetch()}
+              className="px-6 py-2 bg-zinc-800 text-zinc-50 rounded text-xs font-black uppercase tracking-widest hover:bg-zinc-700 transition-colors border border-zinc-700"
+            >
+              Retry Now
+            </button>
+          </div>
         </div>
       </div>
     );

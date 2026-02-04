@@ -13,19 +13,31 @@ export function useProjects(searchQuery: string = '') {
     const fetchProjects = async () => {
         setLoading(true);
         try {
-            let query = (supabase.from('projects_master' as any) as any).select('*', { count: 'exact' });
-            if (searchQuery) {
-                query = query.or(`project_name.ilike.%${searchQuery}%,project_code.ilike.%${searchQuery}%`);
-            }
-            const { data, error } = await query;
+            const { fetchWithRetry, getErrorMessage } = await import('@/lib/fetch-utils');
 
-            if (error) throw error;
-            setProjects(data || []);
+            const data = await fetchWithRetry(async () => {
+                let query = (supabase.from('projects_master' as any) as any).select('*', { count: 'exact' });
+                if (searchQuery) {
+                    query = query.or(`project_name.ilike.%${searchQuery}%,project_code.ilike.%${searchQuery}%`);
+                }
+                const { data, error } = await query;
+
+                if (error) throw error;
+                return data || [];
+            }, {
+                maxRetries: 3,
+                baseDelay: 1000,
+                timeoutMs: 10000
+            });
+
+            setProjects(data);
             logger.debug('DOMAIN_PROJECTS_SYNC', { count: data?.length });
             setError(null);
         } catch (e: any) {
+            const { getErrorMessage } = await import('@/lib/fetch-utils');
+            const friendlyMessage = getErrorMessage(e);
             logger.error('DOMAIN_PROJECTS_ERROR', e);
-            setError(e.message);
+            setError(friendlyMessage);
         } finally {
             setLoading(false);
         }
