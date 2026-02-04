@@ -11,7 +11,6 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 const CACHE_DIR = process.env.MORGAN_CACHE_DIR || path.join(process.cwd(), '.morgan_cache');
 const CACHE_TTL_SECONDS = Number(process.env.CACHE_TTL || '3600');
 const MODEL = process.env.MORGAN_MODEL || 'claude-2.1';
-let redisClient: unknown = null;
 
 async function ensureCacheDir() {
   try {
@@ -45,59 +44,11 @@ async function fileSet(key: string, value: string): Promise<void> {
   await fs.writeFile(file, JSON.stringify(obj), 'utf8');
 }
 
-async function tryInitRedis() {
-  if (!process.env.REDIS_URL) return;
-  if (redisClient) return;
-  try {
-    const IORedisModule = await import('ioredis');
-    // IORedisModule.default when using ES default export
-    const IORedis = (IORedisModule as any).default || IORedisModule;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    redisClient = new (IORedis as any)(process.env.REDIS_URL);
-  } catch (e) {
-    // fail silently, fall back to file cache
-    // eslint-disable-next-line no-console
-    console.warn('redis init failed - falling back to file cache', e);
-    redisClient = null;
-  }
-}
-
-async function redisGet(key: string): Promise<string | null> {
-  if (!redisClient) return null;
-  try {
-    const val = await (redisClient as any).get(key);
-    return typeof val === 'string' ? val : null;
-  } catch (e) {
-    return null;
-  }
-}
-
-async function redisSet(key: string, value: string): Promise<void> {
-  if (!redisClient) return;
-  try {
-    await (redisClient as any).set(key, value, 'EX', CACHE_TTL_SECONDS);
-  } catch (e) {
-    // ignore
-  }
-}
-
 async function getFromCache(key: string): Promise<string | null> {
-  if (process.env.REDIS_URL) {
-    await tryInitRedis();
-    const r = await redisGet(key);
-    if (r) return r;
-  }
   return await fileGet(key);
 }
 
 async function setToCache(key: string, value: string): Promise<void> {
-  if (process.env.REDIS_URL) {
-    await tryInitRedis();
-    if (redisClient) {
-      await redisSet(key, value);
-      return;
-    }
-  }
   await fileSet(key, value);
 }
 

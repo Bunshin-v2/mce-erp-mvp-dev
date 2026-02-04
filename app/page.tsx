@@ -260,40 +260,6 @@ function AppContent() {
     </AppShell>
   );
 
-  const disableAuth =
-    (typeof window !== 'undefined' && (window as any).__ENV?.NEXT_PUBLIC_DISABLE_AUTH === 'true') ||
-    process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
-
-  if (disableAuth) {
-    return (
-      <>
-        {renderDashboard()}
-        <ChatAssistant />
-        {searchQuery && (
-          <SignalMatrix
-            query={searchQuery}
-            results={{
-              projects: projects || [],
-              tenders: tenders || [],
-              documents: documents || [],
-              tasks: tasks || []
-            }}
-            onClose={() => setSearchQuery('')}
-            onNavigate={(view, id) => {
-              if (id) {
-                if (view === 'projects') setSelectedProjectId(id);
-                if (view === 'tenders') setSelectedTenderId(id);
-              }
-              setActiveView(view);
-              setSearchQuery('');
-            }}
-          />
-        )}
-        <Watermark />
-      </>
-    );
-  }
-
   return (
     <>
       <SignedOut>
