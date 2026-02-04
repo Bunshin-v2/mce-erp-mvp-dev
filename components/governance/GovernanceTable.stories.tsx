@@ -21,9 +21,9 @@ export const LightMode: Story = {
       { id: '2', project_name: 'Marina Heights', client_name: 'Nakheel', delivery_risk_rating: 'Critical' },
     ],
     columns: [
-      { header: 'Project', accessor: 'project_name', width: '50%' },
-      { header: 'Client', accessor: 'client_name', width: '30%' },
-      { header: 'Risk', accessor: 'delivery_risk_rating', width: '20%' },
+      { header: 'Project', accessor: (item: any) => item.project_name, width: '50%' },
+      { header: 'Client', accessor: (item: any) => item.client_name, width: '30%' },
+      { header: 'Risk', accessor: (item: any) => item.delivery_risk_rating, width: '20%' },
     ],
   },
 };
